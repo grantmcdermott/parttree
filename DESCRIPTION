@@ -1,15 +1,20 @@
 Package: parttree
-Title: What the Package Does (One Line, Title Case)
+Title: Simple functions for plotting 2D decision tree partition plots
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Grant",
+           family = "McDermott",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "grantmcd@uoregon.edu",
+           comment = c(ORCID = "0000-0001-7883-8573"))
+Description: Simple functions for plotting 2D decision tree partition plots.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/grantmcdermott/parttree
 BugReports: https://github.com/grantmcdermott/parttree/issues
+Imports: 
+    rpart,
+    data.table,
+    ggplot2
+RoxygenNote: 7.0.2
