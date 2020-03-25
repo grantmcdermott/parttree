@@ -7,7 +7,7 @@
 
 <!-- badges: end -->
 
-A set of simple functions for plotting 2D decision tree partitions in R.
+A set of simple functions for visualizing decision tree partitions in R.
 
 ## Installation
 
@@ -25,7 +25,7 @@ remotes::install_github("grantmcdermott/parttree")
 library(rpart)
 library(parttree)
 
-d = part_tree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
+d = parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
 d
 #>    node                                       path xmin xmax ymin ymax
 #> 1:    2                         Petal.Width <  0.8 -Inf 0.80 -Inf  Inf
@@ -79,7 +79,7 @@ ggplot() +
     aes(x=Pclass, y=Age, col=Survived), alpha=0.7
     ) +
   geom_rect(
-    data = part_tree(ti_tree), alpha = 0.1, col = "black",
+    data = parttree(ti_tree), alpha = 0.1, col = "black",
     aes(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax, fill=Survived)
     ) +
   theme_minimal() +

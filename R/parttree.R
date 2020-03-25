@@ -9,8 +9,8 @@
 #' @export
 #' @examples
 #' library(rpart)
-#' part_tree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
-part_tree =
+#' parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
+parttree =
   function(tree) {
     if (!(inherits(tree, "rpart") || inherits(tree, "_rpart"))) {
       stop("This function only accepts rpart objects.\n",
