@@ -1,11 +1,14 @@
-#' @title Convert a decision tree into a data table of partition coordinates
+#' @title Convert a decision tree into a data frame of partition coordinates
 #'
 #' @description Extracts the terminal leaf nodes of a decision tree with one or
 #'   two predictor variables. These leaf nodes are then converted into a data
-#'   table, where each row represents a partition that can easily be plotted in
+#'   frame, where each row represents a partition that can easily be plotted in
 #'   coordinate space.
-#' @param tree An `rpart` object, or an `rpart`-compatible
-#'   object (e.g. produced using `parsnip`).
+#' @param tree An `rpart` object, or an `rpart`-compatible object (e.g. produced
+#'   using `parsnip`).
+#' @param keep_as_dt Logical. The function relies on `data.table` for internal
+#'   data manipulation. But it will coerce the final return object into a
+#'   regular data frame (default behaviour) unless the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
 #'   containing one or (at most) two continuous predictors.
 #' @seealso \code{\link[rpart]{rpart}}.
@@ -19,7 +22,7 @@
 #' library(rpart)
 #' parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
 parttree =
-  function(tree) {
+  function(tree, keep_as_dt = FALSE) {
     if (!(inherits(tree, "rpart") || inherits(tree, "_rpart"))) {
       stop("This function only accepts rpart objects.\n",
            "The object that you provided is of class type: ", class(tree)[1])
@@ -37,7 +40,7 @@ parttree =
     }
 
     vars = unique(as.character(tree$frame[tree$frame$var != "<leaf>", ]$var))
-    if (length(vars>2)) {
+    if (length(vars)>2) {
       stop("Tree can only have one or two predictors.")
     }
 
@@ -95,6 +98,10 @@ parttree =
 
     part_coords$yvals = as.factor(part_coords$yvals)
     colnames(part_coords) = gsub("yvals", y_var, colnames(part_coords))
+
+    if (!keep_as_dt) {
+      part_coords = as.data.frame(part_coords)
+    }
 
     return(part_coords)
   }

@@ -2,13 +2,17 @@
 % Please edit documentation in R/parttree.R
 \name{parttree}
 \alias{parttree}
-\title{Convert a decision tree into a data table of partition coordinates}
+\title{Convert a decision tree into a data frame of partition coordinates}
 \usage{
-parttree(tree)
+parttree(tree, keep_as_dt = FALSE)
 }
 \arguments{
-\item{tree}{An `rpart` object, or an `rpart`-compatible
-object (e.g. produced using `parsnip`).}
+\item{tree}{An `rpart` object, or an `rpart`-compatible object (e.g. produced
+using `parsnip`).}
+
+\item{keep_as_dt}{Logical. The function relies on `data.table` for internal
+data manipulation. But it will coerce the final return object into a
+regular data frame (default behaviour) unless the user specifies `TRUE`.}
 }
 \value{
 A data table comprising seven columns: the leaf node, its path, a set
@@ -18,7 +22,7 @@ A data table comprising seven columns: the leaf node, its path, a set
 \description{
 Extracts the terminal leaf nodes of a decision tree with one or
   two predictor variables. These leaf nodes are then converted into a data
-  table, where each row represents a partition that can easily be plotted in
+  frame, where each row represents a partition that can easily be plotted in
   coordinate space.
 }
 \details{
