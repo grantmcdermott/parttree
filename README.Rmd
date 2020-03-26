@@ -73,7 +73,7 @@ the underlying engine. Here's an example using the
 
 ```{r titanic_plot}
 library(titanic) ## Just for a different data set
-library(parsnip)
+library(parsnip) ## Will use rpart engine
 
 titanic_train$Survived = as.factor(titanic_train$Survived)
 

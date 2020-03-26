@@ -54,6 +54,7 @@ parttree =
           # pd$split = gsub(".+[[:punct:]]", "", pv) ## Use below since we want to keep - and . in split values (e.g. -2.5)
           pd$split = as.numeric(gsub(".+[^[:alnum:]\\-\\.\\s]", "", pv))
           pd$side = gsub("\\w|\\.", "", pv)
+          pd$yvals = yvals[nodes==node]
           return(pd)
         }
       )
@@ -78,13 +79,13 @@ parttree =
                        xmax = mean(xmax, na.rm = TRUE),
                        ymin = mean(ymin, na.rm = TRUE),
                        ymax = mean(ymax, na.rm = TRUE)),
-                   keyby = .(node, path)][
+                   keyby = .(node, yvals, path)][
                      , `:=`(xmin = ifelse(is.na(xmin), -Inf, xmin),
                             xmax = ifelse(is.na(xmax), Inf, xmax),
                             ymin = ifelse(is.na(ymin), -Inf, ymin),
                             ymax = ifelse(is.na(ymax), Inf, ymax))]
 
-    part_coords$yvals = as.factor(yvals)
+    part_coords$yvals = as.factor(part_coords$yvals)
     colnames(part_coords) = gsub("yvals", y_var, colnames(part_coords))
 
     return(part_coords)

@@ -47,14 +47,14 @@ tree_mod
 ## Let's convert it to a partition data frame
 tree_mod_parted = parttree(tree_mod)
 tree_mod_parted
-#>    node                                       path xmin xmax ymin ymax
-#> 1:    2                         Petal.Width <  0.8 -Inf 0.80 -Inf  Inf
-#> 2:    6 Petal.Width >= 0.8 --> Petal.Width <  1.75 0.80 1.75 -Inf  Inf
-#> 3:    7 Petal.Width >= 0.8 --> Petal.Width >= 1.75 1.75  Inf -Inf  Inf
-#>       Species
-#> 1:     setosa
-#> 2: versicolor
-#> 3:  virginica
+#>    node    Species                                       path xmin xmax ymin
+#> 1:    2     setosa                         Petal.Width <  0.8 -Inf 0.80 -Inf
+#> 2:    6 versicolor Petal.Width >= 0.8 --> Petal.Width <  1.75 0.80 1.75 -Inf
+#> 3:    7  virginica Petal.Width >= 0.8 --> Petal.Width >= 1.75 1.75  Inf -Inf
+#>    ymax
+#> 1:  Inf
+#> 2:  Inf
+#> 3:  Inf
 ```
 
 Again, the resulting data frame is designed to be compatible with
@@ -84,7 +84,7 @@ package. However, it does support other packages and modes that call
 
 ``` r
 library(titanic) ## Just for a different data set
-library(parsnip)
+library(parsnip) ## Will use rpart engine
 
 titanic_train$Survived = as.factor(titanic_train$Survived)
 
