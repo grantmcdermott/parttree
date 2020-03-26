@@ -32,10 +32,18 @@ parttree =
       y_var = paste0(tree$call$formula[2])
     }
 
+    if (nrow(tree$frame)<=1) {
+      stop("Cannot plot single node tree.")
+    }
+
+    vars = unique(as.character(tree$frame[tree$frame$var != "<leaf>", ]$var))
+    if (length(vars>2)) {
+      stop("Tree can only have one or two predictors.")
+    }
+
     nodes = rownames(tree$frame[tree$frame$var == "<leaf>", ])
     yvals = tree$frame[tree$frame$var == "<leaf>", ]$yval
     yvals = attr(tree, "ylevels")[yvals] ## get factor equivalents
-    vars = unique(as.character(tree$frame[tree$frame$var != "<leaf>", ]$var))
 
     part_list =
       lapply(
