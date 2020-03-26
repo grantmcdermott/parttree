@@ -21,12 +21,32 @@ remotes::install_github("grantmcdermott/parttree")
 
 ## Examples
 
+The main goal of the package is to convert decision tree objects
+(e.g. created with
+[**rpart**](https://cran.r-project.org/web/packages/rpart/index.html))
+into a data frame, which is amenable to visualizing as a partition plot.
+Here’s a simple example using everyone’s favourite `iris` dataset.
+
 ``` r
 library(rpart)
 library(parttree)
 
-d = parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
-d
+tree_mod = rpart(Species ~ Sepal.Width + Petal.Width, data=iris)
+tree_mod
+#> n= 150 
+#> 
+#> node), split, n, loss, yval, (yprob)
+#>       * denotes terminal node
+#> 
+#> 1) root 150 100 setosa (0.33333333 0.33333333 0.33333333)  
+#>   2) Petal.Width< 0.8 50   0 setosa (1.00000000 0.00000000 0.00000000) *
+#>   3) Petal.Width>=0.8 100  50 versicolor (0.00000000 0.50000000 0.50000000)  
+#>     6) Petal.Width< 1.75 54   5 versicolor (0.00000000 0.90740741 0.09259259) *
+#>     7) Petal.Width>=1.75 46   1 virginica (0.00000000 0.02173913 0.97826087) *
+
+## Let's convert it to a partition data frame
+tree_mod_parted = parttree(tree_mod)
+tree_mod_parted
 #>    node                                       path xmin xmax ymin ymax
 #> 1:    2                         Petal.Width <  0.8 -Inf 0.80 -Inf  Inf
 #> 2:    6 Petal.Width >= 0.8 --> Petal.Width <  1.75 0.80 1.75 -Inf  Inf
@@ -37,9 +57,10 @@ d
 #> 3:  virginica
 ```
 
-The return object is designed to be compatible with **ggplot2** (in
-particular, `geom_rect`). This makes it convenient for visualizing
-partitions in conjunction with the original data.
+Again, the resulting data frame is designed to be compatible with
+[**ggplot2**](https://ggplot2.tidyverse.org/) (in particular,
+`geom_rect()`). This makes it convenient for visualizing partitions in
+conjunction with the original data.
 
 ``` r
 library(ggplot2)
@@ -47,17 +68,19 @@ library(ggplot2)
 ggplot() +
   geom_point(data = iris, aes(x=Petal.Width, y=Sepal.Width, col=Species)) +
   geom_rect(
-    data = d, alpha = 0.1, col = "black",
+    data = tree_mod_parted, alpha = 0.1, col = "black",
     aes(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax, fill=Species)
-    ) 
+    ) +
+  labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.")
 ```
 
 <img src="man/figures/README-iris_plot-1.png" width="100%" />
 
 Currently, the function only works with decision trees created by the
-**rpart** package. However, it does support other packages and modes
-that call `rpart()` as the underlying engine. Here’s an example using
-the **parsnip** package.
+[**rpart**](https://cran.r-project.org/web/packages/rpart/index.html)
+package. However, it does support other packages and modes that call
+`rpart::rpart()` as the underlying engine. Here’s an example using the
+[**parsnip**](https://tidymodels.github.io/parsnip/) package.
 
 ``` r
 library(titanic) ## Just for a different data set

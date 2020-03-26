@@ -6,6 +6,7 @@ output: github_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
+  cach = TRUE,
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
@@ -22,7 +23,8 @@ A set of simple functions for visualizing decision tree partitions in R.
 
 ## Installation
 
-This package is not yet on CRAN, but can be installed from [GitHub](https://github.com/) with:
+This package is not yet on CRAN, but can be installed from [GitHub](https://github.com/) 
+with:
 
 ``` r
 # install.packages("remotes")
@@ -30,15 +32,26 @@ remotes::install_github("grantmcdermott/parttree")
 ```
 ## Examples
 
+The main goal of the package is to convert decision tree objects (e.g. created 
+with [**rpart**](https://cran.r-project.org/web/packages/rpart/index.html)) into 
+a data frame, which is amenable to visualizing as a partition plot. Here's a 
+simple example using everyone's favourite `iris` dataset.
+
 ```{r example_rpart}
 library(rpart)
 library(parttree)
 
-d = parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
-d
-```
+tree_mod = rpart(Species ~ Sepal.Width + Petal.Width, data=iris)
+tree_mod
 
-The return object is designed to be compatible with **ggplot2** (in particular, `geom_rect`). This makes it convenient for visualizing partitions in conjunction with the original data.
+## Let's convert it to a partition data frame
+tree_mod_parted = parttree(tree_mod)
+tree_mod_parted
+```
+Again, the resulting data frame is designed to be compatible with 
+[**ggplot2**](https://ggplot2.tidyverse.org/) (in particular, `geom_rect()`). 
+This makes it convenient for visualizing partitions in conjunction with the 
+original data.
 
 ```{r iris_plot}
 library(ggplot2)
@@ -46,12 +59,17 @@ library(ggplot2)
 ggplot() +
   geom_point(data = iris, aes(x=Petal.Width, y=Sepal.Width, col=Species)) +
   geom_rect(
-    data = d, alpha = 0.1, col = "black",
+    data = tree_mod_parted, alpha = 0.1, col = "black",
     aes(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax, fill=Species)
-    ) 
+    ) +
+  labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.")
 ```
 
-Currently, the function only works with decision trees created by the **rpart** package. However, it does support other packages and modes that call `rpart()` as the underlying engine. Here's an example using the **parsnip** package. 
+Currently, the function only works with decision trees created by the 
+[**rpart**](https://cran.r-project.org/web/packages/rpart/index.html) package. 
+However, it does support other packages and modes that call `rpart::rpart()` as 
+the underlying engine. Here's an example using the 
+[**parsnip**](https://tidymodels.github.io/parsnip/) package. 
 
 ```{r titanic_plot}
 library(titanic) ## Just for a different data set

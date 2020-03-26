@@ -2,24 +2,37 @@
 % Please edit documentation in R/parttree.R
 \name{parttree}
 \alias{parttree}
-\title{Convert a decision tree to a data table of partition coordinates}
+\title{Convert a decision tree into a data table of partition coordinates}
 \usage{
 parttree(tree)
 }
 \arguments{
-\item{tree}{An rpart object, or rpart-compatible object (e.g. using parsnip)}
+\item{tree}{An `rpart` object, or an `rpart`-compatible
+object (e.g. produced using `parsnip`).}
 }
 \value{
-A data table comprising seven columns: the leaf node, its path, a set of coordinates understandable to ggplot2 (i.e. xmin, xmax, ymin, ymax), and a final column corresponding to the predicted value for that leaf.
+A data table comprising seven columns: the leaf node, its path, a set
+  of coordinates understandable to `ggplot2` (i.e. xmin, xmax, ymin, ymax),
+  and a final column corresponding to the predicted value for that leaf.
 }
 \description{
-Extracts the terminal leaf nodes of a decision tree with one or two predictor variables. These leaf nodes are then converted into a data table, such that there partition
+Extracts the terminal leaf nodes of a decision tree with one or
+  two predictor variables. These leaf nodes are then converted into a data
+  table, where each row represents a partition that can easily be plotted in
+  coordinate space.
 }
 \details{
-This function can be used with a regression or classification tree containing one or (at most) two continuous predictors.
+This function can be used with a regression or classification tree
+  containing one or (at most) two continuous predictors.
 }
 \examples{
 library(rpart)
 parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
 }
+\seealso{
+\code{\link[rpart]{rpart}}.
+}
+\keyword{decision}
 \keyword{partition}
+\keyword{tree}
+\keyword{tree,}

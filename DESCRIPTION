@@ -18,3 +18,5 @@ Imports:
     data.table,
     ggplot2
 RoxygenNote: 7.0.2
+Suggests: 
+    parsnip

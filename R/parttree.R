@@ -1,10 +1,18 @@
-#' @title Convert a decision tree to a data table of partition coordinates
+#' @title Convert a decision tree into a data table of partition coordinates
 #'
-#' @description Extracts the terminal leaf nodes of a decision tree with one or two predictor variables. These leaf nodes are then converted into a data table, such that there partition
-#' @param tree An rpart object, or rpart-compatible object (e.g. using parsnip)
-#' @details This function can be used with a regression or classification tree containing one or (at most) two continuous predictors.
-#' @keywords partition
-#' @return A data table comprising seven columns: the leaf node, its path, a set of coordinates understandable to ggplot2 (i.e. xmin, xmax, ymin, ymax), and a final column corresponding to the predicted value for that leaf.
+#' @description Extracts the terminal leaf nodes of a decision tree with one or
+#'   two predictor variables. These leaf nodes are then converted into a data
+#'   table, where each row represents a partition that can easily be plotted in
+#'   coordinate space.
+#' @param tree An `rpart` object, or an `rpart`-compatible
+#'   object (e.g. produced using `parsnip`).
+#' @details This function can be used with a regression or classification tree
+#'   containing one or (at most) two continuous predictors.
+#' @seealso \code{\link[rpart]{rpart}}.
+#' @keywords partition tree, decision tree
+#' @return A data table comprising seven columns: the leaf node, its path, a set
+#'   of coordinates understandable to `ggplot2` (i.e. xmin, xmax, ymin, ymax),
+#'   and a final column corresponding to the predicted value for that leaf.
 #' @importFrom data.table :=
 #' @export
 #' @examples
