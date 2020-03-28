@@ -22,6 +22,9 @@ remotes::install_github("grantmcdermott/parttree")
 
 ## Example
 
+The main function that users will interact with is `geom_parttree()`.
+Here’s a simple example.
+
 ``` r
 library(parttree)
 library(rpart)
@@ -41,17 +44,11 @@ p +
 
 <img src="man/figures/README-iris_plot-1.png" width="100%" />
 
-The main goal of the package is to visualize decision tree objects
-(e.g. created with
-[**rpart**](https://cran.r-project.org/web/packages/rpart/index.html))
-into a data frame, which is amenable to visualizing as a partition plot.
-Here’s a simple example using everyone’s favourite `iris` dataset.
-
 ## Limitations and caveats
 
 ### Supported model classes
 
-Currently, the function only works with decision trees created by the
+Currently, the package only works with decision trees created by the
 [**rpart**](https://cran.r-project.org/web/packages/rpart/index.html)
 package. However, it does support other packages and modes that call
 `rpart::rpart()` as the underlying engine. Here’s an example using the
@@ -84,10 +81,40 @@ titanic_train %>%
 
 ### Orientation
 
-Underneath the hood, `geom_partree()` is calling the companion
+Underneath the hood, `geom_parttree()` is calling the companion
 `parttree()` function, which coerces the **rpart** tree object into a
 data frame that is easily understood by **ggplot2**. For example,
-consider our “ti\_tree” model from above.
+consider our “ti\_tree” model from above. Here’s the print output of the
+raw model.
+
+``` r
+ti_tree
+#> parsnip model object
+#> 
+#> Fit time:  6ms 
+#> n= 891 
+#> 
+#> node), split, n, loss, yval, (yprob)
+#>       * denotes terminal node
+#> 
+#>   1) root 891 342 0 (0.61616162 0.38383838)  
+#>     2) Pclass>=2.5 491 119 0 (0.75763747 0.24236253)  
+#>       4) Age>=6.5 461 102 0 (0.77874187 0.22125813) *
+#>       5) Age< 6.5 30  13 1 (0.43333333 0.56666667) *
+#>     3) Pclass< 2.5 400 177 1 (0.44250000 0.55750000)  
+#>       6) Age>=17.5 365 174 1 (0.47671233 0.52328767)  
+#>        12) Pclass>=1.5 161  66 0 (0.59006211 0.40993789) *
+#>        13) Pclass< 1.5 204  79 1 (0.38725490 0.61274510)  
+#>          26) Age>=44.5 67  32 0 (0.52238806 0.47761194)  
+#>            52) Age>=60.5 14   3 0 (0.78571429 0.21428571) *
+#>            53) Age< 60.5 53  24 1 (0.45283019 0.54716981)  
+#>             106) Age< 47.5 13   3 0 (0.76923077 0.23076923) *
+#>             107) Age>=47.5 40  14 1 (0.35000000 0.65000000) *
+#>          27) Age< 44.5 137  44 1 (0.32116788 0.67883212) *
+#>       7) Age< 17.5 35   3 1 (0.08571429 0.91428571) *
+```
+
+And here’s what we get after we feed it to `parttree()`.
 
 ``` r
 parttree(ti_tree)
@@ -120,18 +147,18 @@ parttree(ti_tree)
 #> 8 -Inf  1.5 47.5 60.5
 ```
 
-Again, the resulting data frame is designed to amenable to a **ggplot2**
-geom layer, with columns like `xmin`, `xmax`, etc. specifying aesthetics
-that **ggplot2** recognises. (Fun fact: `geom_partree()` is really just
-a thin wrapper around `geom_rect()`). The goal is to abstract these
-kinds of details away from the user so we can just specify
-`geom_partree()` \&mdash with a valid tree object as the data input —
-and be done with it. However, while this generally works fine, it can
-sometimes lead to unexpected behaviour in terms of plot orientation.
-That’s because it’s hard to guess ahead of time what the user will
-specify as the *x* and *y* axes/variables in their other plot layers. To
-see what I mean, let’s redo our titanic plot from earlier, but this time
-switch the axes in the main *ggplot()* call.
+Again, the resulting data frame is designed to be amenable to a
+**ggplot2** geom layer, with columns like `xmin`, `xmax`, etc.
+specifying aesthetics that **ggplot2** recognises. (Fun fact:
+`geom_partree()` is really just a thin wrapper around `geom_rect()`.)
+The goal of the package is to abstract away these kinds of details from
+the user, so we can just specify `geom_parttree()` — with a valid tree
+object as the data input — and be done with it. However, while this
+generally works well, it can sometimes lead to unexpected behaviour in
+terms of plot orientation. That’s because it’s hard to guess ahead of
+time what the user will specify as the *x* and *y* axes/variables in
+their other plot layers. To see what I mean, let’s redo our titanic plot
+from earlier, but this time switch the axes in the main `ggplot()` call.
 
 ``` r
 titanic_train %>%
@@ -145,7 +172,7 @@ titanic_train %>%
 
 <img src="man/figures/README-titanic_plot_rot-1.png" width="100%" />
 
-Now, normally this kind of orientation mismatch should hopefully be
-pretty easy to identify. But its admittedly annoying. I’ll try to add
-better support for catching/avoiding these kinds of errors in a future
-update, but as of the moment *caveat emptor*.
+Normally, this kind of orientation mismatch should be pretty easy to
+recognize (as is the case here). But its admittedly annoying. I’ll try
+to add better support for catching/avoiding these kinds of errors in a
+future update, but as of the moment: *caveat emptor*.

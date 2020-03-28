@@ -32,6 +32,9 @@ remotes::install_github("grantmcdermott/parttree")
 ```
 ## Example
 
+The main function that users will interact with is `geom_parttree()`. Here's a
+simple example.
+
 ```{r iris_plot}
 library(parttree)
 library(rpart)
@@ -49,16 +52,11 @@ p +
   labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.") 
 ```
 
-The main goal of the package is to visualize decision tree objects (e.g. created 
-with [**rpart**](https://cran.r-project.org/web/packages/rpart/index.html)) into 
-a data frame, which is amenable to visualizing as a partition plot. Here's a 
-simple example using everyone's favourite `iris` dataset.
-
 ## Limitations and caveats
 
 ### Supported model classes
 
-Currently, the function only works with decision trees created by the 
+Currently, the package only works with decision trees created by the 
 [**rpart**](https://cran.r-project.org/web/packages/rpart/index.html) package. 
 However, it does support other packages and modes that call `rpart::rpart()` as 
 the underlying engine. Here's an example using the 
@@ -88,26 +86,33 @@ titanic_train %>%
 
 ### Orientation
 
-Underneath the hood, `geom_partree()` is calling the companion `parttree()` 
+Underneath the hood, `geom_parttree()` is calling the companion `parttree()` 
 function, which coerces the **rpart** tree object into a data frame that is 
 easily understood by **ggplot2**. For example, consider our "ti_tree" model from
-above.
+above. Here's the print output of the raw model.
+
+```{r ti_tree}
+ti_tree
+```
+
+And here's what we get after we feed it to `parttree()`.
 
 ```{r titanic_parted}
 parttree(ti_tree)
 ```
 
-Again, the resulting data frame is designed to amenable to a **ggplot2** geom
+Again, the resulting data frame is designed to be amenable to a **ggplot2** geom
 layer, with columns like `xmin`, `xmax`, etc. specifying aesthetics that 
 **ggplot2** recognises. (Fun fact: `geom_partree()` is really just a thin 
-wrapper around `geom_rect()`). The goal is to abstract these kinds of details 
-away from the user so we can just specify `geom_partree()` &mdash with a valid
+wrapper around `geom_rect()`.) The goal of the package is to abstract away these 
+kinds of details 
+from the user, so we can just specify `geom_parttree()` &mdash; with a valid
 tree object as the data input &mdash; and be done with it. However, while this 
-generally works fine, it can sometimes lead to unexpected behaviour in terms of 
+generally works well, it can sometimes lead to unexpected behaviour in terms of 
 plot orientation. That's because it's hard to guess ahead of time what the user 
 will specify as the *x* and *y* axes/variables in their other plot layers. To 
 see what I mean, let's redo our titanic plot from earlier, but this time switch 
-the axes in the main *ggplot()* call.
+the axes in the main `ggplot()` call.
 
 ```{r titanic_plot_rot}
 titanic_train %>%
@@ -118,7 +123,7 @@ titanic_train %>%
   labs(title = "Oops!")
 ```
 
-Now, normally this kind of orientation mismatch should hopefully be 
-pretty easy to identify. But its admittedly annoying. I'll try to add better 
+Normally, this kind of orientation mismatch should be pretty easy to recognize
+(as is the case here). But its admittedly annoying. I'll try to add better 
 support for catching/avoiding these kinds of errors in a future update, but as 
-of the moment *caveat emptor*.
+of the moment: *caveat emptor*.
