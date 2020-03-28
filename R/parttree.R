@@ -4,16 +4,15 @@
 #'   two predictor variables. These leaf nodes are then converted into a data
 #'   frame, where each row represents a partition that can easily be plotted in
 #'   coordinate space.
-#' @param tree An `rpart` object, or an `rpart`-compatible object (e.g. produced
-#'   using `parsnip`).
+#' @param tree An \code{\link[rpart]{rpart.object}}, or an object of compatible
+#'   type (e.g. a decision tree produced using `parsnip`).
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behaviour) unless the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
 #'   containing one or (at most) two continuous predictors.
-#' @seealso \code{\link[rpart]{rpart}}.
-#' @keywords partition tree, decision tree
-#' @return A data table comprising seven columns: the leaf node, its path, a set
+#' @seealso \code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}.
+#' @return A data frame comprising seven columns: the leaf node, its path, a set
 #'   of coordinates understandable to `ggplot2` (i.e. xmin, xmax, ymin, ymax),
 #'   and a final column corresponding to the predicted value for that leaf.
 #' @importFrom data.table :=

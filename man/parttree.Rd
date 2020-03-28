@@ -7,15 +7,15 @@
 parttree(tree, keep_as_dt = FALSE)
 }
 \arguments{
-\item{tree}{An `rpart` object, or an `rpart`-compatible object (e.g. produced
-using `parsnip`).}
+\item{tree}{An \code{\link[rpart]{rpart.object}}, or an object of compatible
+type (e.g. a decision tree produced using `parsnip`).}
 
 \item{keep_as_dt}{Logical. The function relies on `data.table` for internal
 data manipulation. But it will coerce the final return object into a
 regular data frame (default behaviour) unless the user specifies `TRUE`.}
 }
 \value{
-A data table comprising seven columns: the leaf node, its path, a set
+A data frame comprising seven columns: the leaf node, its path, a set
   of coordinates understandable to `ggplot2` (i.e. xmin, xmax, ymin, ymax),
   and a final column corresponding to the predicted value for that leaf.
 }
@@ -34,9 +34,5 @@ library(rpart)
 parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
 }
 \seealso{
-\code{\link[rpart]{rpart}}.
+\code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}.
 }
-\keyword{decision}
-\keyword{partition}
-\keyword{tree}
-\keyword{tree,}
