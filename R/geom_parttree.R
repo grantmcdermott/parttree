@@ -38,16 +38,19 @@
 #'
 #' ## Simple decision tree (max of two predictor variables)
 #' iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
-
+#'
 #' ## Plot with original iris data only
-#' p = ggplot(data = iris, aes(x=Petal.Length, y=Petal.Width)) +
-#'   geom_point(aes(col=Species))
-
+#' p = ggplot(data = iris, aes(x = Petal.Length, y = Petal.Width)) +
+#'   geom_point(aes(col = Species))
+#'
 #' ## Add tree partitions to the plot (borders only)
 #' p + geom_parttree(data = iris_tree)
-
-#' ## Better to use fill highlight predictions
-#' p + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
+#'
+#' ## Better to use fill and highlight predictions
+#' p + geom_parttree(data = iris_tree, aes(fill = Species), alpha=0.1)
+#'
+#' ## To drop the black border lines (i.e. fill only)
+#' p + geom_parttree(data = iris_tree, aes(fill = Species), col = NA, alpha = 0.1)
 #'
 #' ## Various front-end frameworks are also supported, e.g.:
 #' library(parsnip)
