@@ -23,7 +23,8 @@
 #' parttree(rpart(Species ~ Petal.Length + Petal.Width, data=iris))
 parttree =
   function(tree, keep_as_dt = FALSE) {
-    if (!(inherits(tree, "rpart") || inherits(tree, "_rpart") || inherits(learner, "LearnerClassifRpart"))) {
+    if (!(inherits(tree, "rpart") || inherits(tree, "_rpart") ||
+          inherits(tree, "LearnerClassifRpart") || inherits(tree, "LearnerRegrRpart"))) {
       stop("The parttree() function only accepts rpart objects.\n",
            "The object that you provided is of class type: ", class(tree)[1])
     }
@@ -38,7 +39,7 @@ parttree =
     }
 
     ## mlr3 front-end
-    if (inherits(tree, "LearnerClassifRpart")) {
+    if (inherits(tree, "LearnerClassifRpart") || inherits(tree, "LearnerRegrRpart")) {
       if (is.null(tree$model)) {
         stop("No model detected.\n",
              "Did you forget to assign a learner? See `?mlr3::lrn`.")
@@ -58,9 +59,15 @@ parttree =
     nodes = rownames(tree$frame[tree$frame$var == "<leaf>", ])
 
     ## Get details about y variable for later
+    ### y variable string (i.e. name)
+    y_var = attr(tree$terms, "variables")[[2]]
+    ### y values
     yvals = tree$frame[tree$frame$var == "<leaf>", ]$yval
-    yvals = attr(tree, "ylevels")[yvals] ## factor equivalents
-    y_var = attr(tree$terms, "variables")[[2]] ## variable string (i.e. name)
+    y_factored = attr(tree$terms, "dataClasses")[paste(y_var)] == "factor"
+    ## factor equivalents (if factor)
+    if (y_factored) {
+      yvals = attr(tree, "ylevels")[yvals]
+    }
 
     part_list =
       lapply(
@@ -110,7 +117,9 @@ parttree =
                             ymin = ifelse(is.na(ymin), -Inf, ymin),
                             ymax = ifelse(is.na(ymax), Inf, ymax))]
 
-    part_coords$yvals = as.factor(part_coords$yvals)
+    if (y_factored) {
+      part_coords$yvals = as.factor(part_coords$yvals)
+    }
     colnames(part_coords) = gsub("yvals", y_var, colnames(part_coords))
 
     if (!keep_as_dt) {

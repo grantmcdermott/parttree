@@ -36,7 +36,7 @@
 #' library(ggplot2)
 #' library(rpart)
 #'
-#' ## Simple decision tree (max of two predictor variables)
+#' ### Simple decision tree (max of two predictor variables)
 #' iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
 #'
 #' ## Plot with original iris data only
@@ -52,16 +52,37 @@
 #' ## To drop the black border lines (i.e. fill only)
 #' p + geom_parttree(data = iris_tree, aes(fill = Species), col = NA, alpha = 0.1)
 #'
-#' ## Various front-end frameworks are also supported, e.g.:
+#'
+#' ### Various front-end frameworks are also supported, e.g.:
 #' library(parsnip)
 #'
-#' iris_tree2 =
+#' iris_tree_parsnip =
 #'   decision_tree() %>%
 #'   set_engine("rpart") %>%
 #'   set_mode("classification") %>%
 #'   fit(Species ~ Petal.Length + Petal.Width, data=iris)
 #'
-#' p + geom_parttree(data = iris_tree2, aes(fill=Species), alpha = 0.1)
+#' p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)
+#'
+#'
+#' ### Trees with continuous independent variables are also supported. But you
+#' ### may need to adjust (or switch off) the fill legend to match the original
+#' ### data, e.g.:
+#'
+#' iris_tree_cont = rpart(Petal.Length ~ Sepal.Length + Petal.Width, data=iris)
+#' p2 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
+#'  geom_parttree(
+#'    data = iris_tree_cont,
+#'    aes(fill = Petal.Length), alpha=0.5
+#'    ) +
+#'   geom_point(aes(col = Petal.Length)) +
+#'   theme_minimal()
+#'
+#' ## Legend scales don't quite match here:
+#' p2
+#'
+#' ## Better to scale fill to the original data
+#' p2 + scale_fill_continuous(limits = c(min(iris$Petal.Length), max(iris$Petal.Length)))
 geom_parttree <-
   function(mapping = NULL, data = NULL,
            stat = "identity", position = "identity",
