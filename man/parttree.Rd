@@ -32,7 +32,7 @@ This function can be used with a regression or classification tree
 }
 \examples{
 library(rpart)
-parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
+parttree(rpart(Species ~ Petal.Length + Petal.Width, data=iris))
 }
 \seealso{
 \code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}.

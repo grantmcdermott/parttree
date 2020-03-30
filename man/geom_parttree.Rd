@@ -87,10 +87,10 @@ library(ggplot2)
 library(rpart)
 
 ## Simple decision tree (max of two predictor variables)
-iris_tree = rpart(Species ~ Sepal.Width + Petal.Width, data=iris)
+iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
 ## Plot with original iris data only
-p = ggplot(data = iris, aes(x=Petal.Width, y=Sepal.Width)) +
-  geom_point(aes(col=Species)) ## Original data
+p = ggplot(data = iris, aes(x=Petal.Length, y=Petal.Width)) +
+  geom_point(aes(col=Species))
 ## Add tree partitions to the plot (borders only)
 p + geom_parttree(data = iris_tree)
 ## Better to use fill highlight predictions
@@ -103,7 +103,7 @@ iris_tree2 =
   decision_tree() \%>\%
   set_engine("rpart") \%>\%
   set_mode("classification") \%>\%
-  fit(Species ~ Sepal.Width + Petal.Width, data=iris)
+  fit(Species ~ Petal.Length + Petal.Width, data=iris)
 
 p + geom_parttree(data = iris_tree2, aes(fill=Species), alpha = 0.1)
 }

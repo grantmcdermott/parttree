@@ -20,7 +20,7 @@
 #' @export
 #' @examples
 #' library(rpart)
-#' parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
+#' parttree(rpart(Species ~ Petal.Length + Petal.Width, data=iris))
 parttree =
   function(tree, keep_as_dt = FALSE) {
     if (!(inherits(tree, "rpart") || inherits(tree, "_rpart") || inherits(learner, "LearnerClassifRpart"))) {
