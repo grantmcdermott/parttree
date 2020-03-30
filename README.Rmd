@@ -40,16 +40,17 @@ library(parttree)
 library(rpart)
 library(ggplot2)
 
-iris_tree = rpart(Species ~ Sepal.Width + Petal.Width, data=iris)
+iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
 
 ## Let's construct a scatterplot of the original iris data
-p = ggplot(data = iris, aes(x=Petal.Width, y=Sepal.Width)) +
+p = ggplot(data = iris, aes(x=Petal.Length, y=Petal.Width)) +
   geom_point(aes(col=Species))
 
 ## We now add the partitions with geom_parttree()
 p +  
   geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1) +
-  labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.") 
+  labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.")  +
+  theme_minimal()
 ```
 
 ## Limitations and caveats
@@ -58,9 +59,11 @@ p +
 
 Currently, the package only works with decision trees created by the 
 [**rpart**](https://cran.r-project.org/web/packages/rpart/index.html) package. 
-However, it does support other packages and modes that call `rpart::rpart()` as 
-the underlying engine. Here's an example using the 
-[**parsnip**](https://tidymodels.github.io/parsnip/) package. 
+However, it does support other front-end modes that call `rpart::rpart()` as 
+the underlying engine; in particular the
+[**parsnip**](https://tidymodels.github.io/parsnip/) and 
+[**mlr3**](https://mlr3.mlr-org.com/) packages. Here's an example with the 
+former.
 
 ```{r titanic_plot}
 library(parsnip)
@@ -84,46 +87,48 @@ titanic_train %>%
   theme_minimal()
 ```
 
-### Orientation
+### Plot orientation
 
 Underneath the hood, `geom_parttree()` is calling the companion `parttree()` 
 function, which coerces the **rpart** tree object into a data frame that is 
-easily understood by **ggplot2**. For example, consider our "ti_tree" model from
-above. Here's the print output of the raw model.
+easily understood by **ggplot2**. For example, consider again the "iris_tree" 
+model from earlier. Here's the print output of the raw model.
 
-```{r ti_tree}
-ti_tree
+```{r iris_tree}
+iris_tree
 ```
 
 And here's what we get after we feed it to `parttree()`.
 
-```{r titanic_parted}
-parttree(ti_tree)
+```{r iris_parted}
+parttree(iris_tree)
 ```
 
 Again, the resulting data frame is designed to be amenable to a **ggplot2** geom
 layer, with columns like `xmin`, `xmax`, etc. specifying aesthetics that 
-**ggplot2** recognises. (Fun fact: `geom_partree()` is really just a thin 
+**ggplot2** recognises. (Fun fact: `geom_parttree()` is really just a thin 
 wrapper around `geom_rect()`.) The goal of the package is to abstract away these 
 kinds of details 
 from the user, so we can just specify `geom_parttree()` &mdash; with a valid
 tree object as the data input &mdash; and be done with it. However, while this 
 generally works well, it can sometimes lead to unexpected behaviour in terms of 
 plot orientation. That's because it's hard to guess ahead of time what the user 
-will specify as the *x* and *y* axes/variables in their other plot layers. To 
-see what I mean, let's redo our titanic plot from earlier, but this time switch 
+will specify as the x and y variables (i.e. axes) in their other plot layers. To 
+see what I mean, let's redo our iris plot from earlier, but this time switch 
 the axes in the main `ggplot()` call.
 
-```{r titanic_plot_rot}
-titanic_train %>%
-  ggplot(aes(x=Age, y=Pclass)) + ## Changed!
-  geom_jitter(aes(col=Survived), alpha=0.7) +
-  geom_parttree(data = ti_tree, aes(fill=Survived), alpha = 0.1) +
-  theme_minimal() +
-  labs(title = "Oops!")
+```{r iris_plot_rot}
+iris %>%
+  ggplot(aes(x=Petal.Width, y=Petal.Length)) + ## Changed!
+  geom_point(aes(col=Species)) +  
+  geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1) +
+  labs(
+    title = "Oops!",
+    caption = "Looks like a mismatch between our x and y axes...")  +
+  theme_minimal()
 ```
 
 Normally, this kind of orientation mismatch should be pretty easy to recognize
-(as is the case here). But its admittedly annoying. I'll try to add better 
+(as is the case here). But it's admittedly annoying. I'll try to add better 
 support for catching/avoiding these kinds of errors in a future update, but as 
 of the moment: *caveat emptor*.
