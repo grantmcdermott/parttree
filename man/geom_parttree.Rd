@@ -23,7 +23,8 @@ default), it is combined with the default mapping at the top level of the
 plot. You must supply \code{mapping} if there is no plot mapping.}
 
 \item{data}{An \code{\link[rpart]{rpart.object}}, or an object of compatible
-type (e.g. a decision tree produced using `parsnip`).}
+type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
+front-ends).}
 
 \item{stat}{The statistical transformation to use on the data for this
 layer, as a string.}

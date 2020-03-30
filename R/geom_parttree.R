@@ -4,7 +4,8 @@
 #'   \code{\link[ggplot2]{geom_rect()}} that first calls \code{\link{parttree()}}
 #'   to convert the inputted tree object into an amenable data frame.
 #' @param data An \code{\link[rpart]{rpart.object}}, or an object of compatible
-#'   type (e.g. a decision tree produced using `parsnip`).
+#'   type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
+#'   front-ends).
 #' @import ggplot2
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point

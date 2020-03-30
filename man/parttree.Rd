@@ -8,7 +8,8 @@ parttree(tree, keep_as_dt = FALSE)
 }
 \arguments{
 \item{tree}{An \code{\link[rpart]{rpart.object}}, or an object of compatible
-type (e.g. a decision tree produced using `parsnip`).}
+type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
+front-ends).}
 
 \item{keep_as_dt}{Logical. The function relies on `data.table` for internal
 data manipulation. But it will coerce the final return object into a

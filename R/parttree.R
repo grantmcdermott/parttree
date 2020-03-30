@@ -5,7 +5,8 @@
 #'   frame, where each row represents a partition that can easily be plotted in
 #'   coordinate space.
 #' @param tree An \code{\link[rpart]{rpart.object}}, or an object of compatible
-#'   type (e.g. a decision tree produced using `parsnip`).
+#'   type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
+#'   front-ends).
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behaviour) unless the user specifies `TRUE`.
@@ -22,16 +23,27 @@
 #' parttree(rpart(Species ~ Sepal.Width + Petal.Width, data=iris))
 parttree =
   function(tree, keep_as_dt = FALSE) {
-    if (!(inherits(tree, "rpart") || inherits(tree, "_rpart"))) {
-      stop("This function only accepts rpart objects.\n",
+    if (!(inherits(tree, "rpart") || inherits(tree, "_rpart") || inherits(learner, "LearnerClassifRpart"))) {
+      stop("The parttree() function only accepts rpart objects.\n",
            "The object that you provided is of class type: ", class(tree)[1])
     }
 
+    ## parsnip front-end
     if (inherits(tree, "_rpart")) {
-      y_var = tree$preproc$y_var
+      if (is.null(tree$fit)) {
+        stop("No model detected.\n",
+             "Did you forget to fit a model? See `?parsnip::fit`.")
+      }
       tree = tree$fit
-    } else {
-      y_var = paste0(tree$call$formula[2])
+    }
+
+    ## mlr3 front-end
+    if (inherits(tree, "LearnerClassifRpart")) {
+      if (is.null(tree$model)) {
+        stop("No model detected.\n",
+             "Did you forget to assign a learner? See `?mlr3::lrn`.")
+      }
+      tree = tree$model
     }
 
     if (nrow(tree$frame)<=1) {
@@ -44,8 +56,11 @@ parttree =
     }
 
     nodes = rownames(tree$frame[tree$frame$var == "<leaf>", ])
+
+    ## Get details about y variable for later
     yvals = tree$frame[tree$frame$var == "<leaf>", ]$yval
-    yvals = attr(tree, "ylevels")[yvals] ## get factor equivalents
+    yvals = attr(tree, "ylevels")[yvals] ## factor equivalents
+    y_var = attr(tree$terms, "variables")[[2]] ## variable string (i.e. name)
 
     part_list =
       lapply(
