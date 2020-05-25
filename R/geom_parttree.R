@@ -6,6 +6,9 @@
 #' @param data An \code{\link[rpart]{rpart.object}}, or an object of compatible
 #'   type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
 #'   front-ends).
+#' @param flipaxes Logical. The function will automatically set the yaxis
+#'   variable as the first split variable in the tree provided unless
+#'   the user specifies `TRUE`.
 #' @import ggplot2
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
@@ -87,8 +90,8 @@ geom_parttree <-
   function(mapping = NULL, data = NULL,
            stat = "identity", position = "identity",
            linejoin = "mitre", na.rm = FALSE, show.legend = NA,
-           inherit.aes = TRUE, ...) {
-    pdata <- parttree(data)
+           inherit.aes = TRUE, flipaxes = FALSE, ...) {
+    pdata <- parttree(data, flipaxes = flipaxes)
     mapping_null = is.null(mapping)
     mapping$xmin = quote(xmin)
     mapping$xmax = quote(xmax)

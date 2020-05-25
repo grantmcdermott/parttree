@@ -10,6 +10,9 @@
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behaviour) unless the user specifies `TRUE`.
+#' @param flipaxes Logical. The function will automatically set the yaxis
+#'   variable as the first split variable in the tree provided unless
+#'   the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
 #'   containing one or (at most) two continuous predictors.
 #' @seealso \code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}.
@@ -22,7 +25,7 @@
 #' library(rpart)
 #' parttree(rpart(Species ~ Petal.Length + Petal.Width, data=iris))
 parttree =
-  function(tree, keep_as_dt = FALSE) {
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     if (!(inherits(tree, "rpart") || inherits(tree, "_rpart") ||
           inherits(tree, "LearnerClassifRpart") || inherits(tree, "LearnerRegrRpart"))) {
       stop("The parttree() function only accepts rpart objects.\n",
@@ -100,9 +103,16 @@ parttree =
                       keyby = .(node, var, side)]
 
     ## Get the coords data frame
+    if (flipaxes) {
+      var1 = 2
+      var2 = 1
+    } else {
+      var1 = 1
+      var2 = 2
+    }
     part_coords =
       part_dt[, `:=`(split = as.double(split))][
-        , `:=`(xvar = var == ..vars[1], yvar = var == ..vars[2])][
+        , `:=`(xvar = var == ..vars[var1], yvar = var == ..vars[var2])][
           , `:=`(xmin = ifelse(xvar, ifelse(grepl(">", side), split, NA), NA),
                  xmax = ifelse(xvar, ifelse(grepl("<", side), split, NA), NA),
                  ymin = ifelse(yvar, ifelse(grepl(">", side), split, NA), NA),
