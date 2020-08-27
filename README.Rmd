@@ -33,24 +33,56 @@ remotes::install_github("grantmcdermott/parttree")
 ## Example
 
 The main function that users will interact with is `geom_parttree()`. Here's a
-simple example.
+simple example using the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/) 
+dataset.
 
-```{r iris_plot}
-library(parttree)
-library(rpart)
-library(ggplot2)
+```{r penguin_plot}
+library(palmerpenguins) ## For 'penguins' dataset
+library(rpart)          ## For fitting decisions trees
+library(parttree)       ## This package (will automatically load ggplot2 too)
 
-iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
+## First construct a scatterplot of the raw penguin data
+p = ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+    geom_point(aes(col = species)) +
+    theme_minimal()
 
-## Let's construct a scatterplot of the original iris data
-p = ggplot(data = iris, aes(x=Petal.Length, y=Petal.Width)) +
-  geom_point(aes(col=Species))
+## Fit a decision tree using the same variables as the above plot
+tree = rpart(species ~ flipper_length_mm + bill_length_mm, data = penguins)
 
-## We now add the partitions with geom_parttree()
+## Visualise the tree partitions by adding it via geom_parttree()
 p +  
-  geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1) +
-  labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.")  +
+  geom_parttree(data = tree, aes(fill=species), alpha = 0.1) +
+  labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.")
+```
+
+Trees with continuous independent variables are also supported. However, I 
+recommend adjusting the plot fill aesthetic, since your tree will likely 
+partition the data into intervals that don't match up exactly with the raw data.
+
+```{r penguin_plot2}
+tree2 = rpart(body_mass_g ~ flipper_length_mm + bill_length_mm, data=penguins)
+
+p2 = 
+  ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+  geom_parttree(data = tree2, aes(fill=body_mass_g), alpha = 0.3) +
+  geom_point(aes(col = body_mass_g)) +
   theme_minimal()
+  
+## Legend scales don't quite match (try it yourself)
+# p2
+
+## Better to scale fill to the original data
+
+## This does the job but is still kind of hard to make out (again, try yourself)
+# p2 + 
+#   scale_fill_continuous(limits = range(penguins$body_mass_g, na.rm = TRUE))
+
+## Even better to combine fill scaling with a mixed colour palette
+p2 + 
+  scale_colour_viridis_c(
+    limits = range(penguins$body_mass_g, na.rm = TRUE), 
+    aesthetics = c('colour', 'fill')
+    )
 ```
 
 ## Limitations and caveats
@@ -91,17 +123,17 @@ titanic_train %>%
 
 Underneath the hood, `geom_parttree()` is calling the companion `parttree()` 
 function, which coerces the **rpart** tree object into a data frame that is 
-easily understood by **ggplot2**. For example, consider again the "iris_tree" 
+easily understood by **ggplot2**. For example, consider again our first "tree" 
 model from earlier. Here's the print output of the raw model.
 
-```{r iris_tree}
-iris_tree
+```{r tree}
+tree
 ```
 
 And here's what we get after we feed it to `parttree()`.
 
-```{r iris_parted}
-parttree(iris_tree)
+```{r tree_parted}
+parttree(tree)
 ```
 
 Again, the resulting data frame is designed to be amenable to a **ggplot2** geom
@@ -114,21 +146,37 @@ tree object as the data input &mdash; and be done with it. However, while this
 generally works well, it can sometimes lead to unexpected behaviour in terms of 
 plot orientation. That's because it's hard to guess ahead of time what the user 
 will specify as the x and y variables (i.e. axes) in their other plot layers. To 
-see what I mean, let's redo our iris plot from earlier, but this time switch 
+see what I mean, let's redo our penguin plot from earlier, but this time switch 
 the axes in the main `ggplot()` call.
 
-```{r iris_plot_rot}
-iris %>%
-  ggplot(aes(x=Petal.Width, y=Petal.Length)) + ## Changed!
-  geom_point(aes(col=Species)) +  
-  geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1) +
+```{r tree_plot_mismatch}
+## First, redo our first plot but this time switch the x and y variables
+p3 = 
+  ggplot(
+    data = penguins, 
+    aes(x = bill_length_mm, y = flipper_length_mm) ## Switched!
+    ) +
+  geom_point(aes(col = species)) +  
+  theme_minimal()
+
+## Add on our tree (and some preemptive titling..)
+p3 +
+  geom_parttree(data = tree, aes(fill = species), alpha = 0.1) +
   labs(
     title = "Oops!",
-    caption = "Looks like a mismatch between our x and y axes...")  +
-  theme_minimal()
+    subtitle = "Looks like a mismatch between our x and y axes..."
+    )
 ```
 
-Normally, this kind of orientation mismatch should be pretty easy to recognize
-(as is the case here). But it's admittedly annoying. I'll try to add better 
-support for catching/avoiding these kinds of errors in a future update, but as 
-of the moment: *caveat emptor*.
+As was the case here, this kind of orientation mismatch normally (hopefully) be 
+pretty easy to recognize. To fix, we can use the `flipaxes = TRUE` argument to 
+flip the orientation of the `geom_parttree` layer.
+
+```{r tree_plot_flip}
+p3 +
+  geom_parttree(
+    data = tree, aes(fill = species), alpha = 0.1,
+    flipaxes = TRUE  ## Flip the orientation
+    ) +
+  labs(title = "That's better")
+```
