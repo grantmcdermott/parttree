@@ -8,7 +8,9 @@
 <!-- badges: end -->
 
 A set of simple functions for visualizing decision tree partitions in R
-with [**ggplot2**](https://ggplot2.tidyverse.org/).
+with [**ggplot2**](https://ggplot2.tidyverse.org/). See the examples
+below, or here's a short [video walkthough](https://www.pscp.tv/w/1nAKEdBryEZxL) 
+that I recorded.
 
 ## Installation
 
