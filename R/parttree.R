@@ -103,16 +103,10 @@ parttree =
                       keyby = .(node, var, side)]
 
     ## Get the coords data frame
-    if (flipaxes) {
-      var1 = 2
-      var2 = 1
-    } else {
-      var1 = 1
-      var2 = 2
-    }
+    if (flipaxes) vars = rev(vars)
     part_coords =
       part_dt[, `:=`(split = as.double(split))][
-        , `:=`(xvar = var == ..vars[var1], yvar = var == ..vars[var2])][
+        , `:=`(xvar = var == ..vars[1], yvar = var == ..vars[2])][
           , `:=`(xmin = ifelse(xvar, ifelse(grepl(">", side), split, NA), NA),
                  xmax = ifelse(xvar, ifelse(grepl("<", side), split, NA), NA),
                  ymin = ifelse(yvar, ifelse(grepl(">", side), split, NA), NA),
