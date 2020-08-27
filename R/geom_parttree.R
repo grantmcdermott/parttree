@@ -6,9 +6,11 @@
 #' @param data An \code{\link[rpart]{rpart.object}}, or an object of compatible
 #'   type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
 #'   front-ends).
-#' @param flipaxes Logical. The function will automatically set the yaxis
-#'   variable as the first split variable in the tree provided unless
-#'   the user specifies `TRUE`.
+#' @param flipaxes Logical. By default, the "x" and "y" axes variables for
+#'   plotting are determined by the first split in the tree. This can cause
+#'   plot orientation mismatches depending on how users specify the other layers
+#'   of their plot. Setting to `TRUE` will flip the "x" and "y" variables for
+#'   the `geom_parttree` layer.
 #' @import ggplot2
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
@@ -36,10 +38,10 @@
 #' @seealso \code{\link{parttree()}}, \code{\link[ggplot2]{geom_rect()}}.
 #' @export
 #' @examples
-#' library(ggplot2)
 #' library(rpart)
 #'
 #' ### Simple decision tree (max of two predictor variables)
+#'
 #' iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
 #'
 #' ## Plot with original iris data only
@@ -56,7 +58,20 @@
 #' p + geom_parttree(data = iris_tree, aes(fill = Species), col = NA, alpha = 0.1)
 #'
 #'
+#' ### Example with plot orientation mismatch
+#'
+#' p2 = ggplot(iris, aes(x=Petal.Width, y=Petal.Length)) +
+#'   geom_point(aes(col=Species))
+#'
+#' ## Oops
+#' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
+#'
+#' ## Fix with 'flipaxes = TRUE'
+#' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flipaxes = TRUE)
+#'
+#'
 #' ### Various front-end frameworks are also supported, e.g.:
+#'
 #' library(parsnip)
 #'
 #' iris_tree_parsnip =
@@ -73,7 +88,7 @@
 #' ### data, e.g.:
 #'
 #' iris_tree_cont = rpart(Petal.Length ~ Sepal.Length + Petal.Width, data=iris)
-#' p2 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
+#' p3 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
 #'  geom_parttree(
 #'    data = iris_tree_cont,
 #'    aes(fill = Petal.Length), alpha=0.5
@@ -82,10 +97,10 @@
 #'   theme_minimal()
 #'
 #' ## Legend scales don't quite match here:
-#' p2
+#' p3
 #'
 #' ## Better to scale fill to the original data
-#' p2 + scale_fill_continuous(limits = c(min(iris$Petal.Length), max(iris$Petal.Length)))
+#' p3 + scale_fill_continuous(limits = range(iris$Petal.Length))
 geom_parttree <-
   function(mapping = NULL, data = NULL,
            stat = "identity", position = "identity",

@@ -4,7 +4,7 @@
 \alias{parttree}
 \title{Convert a decision tree into a data frame of partition coordinates}
 \usage{
-parttree(tree, keep_as_dt = FALSE)
+parttree(tree, keep_as_dt = FALSE, flipaxes = FALSE)
 }
 \arguments{
 \item{tree}{An \code{\link[rpart]{rpart.object}}, or an object of compatible
@@ -14,6 +14,10 @@ front-ends).}
 \item{keep_as_dt}{Logical. The function relies on `data.table` for internal
 data manipulation. But it will coerce the final return object into a
 regular data frame (default behaviour) unless the user specifies `TRUE`.}
+
+\item{flipaxes}{Logical. The function will automatically set the yaxis
+variable as the first split variable in the tree provided unless
+the user specifies `TRUE`.}
 }
 \value{
 A data frame comprising seven columns: the leaf node, its path, a set
