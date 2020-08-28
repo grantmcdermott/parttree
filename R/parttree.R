@@ -26,30 +26,12 @@
 #' parttree(rpart(Species ~ Petal.Length + Petal.Width, data=iris))
 parttree =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
-    if (!(inherits(tree, "rpart") || inherits(tree, "_rpart") ||
-          inherits(tree, "LearnerClassifRpart") || inherits(tree, "LearnerRegrRpart"))) {
-      stop("The parttree() function only accepts rpart objects.\n",
-           "The object that you provided is of class type: ", class(tree)[1])
-    }
+    UseMethod("parttree")
+  }
 
-    ## parsnip front-end
-    if (inherits(tree, "_rpart")) {
-      if (is.null(tree$fit)) {
-        stop("No model detected.\n",
-             "Did you forget to fit a model? See `?parsnip::fit`.")
-      }
-      tree = tree$fit
-    }
-
-    ## mlr3 front-end
-    if (inherits(tree, "LearnerClassifRpart") || inherits(tree, "LearnerRegrRpart")) {
-      if (is.null(tree$model)) {
-        stop("No model detected.\n",
-             "Did you forget to assign a learner? See `?mlr3::lrn`.")
-      }
-      tree = tree$model
-    }
-
+#' @export
+parttree.rpart =
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     if (nrow(tree$frame)<=1) {
       stop("Cannot plot single node tree.")
     }
@@ -132,3 +114,144 @@ parttree =
 
     return(part_coords)
   }
+
+#' @export
+parttree._rpart =
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+    ## parsnip front-end
+    if (is.null(tree$fit)) {
+      stop("No model detected.\n",
+    	   "Did you forget to fit a model? See `?parsnip::fit`.")
+    }
+    tree = tree$fit
+    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+  }
+
+#' @export
+parttree.LearnerClassifRpart = parttree.LearnerRegrRpart =
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+    ## mlr3 front-end
+    if (is.null(tree$model)) {
+      stop("No model detected.\n",
+    	   "Did you forget to assign a learner? See `?mlr3::lrn`.")
+    }
+    tree = tree$model
+    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+  }
+
+#' @export
+parttree.constparty =
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+    ## sanity checks for tree
+    mt = tree$terms
+    mf = attr(mt, "factors")
+    my = setdiff(rownames(mf), colnames(mf))
+    mx = colnames(mf)
+    mf = tree$data[0L, , drop = FALSE]
+    if((length(my) != 1L) || !(class(mf[[my]])[1L] %in% c("numeric", "integer", "factor", "ordered"))) {
+      stop("tree must have a univariate numeric or factor response")
+    }
+    if((length(mx) > 2L) || any(sapply(mx, function(x) !is.numeric(mf[[x]])))) {
+      stop("tree may only have up to two numeric regressors")
+    }
+    stopifnot(requireNamespace("partykit"))
+
+    ## list of splits kids per node (NULL if terminal)
+    splits = as.list(tree$node)
+    kids = lapply(splits, "[[", "kids")
+    for(i in seq_along(splits)) {
+      splits[[i]] = if("split" %in% names(splits[[i]])) splits[[i]]$split else list()
+      splits[[i]]$kids = kids[[i]]
+    }
+
+    if(length(kids) > 1L) {
+
+      ## recursively add node IDs of children to path
+      add_ids = function(x) {
+        ki = kids[[x[1L]]]
+        if(is.null(ki)) {
+          return(list(x))
+        } else {
+          x = lapply(ki, "c", x)
+          return(do.call("c", lapply(x, add_ids)))
+        }
+      }
+      paths = add_ids(1L)
+    
+      ## augment splits with interval and label information
+      augment_split = function(s) {
+        if(length(s) > 0L) {
+          ## labels
+	  n = length(s$kids)
+          if(is.null(s$index)) s$index = 1L:n
+          lab = partykit::character_split(s, data = mf)
+          lab = paste(lab$name, lab$levels[s$index])
+          names(lab) = s$kids
+          s$labels = lab
+
+          ## intervals
+          int = matrix(rep.int(rep(c(-Inf, Inf), each = n), 2L),
+	    nrow = n, ncol = 4L,
+            dimnames = list(s$kids, c("xmin", "xmax", "ymin", "ymax")))
+          brk = c(-Inf, s$breaks, Inf)
+          int[, -3L + 2L * s$varid] = brk[s$index]
+          int[, -2L + 2L * s$varid] = brk[s$index + 1L]
+          s$intervals = int
+        }
+        return(s)      
+      }
+      splits = lapply(splits, augment_split)
+
+      ## put together path labels
+      labs = character(length(paths))
+      for(i in seq_along(paths)) {
+        ids = rev(paths[[i]])
+        lbs = sapply(1L:(length(ids) - 1L), function(j) {
+          splits[[ids[j]]]$labels[as.character(ids[j + 1L])]
+        })
+        labs[i] = paste(lbs, collapse = " --> ")
+      }
+
+      ## combine intervals
+      ints = matrix(NA, nrow = length(paths), ncol = 4L)
+      for(i in seq_along(paths)) {
+        ids = rev(paths[[i]])
+        its = sapply(1L:(length(ids) - 1L), function(j) {
+          splits[[ids[j]]]$intervals[as.character(ids[j + 1L]), ]
+        })
+        ints[i, c(1L, 3L)] = apply(its[c(1L, 3L), , drop = FALSE], 1L, max, na.rm = TRUE)
+        ints[i, c(2L, 4L)] = apply(its[c(2L, 4L), , drop = FALSE], 1L, min, na.rm = TRUE)
+      }
+    } else {
+      paths <- list(1L)
+      labs <- ""
+      ints <- matrix(c(-Inf, Inf, -Inf, Inf), nrow = 1L, ncol = 4L)
+    }
+
+    ## obtain fitted response
+    fit = tree$fitted
+    fit = if(is.numeric(fit[["(response)"]])) {
+      tapply(fit[["(response)"]], fit[["(fitted)"]], mean, na.rm = TRUE)
+    } else {
+      fit0 = tapply(fit[["(response)"]], fit[["(fitted)"]], function(y) {
+        tab = table(y)
+	names(tab)[which.max(tab)]
+      })
+      factor(fit0, levels = levels(fit[["(response)"]]), ordered = is.ordered(fit[["(response)"]]))
+    }
+
+    ## collect everything
+    rval = data.frame(
+      node = sapply(paths, "[", 1L),
+      response = fit,
+      path = labs
+    )
+    names(rval)[2L] = my
+    rval = cbind(rval, if(flipaxes) ints[, c(3L:4L, 1L:2L, drop = FALSE)] else ints)
+    colnames(rval)[4L:7L] = c("xmin", "xmax", "ymin", "ymax")
+
+    ## turn into data.table?
+    if(keep_as_dt) rval = data.table::as.data.table(rval)
+
+    return(rval)
+}
