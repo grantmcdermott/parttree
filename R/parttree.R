@@ -1,29 +1,42 @@
 #' @title Convert a decision tree into a data frame of partition coordinates
+#' @aliases parttree parttree.rpart parttree._rpart parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
 #'
 #' @description Extracts the terminal leaf nodes of a decision tree with one or
-#'   two predictor variables. These leaf nodes are then converted into a data
-#'   frame, where each row represents a partition that can easily be plotted in
-#'   coordinate space.
-#' @param tree An \code{\link[rpart]{rpart.object}}, or an object of compatible
-#'   type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
-#'   front-ends).
+#'   two numeric predictor variables. These leaf nodes are then converted into a data
+#'   frame, where each row represents a partition (or leaf or terminal node)
+#'   that can easily be plotted in coordinate space.
+#' @param tree A tree object. Supported classes include
+#'   \code{\link[rpart]{rpart.object}}, or the compatible classes from
+#'   from the `parsnip` or `mlr3` front-ends, or the `constparty` class
+#'   inheriting from \code{\link[partykit]{party}}.
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
-#'   regular data frame (default behaviour) unless the user specifies `TRUE`.
+#'   regular data frame (default behavior) unless the user specifies `TRUE`.
 #' @param flipaxes Logical. The function will automatically set the yaxis
 #'   variable as the first split variable in the tree provided unless
 #'   the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
-#'   containing one or (at most) two continuous predictors.
-#' @seealso \code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}.
+#'   containing one or (at most) two numeric predictors.
+#' @seealso \code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}, \code{\link[partykit]{ctree}}.
 #' @return A data frame comprising seven columns: the leaf node, its path, a set
-#'   of coordinates understandable to `ggplot2` (i.e. xmin, xmax, ymin, ymax),
+#'   of coordinates understandable to `ggplot2` (i.e., xmin, xmax, ymin, ymax),
 #'   and a final column corresponding to the predicted value for that leaf.
 #' @importFrom data.table :=
 #' @export
 #' @examples
-#' library(rpart)
-#' parttree(rpart(Species ~ Petal.Length + Petal.Width, data=iris))
+#' ## rpart trees
+#' library("rpart")
+#' rp <- rpart(Species ~ Petal.Length + Petal.Width, data = iris)
+#' parttree(rp)
+#'
+#' ## conditional inference trees
+#' library("partykit")
+#' ct <- ctree(Species ~ Petal.Length + Petal.Width, data = iris)
+#' parttree(ct)
+#' 
+#' ## rpart via partykit
+#' rp2 <- as.party(rp)
+#' parttree(rp2)
 parttree =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     UseMethod("parttree")
