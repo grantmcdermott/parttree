@@ -28,9 +28,9 @@ Here’s a simple example using the
 dataset.
 
 ``` r
-library(palmerpenguins) ## For 'penguins' dataset
-library(rpart)          ## For fitting decisions trees
-library(parttree)       ## This package (will automatically load ggplot2 too)
+library("palmerpenguins") ## For 'penguins' dataset
+library("rpart")          ## For fitting decisions trees
+library("parttree")       ## This package (will automatically load ggplot2 too)
 #> Loading required package: ggplot2
 
 ## First construct a scatterplot of the raw penguin data
@@ -88,17 +88,18 @@ p2 +
 
 ### Supported model classes
 
-Currently, the package only works with decision trees created by the
-[**rpart**](https://cran.r-project.org/web/packages/rpart/index.html)
-package. However, it does support other front-end modes that call
+Currently, the package works with decision trees created by the
+[**rpart**](https://CRAN.R-project.org/web/package=rpart) and
+[**partykit**](https://CRAN.R-project.org/web/package=partykit)
+packages. Moreover, it supports other front-end modes that call
 `rpart::rpart()` as the underlying engine; in particular the
 [**parsnip**](https://tidymodels.github.io/parsnip/) and
 [**mlr3**](https://mlr3.mlr-org.com/) packages. Here’s an example with
 the former.
 
 ``` r
-library(parsnip)
-library(titanic) ## Just for a different data set
+library("parsnip")
+library("titanic") ## Just for a different data set
 set.seed(123) ## For consistent jitter
 
 titanic_train$Survived = as.factor(titanic_train$Survived)
@@ -208,3 +209,34 @@ p3 +
 ```
 
 <img src="man/figures/README-tree_plot_flip-1.png" width="100%" />
+
+### Base graphics
+
+While the package has been primarily designed to work with `ggplot2`,
+the `parttree()` infrastructure can also be used to generate plots with
+base graphics. Here, the `ctree()` function from `partykit` is used for
+fitting the tree.
+
+``` r
+library("partykit")
+#> Loading required package: grid
+#> Loading required package: libcoin
+#> Loading required package: mvtnorm
+
+## CTree and corresponding partition
+ct = ctree(species ~ flipper_length_mm + bill_length_mm, data = penguins)
+pt = parttree(ct)
+
+## Color palette
+pal <- palette.colors(4, "R4")[-1]
+
+## Maximum/minimum for plotting range as rect() does not handle Inf well
+m <- 1000
+
+## scatter plot() with added rect()
+plot(bill_length_mm ~ flipper_length_mm, data = penguins, col = pal[species], pch = 19)
+rect(pmax(-m, pt$xmin), pmax(-m, pt$ymin), pmin(m, pt$xmax), pmin(m, pt$ymax),
+  col = adjustcolor(pal, alpha.f = 0.1)[pt$species])
+```
+
+<img src="man/figures/README-ctree_base_graphics-1.png" width="100%" />
