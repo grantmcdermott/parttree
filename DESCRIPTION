@@ -1,12 +1,17 @@
 Package: parttree
 Title: Simple functions for plotting 2D decision tree partition plots
 Version: 0.0.1
-Authors@R: 
+Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
            role = c("aut", "cre"),
            email = "grantmcd@uoregon.edu",
-           comment = c(ORCID = "0000-0001-7883-8573"))
+           comment = c(ORCID = "0000-0001-7883-8573")),
+    person(given = "Achim",
+           family = "Zeileis",
+	   role = "ctb",
+	   email = "Achim.Zeileis@R-project.org",
+           comment = c(ORCID = "0000-0003-0918-3766")))
 Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -17,7 +22,8 @@ Depends:
     ggplot2
 Imports: 
     rpart,
-    data.table
+    data.table,
+    partykit
 RoxygenNote: 7.1.1
 Suggests: 
     parsnip,
