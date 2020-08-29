@@ -6,7 +6,7 @@ Authors@R: c(
            family = "McDermott",
            role = c("aut", "cre"),
            email = "grantmcd@uoregon.edu",
-           comment = c(ORCID = "0000-0001-7883-8573"))
+           comment = c(ORCID = "0000-0001-7883-8573")),
     person(given = "Achim",
            family = "Zeileis",
 	   role = "ctb",
