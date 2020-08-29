@@ -13,6 +13,7 @@ geom_parttree(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
+  flipaxes = FALSE,
   ...
 )
 }
@@ -47,6 +48,12 @@ display.}
 rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
+
+\item{flipaxes}{Logical. By default, the "x" and "y" axes variables for
+plotting are determined by the first split in the tree. This can cause
+plot orientation mismatches depending on how users specify the other layers
+of their plot. Setting to `TRUE` will flip the "x" and "y" variables for
+the `geom_parttree` layer.}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
@@ -83,10 +90,10 @@ may choose to specify manually:
 }
 
 \examples{
-library(ggplot2)
 library(rpart)
 
 ### Simple decision tree (max of two predictor variables)
+
 iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
 
 ## Plot with original iris data only
@@ -103,7 +110,20 @@ p + geom_parttree(data = iris_tree, aes(fill = Species), alpha=0.1)
 p + geom_parttree(data = iris_tree, aes(fill = Species), col = NA, alpha = 0.1)
 
 
+### Example with plot orientation mismatch
+
+p2 = ggplot(iris, aes(x=Petal.Width, y=Petal.Length)) +
+  geom_point(aes(col=Species))
+
+## Oops
+p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
+
+## Fix with 'flipaxes = TRUE'
+p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flipaxes = TRUE)
+
+
 ### Various front-end frameworks are also supported, e.g.:
+
 library(parsnip)
 
 iris_tree_parsnip =
@@ -120,7 +140,7 @@ p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)
 ### data, e.g.:
 
 iris_tree_cont = rpart(Petal.Length ~ Sepal.Length + Petal.Width, data=iris)
-p2 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
+p3 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
  geom_parttree(
    data = iris_tree_cont,
    aes(fill = Petal.Length), alpha=0.5
@@ -129,10 +149,10 @@ p2 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
   theme_minimal()
 
 ## Legend scales don't quite match here:
-p2
+p3
 
 ## Better to scale fill to the original data
-p2 + scale_fill_continuous(limits = c(min(iris$Petal.Length), max(iris$Petal.Length)))
+p3 + scale_fill_continuous(limits = range(iris$Petal.Length))
 }
 \seealso{
 \code{\link{parttree()}}, \code{\link[ggplot2]{geom_rect()}}.
