@@ -18,8 +18,16 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-A set of simple functions for visualizing decision tree partitions in R with
-[**ggplot2**](https://ggplot2.tidyverse.org/).
+A set of simple functions for visualizing decision tree partitions in R. The
+package is optimised to work with [**ggplot2**](https://ggplot2.tidyverse.org/),
+although it can be used to visualize tree partitions with base R graphics too.
+
+
+- [Installation](#installation)
+- [Examples](#examples)
+- [Supported model classes](#supported-model-classes)
+- [Plot orientation](#plot-orientation)
+- [Base graphics](#base-graphics)
 
 ## Installation
 
@@ -30,7 +38,7 @@ with:
 # install.packages("remotes")
 remotes::install_github("grantmcdermott/parttree")
 ```
-## Example
+## Examples
 
 The main function that users will interact with is `geom_parttree()`. Here's a
 simple example using the [palmerpenguins](https://allisonhorst.github.io/palmerpenguins/) 
@@ -85,9 +93,7 @@ p2 +
     )
 ```
 
-## Limitations and caveats
-
-### Supported model classes
+## Supported model classes
 
 Currently, the package works with decision trees created by the 
 [**rpart**](https://CRAN.R-project.org/web/package=rpart) and
@@ -120,7 +126,7 @@ titanic_train %>%
   theme_minimal()
 ```
 
-### Plot orientation
+## Plot orientation
 
 Underneath the hood, `geom_parttree()` is calling the companion `parttree()` 
 function, which coerces the **rpart** tree object into a data frame that is 
@@ -169,7 +175,7 @@ p3 +
     )
 ```
 
-As was the case here, this kind of orientation mismatch normally (hopefully) be 
+As was the case here, this kind of orientation mismatch is normally (hopefully) 
 pretty easy to recognize. To fix, we can use the `flipaxes = TRUE` argument to 
 flip the orientation of the `geom_parttree` layer.
 
@@ -182,11 +188,11 @@ p3 +
   labs(title = "That's better")
 ```
 
-### Base graphics
+## Base graphics
 
-While the package has been primarily designed to work with `ggplot2`, the
+While the package has been primarily designed to work with **ggplot2**, the
 `parttree()` infrastructure can also be used to generate plots with base
-graphics. Here, the `ctree()` function from `partykit` is used for fitting
+graphics. Here, the `ctree()` function from **partykit** is used for fitting
 the tree.
 
 ```{r ctree_base_graphics}

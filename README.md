@@ -7,8 +7,16 @@
 
 <!-- badges: end -->
 
-A set of simple functions for visualizing decision tree partitions in R
-with [**ggplot2**](https://ggplot2.tidyverse.org/).
+A set of simple functions for visualizing decision tree partitions in R.
+The package is optimised to work with
+[**ggplot2**](https://ggplot2.tidyverse.org/), although it can be used
+to visualize tree partitions with base R graphics too.
+
+  - [Installation](#installation)
+  - [Examples](#examples)
+  - [Supported model classes](#supported-model-classes)
+  - [Plot orientation](#plot-orientation)
+  - [Base graphics](#base-graphics)
 
 ## Installation
 
@@ -20,7 +28,7 @@ This package is not yet on CRAN, but can be installed from
 remotes::install_github("grantmcdermott/parttree")
 ```
 
-## Example
+## Examples
 
 The main function that users will interact with is `geom_parttree()`.
 Here’s a simple example using the
@@ -84,9 +92,7 @@ p2 +
 
 <img src="man/figures/README-penguin_plot2-1.png" width="100%" />
 
-## Limitations and caveats
-
-### Supported model classes
+## Supported model classes
 
 Currently, the package works with decision trees created by the
 [**rpart**](https://CRAN.R-project.org/web/package=rpart) and
@@ -122,7 +128,7 @@ titanic_train %>%
 
 <img src="man/figures/README-titanic_plot-1.png" width="100%" />
 
-### Plot orientation
+## Plot orientation
 
 Underneath the hood, `geom_parttree()` is calling the companion
 `parttree()` function, which coerces the **rpart** tree object into a
@@ -193,10 +199,9 @@ p3 +
 
 <img src="man/figures/README-tree_plot_mismatch-1.png" width="100%" />
 
-As was the case here, this kind of orientation mismatch normally
-(hopefully) be pretty easy to recognize. To fix, we can use the
-`flipaxes = TRUE` argument to flip the orientation of the
-`geom_parttree` layer.
+As was the case here, this kind of orientation mismatch is normally
+(hopefully) pretty easy to recognize. To fix, we can use the `flipaxes =
+TRUE` argument to flip the orientation of the `geom_parttree` layer.
 
 ``` r
 p3 +
@@ -210,12 +215,12 @@ p3 +
 
 <img src="man/figures/README-tree_plot_flip-1.png" width="100%" />
 
-### Base graphics
+## Base graphics
 
-While the package has been primarily designed to work with `ggplot2`,
+While the package has been primarily designed to work with **ggplot2**,
 the `parttree()` infrastructure can also be used to generate plots with
-base graphics. Here, the `ctree()` function from `partykit` is used for
-fitting the tree.
+base graphics. Here, the `ctree()` function from **partykit** is used
+for fitting the tree.
 
 ``` r
 library("partykit")
