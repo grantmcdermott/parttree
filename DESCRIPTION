@@ -11,7 +11,13 @@ Authors@R: c(
            family = "Zeileis",
            role = "ctb",
            email = "Achim.Zeileis@R-project.org",
-           comment = c(ORCID = "0000-0003-0918-3766")))
+           comment = c(ORCID = "0000-0003-0918-3766")),
+    person(given = "Brian",
+           middle = "Heseung",
+           family = "Kim",
+           role = "ctb",
+           email = "brhkim@gmail.com",
+           comment = c(ORCID = "0000-0002-7988-1802")))
 Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
