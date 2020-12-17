@@ -82,8 +82,8 @@ parttree.rpart =
 
           # pd$var = gsub("[[:punct:]].+", "", pv) ## Causes problems when punctuation mark in name, so use below
           pd$var = gsub("<.+|<=.+|>.+|>=.+", "", pv)
-          # pd$split = gsub(".+[[:punct:]]", "", pv) ## Use below since we want to keep - and . in split values (e.g. -2.5)
-          pd$split = as.numeric(gsub(".+[^[:alnum:]\\-\\.\\s]", "", pv))
+          #pd$split = gsub(".+[[:punct:]]", "", pv) ## Use below since we want to keep - and . in split values (e.g. -2.5)
+          pd$split = as.numeric(gsub(".+<|.+<=|>|.+>=", "", pv))
           pd$side = gsub("\\w|\\.", "", pv)
           pd$yvals = yvals[nodes==node]
           return(pd)
