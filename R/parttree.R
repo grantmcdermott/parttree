@@ -33,7 +33,7 @@
 #' library("partykit")
 #' ct <- ctree(Species ~ Petal.Length + Petal.Width, data = iris)
 #' parttree(ct)
-#' 
+#'
 #' ## rpart via partykit
 #' rp2 <- as.party(rp)
 #' parttree(rp2)
@@ -64,7 +64,8 @@ parttree.rpart =
     y_factored = attr(tree$terms, "dataClasses")[paste(y_var)] == "factor"
     ## factor equivalents (if factor)
     if (y_factored) {
-      yvals = attr(tree, "ylevels")[yvals]
+      ylevs = attr(tree, "ylevels")
+      yvals = ylevs[yvals]
     }
 
     part_list =
@@ -98,7 +99,14 @@ parttree.rpart =
                       keyby = .(node, var, side)]
 
     ## Get the coords data frame
-    if (flipaxes) vars = rev(vars)
+    if (flipaxes) {
+      vars = rev(vars)
+      ## Handle edge cases with only 1 level
+      if (length(vars)==1) {
+        missing_var = setdiff(attr(tree$terms, 'term.labels'), vars)
+        vars = c(missing_var, vars)
+      }
+      }
     part_coords =
       part_dt[, `:=`(split = as.double(split))][
         , `:=`(xvar = var == ..vars[1], yvar = var == ..vars[2])][
@@ -117,7 +125,7 @@ parttree.rpart =
                             ymax = ifelse(is.na(ymax), Inf, ymax))]
 
     if (y_factored) {
-      part_coords$yvals = as.factor(part_coords$yvals)
+      part_coords$yvals = factor(part_coords$yvals, levels = ylevs)
     }
     colnames(part_coords) = gsub("yvals", y_var, colnames(part_coords))
 
@@ -190,7 +198,7 @@ parttree.constparty =
         }
       }
       paths = add_ids(1L)
-    
+
       ## augment splits with interval and label information
       augment_split = function(s) {
         if(length(s) > 0L) {
@@ -211,7 +219,7 @@ parttree.constparty =
           int[, -2L + 2L * s$varid] = brk[s$index + 1L]
           s$intervals = int
         }
-        return(s)      
+        return(s)
       }
       splits = lapply(splits, augment_split)
 
