@@ -1,3 +1,12 @@
+# parttree 0.0.1.9000
+
+To be released as 0.1
+
+#### Bug fixes
+
+* Support for negative values (#6 by @pjgeens).
+* Better handling of single-level factors and `flipaxes` (#5).
+
 # parttree 0.0.1
 
 * Create `parttree()` generic. (again, #3 by @zeileis)
