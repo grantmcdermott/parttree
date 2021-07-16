@@ -1,5 +1,5 @@
 #' @title Convert a decision tree into a data frame of partition coordinates
-#' @aliases parttree parttree.rpart parttree._rpart parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
+#' @aliases parttree parttree.rpart parttree._rpart parttree.workflow parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
 #'
 #' @description Extracts the terminal leaf nodes of a decision tree with one or
 #'   two numeric predictor variables. These leaf nodes are then converted into a data
@@ -7,12 +7,12 @@
 #'   that can easily be plotted in coordinate space.
 #' @param tree A tree object. Supported classes include
 #'   \code{\link[rpart]{rpart.object}}, or the compatible classes from
-#'   from the `parsnip` or `mlr3` front-ends, or the `constparty` class
-#'   inheriting from \code{\link[partykit]{party}}.
+#'   from the `parsnip`, `workflows`, or `mlr3` front-ends, or the
+#'   `constparty` class inheriting from \code{\link[partykit]{party}}.
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behavior) unless the user specifies `TRUE`.
-#' @param flipaxes Logical. The function will automatically set the yaxis
+#' @param flipaxes Logical. The function will automatically set the y-axis
 #'   variable as the first split variable in the tree provided unless
 #'   the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
