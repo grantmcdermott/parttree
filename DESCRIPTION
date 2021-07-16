@@ -32,5 +32,6 @@ Imports:
     partykit
 RoxygenNote: 7.1.1
 Suggests: 
+    mlr3,
     parsnip,
-    mlr3
+    workflows

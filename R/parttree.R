@@ -149,6 +149,21 @@ parttree._rpart =
   }
 
 #' @export
+parttree.workflow =
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+    ## workflow front-end
+    if (!workflows::is_trained_workflow(fitted)) {
+      stop("No model detected.\n",
+           "Did you forget to fit a model? See `?workflows::fit`.")
+    }
+    tree = workflows::extract_fit_engine(tree)
+    y_name = names(fitted$pre$mold$outcomes)[[1]]
+    attr(tree$terms, "variables")[[2]] = y_name
+    names(attr(tree$terms, "dataClasses"))[[1]] = y_name
+    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+  }
+
+#' @export
 parttree.LearnerClassifRpart = parttree.LearnerRegrRpart =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     ## mlr3 front-end
