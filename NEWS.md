@@ -2,7 +2,7 @@
 
 To be released as 0.1
 
-* Add method for tidymodels workflows objects fitted with `"rpart"` engine.
+* Add method for tidymodels workflows objects fitted with `"rpart"` engine. (#7 by @juliasilge)
 
 #### Bug fixes
 
