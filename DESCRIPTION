@@ -29,7 +29,8 @@ Depends:
 Imports: 
     rpart,
     data.table,
-    partykit
+    partykit,
+    rlang
 RoxygenNote: 7.1.1
 Suggests: 
     parsnip,
