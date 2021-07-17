@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/grantmcdermott/parttree/workflows/R-CMD-check/badge.svg)](https://github.com/grantmcdermott/parttree/actions)
 <!-- badges: end -->
 
 A set of simple functions for visualizing decision tree partitions in R.
@@ -12,11 +13,11 @@ The package is optimised to work with
 [**ggplot2**](https://ggplot2.tidyverse.org/), although it can be used
 to visualize tree partitions with base R graphics too.
 
-  - [Installation](#installation)
-  - [Examples](#examples)
-  - [Supported model classes](#supported-model-classes)
-  - [Plot orientation](#plot-orientation)
-  - [Base graphics](#base-graphics)
+-   [Installation](#installation)
+-   [Examples](#examples)
+-   [Supported model classes](#supported-model-classes)
+-   [Plot orientation](#plot-orientation)
+-   [Base graphics](#base-graphics)
 
 ## Installation
 
@@ -200,8 +201,9 @@ p3 +
 <img src="man/figures/README-tree_plot_mismatch-1.png" width="100%" />
 
 As was the case here, this kind of orientation mismatch is normally
-(hopefully) pretty easy to recognize. To fix, we can use the `flipaxes =
-TRUE` argument to flip the orientation of the `geom_parttree` layer.
+(hopefully) pretty easy to recognize. To fix, we can use the
+`flipaxes = TRUE` argument to flip the orientation of the
+`geom_parttree` layer.
 
 ``` r
 p3 +
