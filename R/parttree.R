@@ -1,5 +1,5 @@
 #' @title Convert a decision tree into a data frame of partition coordinates
-#' @aliases parttree parttree.rpart parttree._rpart parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
+#' @aliases parttree parttree.rpart parttree._rpart parttree.workflow parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
 #'
 #' @description Extracts the terminal leaf nodes of a decision tree with one or
 #'   two numeric predictor variables. These leaf nodes are then converted into a data
@@ -7,12 +7,12 @@
 #'   that can easily be plotted in coordinate space.
 #' @param tree A tree object. Supported classes include
 #'   \code{\link[rpart]{rpart.object}}, or the compatible classes from
-#'   from the `parsnip` or `mlr3` front-ends, or the `constparty` class
-#'   inheriting from \code{\link[partykit]{party}}.
+#'   from the `parsnip`, `workflows`, or `mlr3` front-ends, or the
+#'   `constparty` class inheriting from \code{\link[partykit]{party}}.
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behavior) unless the user specifies `TRUE`.
-#' @param flipaxes Logical. The function will automatically set the yaxis
+#' @param flipaxes Logical. The function will automatically set the y-axis
 #'   variable as the first split variable in the tree provided unless
 #'   the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
@@ -145,6 +145,21 @@ parttree._rpart =
     	   "Did you forget to fit a model? See `?parsnip::fit`.")
     }
     tree = tree$fit
+    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+  }
+
+#' @export
+parttree.workflow =
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+    ## workflow front-end
+    if (!workflows::is_trained_workflow(fitted)) {
+      stop("No model detected.\n",
+           "Did you forget to fit a model? See `?workflows::fit`.")
+    }
+    tree = workflows::extract_fit_engine(tree)
+    y_name = names(fitted$pre$mold$outcomes)[[1]]
+    attr(tree$terms, "variables")[[2]] = y_name
+    names(attr(tree$terms, "dataClasses"))[[1]] = y_name
     parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
   }
 

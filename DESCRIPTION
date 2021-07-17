@@ -17,7 +17,12 @@ Authors@R: c(
            family = "Kim",
            role = "ctb",
            email = "brhkim@gmail.com",
-           comment = c(ORCID = "0000-0002-7988-1802")))
+           comment = c(ORCID = "0000-0002-7988-1802")),
+    person(given = "Julia", 
+           family = "Silge", 
+           role = "ctb", 
+           email = "julia.silge@gmail.com", 
+           comment = c(ORCID = "0000-0002-3671-836X")))
 Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -33,5 +38,6 @@ Imports:
     rlang
 RoxygenNote: 7.1.1
 Suggests: 
+    mlr3,
     parsnip,
-    mlr3
+    workflows

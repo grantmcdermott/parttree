@@ -4,7 +4,6 @@
 # parttree
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/workflows/R-CMD-check/badge.svg)](https://github.com/grantmcdermott/parttree/actions)
 <!-- badges: end -->
 
@@ -100,9 +99,11 @@ Currently, the package works with decision trees created by the
 [**partykit**](https://CRAN.R-project.org/web/package=partykit)
 packages. Moreover, it supports other front-end modes that call
 `rpart::rpart()` as the underlying engine; in particular the
-[**parsnip**](https://tidymodels.github.io/parsnip/) and
+[**tidymodels**](https://www.tidymodels.org/)
+([parsnip](https://parsnip.tidymodels.org/) or
+[workflows](https://workflows.tidymodels.org/)) and
 [**mlr3**](https://mlr3.mlr-org.com/) packages. Here’s an example with
-the former.
+parsnip.
 
 ``` r
 library("parsnip")

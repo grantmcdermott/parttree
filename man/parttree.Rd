@@ -4,6 +4,7 @@
 \alias{parttree}
 \alias{parttree.rpart}
 \alias{parttree._rpart}
+\alias{parttree.workflow}
 \alias{parttree.LearnerClassifRpart}
 \alias{parttree.LearnerRegrRpart}
 \alias{parttree.constparty}
@@ -14,14 +15,14 @@ parttree(tree, keep_as_dt = FALSE, flipaxes = FALSE)
 \arguments{
 \item{tree}{A tree object. Supported classes include
 \code{\link[rpart]{rpart.object}}, or the compatible classes from
-from the `parsnip` or `mlr3` front-ends, or the `constparty` class
-inheriting from \code{\link[partykit]{party}}.}
+from the `parsnip`, `workflows`, or `mlr3` front-ends, or the
+`constparty` class inheriting from \code{\link[partykit]{party}}.}
 
 \item{keep_as_dt}{Logical. The function relies on `data.table` for internal
 data manipulation. But it will coerce the final return object into a
 regular data frame (default behavior) unless the user specifies `TRUE`.}
 
-\item{flipaxes}{Logical. The function will automatically set the yaxis
+\item{flipaxes}{Logical. The function will automatically set the y-axis
 variable as the first split variable in the tree provided unless
 the user specifies `TRUE`.}
 }
