@@ -4,6 +4,7 @@
 # parttree
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/grantmcdermott/parttree/workflows/R-CMD-check/badge.svg)](https://github.com/grantmcdermott/parttree/actions)
 <!-- badges: end -->
 
 A set of simple functions for visualizing decision tree partitions in R.
