@@ -26,6 +26,8 @@ Authors@R: c(
 Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
 LazyData: true
 URL: https://github.com/grantmcdermott/parttree
 BugReports: https://github.com/grantmcdermott/parttree/issues
@@ -36,7 +38,6 @@ Imports:
     data.table,
     partykit,
     rlang
-RoxygenNote: 7.1.1
 Suggests: 
     mlr3,
     parsnip,

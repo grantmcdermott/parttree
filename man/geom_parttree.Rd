@@ -23,9 +23,9 @@ geom_parttree(
 default), it is combined with the default mapping at the top level of the
 plot. You must supply \code{mapping} if there is no plot mapping.}
 
-\item{data}{An \code{\link[rpart]{rpart.object}}, or an object of compatible
-type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
-front-ends).}
+\item{data}{An \link[rpart:rpart.object]{rpart::rpart.object} or an object of compatible
+type (e.g. a decision tree constructed via the \code{partykit}, \code{tidymodels}, or
+\code{mlr3} front-ends).}
 
 \item{stat}{The statistical transformation to use on the data for this
 layer, as a string.}
@@ -52,8 +52,8 @@ the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 \item{flipaxes}{Logical. By default, the "x" and "y" axes variables for
 plotting are determined by the first split in the tree. This can cause
 plot orientation mismatches depending on how users specify the other layers
-of their plot. Setting to `TRUE` will flip the "x" and "y" variables for
-the `geom_parttree` layer.}
+of their plot. Setting to \code{TRUE} will flip the "x" and "y" variables for
+the \code{geom_parttree} layer.}
 
 \item{...}{Other arguments passed on to \code{\link[ggplot2:layer]{layer()}}. These are
 often aesthetics, used to set an aesthetic to a fixed value, like
@@ -62,30 +62,31 @@ to the paired geom/stat.}
 }
 \description{
 \code{geom_parttree()} is a simple extension of
-  \code{\link[ggplot2]{geom_rect()}} that first calls \code{\link{parttree()}}
-  to convert the inputted tree object into an amenable data frame.
+\code{\link[ggplot2:geom_tile]{ggplot2::geom_rect()}}that first calls
+\code{\link[=parttree]{parttree()}} to convert the inputted tree object into an
+amenable data frame.
 }
 \details{
-Note that, because of the way \code{ggplot2} validates inputs and
-  assembles plot layers, the data input for \code{geom_parttree()} (i.e. an
-  \code{\link[rpart]{rpart.object}}) must assigned in the layer itself; not
-  in the initialising \code{\link[ggplot2]{ggplot2()}} call. See Examples.
+Because of the way that \code{ggplot2} validates inputs and assembles
+plot layers, note that the data input for \code{geom_parttree()} (i.e. decision
+tree object) must assigned in the layer itself; not in the initialising
+\code{\link[ggplot2:ggplot]{ggplot2::ggplot()}} call. See Examples.
 }
 \section{Aesthetics}{
 
 \code{geom_parttree()} aims to "work-out-of-the-box" with minimal input from
 the user's side, apart from specifying the data object. This includes taking
 care of the data transformation in a way that, generally, produces optimal
-corner coordinates for each partition (i.e. `xmin`, `xmax`, `ymin`, and
-`ymax`). However, it also understands the following aesthetics that users
+corner coordinates for each partition (i.e. \code{xmin}, \code{xmax}, \code{ymin}, and
+\code{ymax}). However, it also understands the following aesthetics that users
 may choose to specify manually:
 \itemize{
- \item{\code{fill} (particularly encouraged, since this will provide a visual
- cue regarding the prediction in each partition region)}
- \item{\code{colour}}
- \item{\code{alpha}}
- \item{\code{linetype}}
- \item{\code{size}}
+\item{\code{fill} (particularly encouraged, since this will provide a visual
+cue regarding the prediction in each partition region)}
+\item{\code{colour}}
+\item{\code{alpha}}
+\item{\code{linetype}}
+\item{\code{size}}
 }
 }
 
@@ -155,5 +156,5 @@ p3
 p3 + scale_fill_continuous(limits = range(iris$Petal.Length))
 }
 \seealso{
-\code{\link{parttree()}}, \code{\link[ggplot2]{geom_rect()}}.
+\code{\link[=parttree]{parttree()}}, \code{\link[ggplot2:geom_tile]{ggplot2::geom_rect()}}.
 }

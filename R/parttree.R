@@ -6,9 +6,9 @@
 #'   frame, where each row represents a partition (or leaf or terminal node)
 #'   that can easily be plotted in coordinate space.
 #' @param tree A tree object. Supported classes include
-#'   \code{\link[rpart]{rpart.object}}, or the compatible classes from
+#'  [rpart::rpart.object], or the compatible classes from
 #'   from the `parsnip`, `workflows`, or `mlr3` front-ends, or the
-#'   `constparty` class inheriting from \code{\link[partykit]{party}}.
+#'   `constparty` class inheriting from [partykit::party()].
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behavior) unless the user specifies `TRUE`.
@@ -17,11 +17,12 @@
 #'   the user specifies `TRUE`.
 #' @details This function can be used with a regression or classification tree
 #'   containing one or (at most) two numeric predictors.
-#' @seealso \code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}, \code{\link[partykit]{ctree}}.
+#' @seealso [geom_parttree()], [rpart::rpart()], [partykit::ctree()].
 #' @return A data frame comprising seven columns: the leaf node, its path, a set
 #'   of coordinates understandable to `ggplot2` (i.e., xmin, xmax, ymin, ymax),
 #'   and a final column corresponding to the predicted value for that leaf.
 #' @importFrom data.table :=
+#' @importFrom data.table .SD
 #' @export
 #' @examples
 #' ## rpart trees

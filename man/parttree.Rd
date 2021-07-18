@@ -14,32 +14,32 @@ parttree(tree, keep_as_dt = FALSE, flipaxes = FALSE)
 }
 \arguments{
 \item{tree}{A tree object. Supported classes include
-\code{\link[rpart]{rpart.object}}, or the compatible classes from
-from the `parsnip`, `workflows`, or `mlr3` front-ends, or the
-`constparty` class inheriting from \code{\link[partykit]{party}}.}
+\link[rpart:rpart.object]{rpart::rpart.object}, or the compatible classes from
+from the \code{parsnip}, \code{workflows}, or \code{mlr3} front-ends, or the
+\code{constparty} class inheriting from \code{\link[partykit:party]{partykit::party()}}.}
 
-\item{keep_as_dt}{Logical. The function relies on `data.table` for internal
+\item{keep_as_dt}{Logical. The function relies on \code{data.table} for internal
 data manipulation. But it will coerce the final return object into a
-regular data frame (default behavior) unless the user specifies `TRUE`.}
+regular data frame (default behavior) unless the user specifies \code{TRUE}.}
 
 \item{flipaxes}{Logical. The function will automatically set the y-axis
 variable as the first split variable in the tree provided unless
-the user specifies `TRUE`.}
+the user specifies \code{TRUE}.}
 }
 \value{
 A data frame comprising seven columns: the leaf node, its path, a set
-  of coordinates understandable to `ggplot2` (i.e., xmin, xmax, ymin, ymax),
-  and a final column corresponding to the predicted value for that leaf.
+of coordinates understandable to \code{ggplot2} (i.e., xmin, xmax, ymin, ymax),
+and a final column corresponding to the predicted value for that leaf.
 }
 \description{
 Extracts the terminal leaf nodes of a decision tree with one or
-  two numeric predictor variables. These leaf nodes are then converted into a data
-  frame, where each row represents a partition (or leaf or terminal node)
-  that can easily be plotted in coordinate space.
+two numeric predictor variables. These leaf nodes are then converted into a data
+frame, where each row represents a partition (or leaf or terminal node)
+that can easily be plotted in coordinate space.
 }
 \details{
 This function can be used with a regression or classification tree
-  containing one or (at most) two numeric predictors.
+containing one or (at most) two numeric predictors.
 }
 \examples{
 ## rpart trees
@@ -57,5 +57,5 @@ rp2 <- as.party(rp)
 parttree(rp2)
 }
 \seealso{
-\code{\link{geom_parttree()}}, \code{\link[rpart]{rpart}}, \code{\link[partykit]{ctree}}.
+\code{\link[=geom_parttree]{geom_parttree()}}, \code{\link[rpart:rpart]{rpart::rpart()}}, \code{\link[partykit:ctree]{partykit::ctree()}}.
 }

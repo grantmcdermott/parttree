@@ -1,11 +1,12 @@
 #' @title Visualise tree partitions
 #'
-#' @description \code{geom_parttree()} is a simple extension of
-#'   \code{\link[ggplot2]{geom_rect()}} that first calls \code{\link{parttree()}}
-#'   to convert the inputted tree object into an amenable data frame.
-#' @param data An \code{\link[rpart]{rpart.object}}, or an object of compatible
-#'   type (e.g. a decision tree constructed via the `parsnip` or `mlr3`
-#'   front-ends).
+#' @description `geom_parttree()` is a simple extension of
+#'   [ggplot2::geom_rect()]that first calls
+#'   [parttree()] to convert the inputted tree object into an
+#'   amenable data frame.
+#' @param data An [rpart::rpart.object] or an object of compatible
+#'   type (e.g. a decision tree constructed via the `partykit`, `tidymodels`, or
+#'   `mlr3` front-ends).
 #' @param flipaxes Logical. By default, the "x" and "y" axes variables for
 #'   plotting are determined by the first split in the tree. This can cause
 #'   plot orientation mismatches depending on how users specify the other layers
@@ -15,10 +16,10 @@
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::geom_segment
-#' @details Note that, because of the way \code{ggplot2} validates inputs and
-#'   assembles plot layers, the data input for \code{geom_parttree()} (i.e. an
-#'   \code{\link[rpart]{rpart.object}}) must assigned in the layer itself; not
-#'   in the initialising \code{\link[ggplot2]{ggplot2()}} call. See Examples.
+#' @details Because of the way that `ggplot2` validates inputs and assembles
+#'   plot layers, note that the data input for `geom_parttree()` (i.e. decision
+#'   tree object) must assigned in the layer itself; not in the initialising
+#'   [ggplot2::ggplot()] call. See Examples.
 #' @section Aesthetics:
 #' \code{geom_parttree()} aims to "work-out-of-the-box" with minimal input from
 #' the user's side, apart from specifying the data object. This includes taking
@@ -35,7 +36,7 @@
 #'  \item{\code{size}}
 #' }
 #'
-#' @seealso \code{\link{parttree()}}, \code{\link[ggplot2]{geom_rect()}}.
+#' @seealso [parttree()], [ggplot2::geom_rect()].
 #' @export
 #' @examples
 #' library(rpart)
