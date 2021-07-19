@@ -46,6 +46,10 @@ parttree =
 #' @export
 parttree.rpart =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+    ## Silence NSE notes in R CMD check. See:
+    ## https://cran.r-project.org/web/packages/data.table/vignettes/datatable-importing.html#globals
+    node = path = variable = side = ..vars = xvar = yvar = xmin = xmax = ymin = ymax = NULL
+
     if (nrow(tree$frame)<=1) {
       stop("Cannot plot single node tree.")
     }
@@ -81,8 +85,8 @@ parttree.rpart =
 
           pv = sapply(2:length(pv), function(i) pv[i])
 
-          # pd$var = gsub("[[:punct:]].+", "", pv) ## Causes problems when punctuation mark in name, so use below
-          pd$var = gsub("<.+|<=.+|>.+|>=.+", "", pv)
+          # pd$variable = gsub("[[:punct:]].+", "", pv) ## Causes problems when punctuation mark in name, so use below
+          pd$variable = gsub("<.+|<=.+|>.+|>=.+", "", pv)
           #pd$split = gsub(".+[[:punct:]]", "", pv) ## Use below since we want to keep - and . in split values (e.g. -2.5)
           pd$split = as.numeric(gsub(".+<|.+<=|>|.+>=", "", pv))
           pd$side = gsub("\\w|\\.", "", pv)
@@ -94,10 +98,10 @@ parttree.rpart =
 
     ## Trim irrelevant parts of tree
     data.table::setorder(part_dt, node)
-    part_dt[, path := paste(var, side, split, collapse = " --> "), by = node]
+    part_dt[, path := paste(variable, side, split, collapse = " --> "), by = node]
     part_dt = part_dt[,
                       .SD[(grepl(">", side) & split == max(split)) | (grepl("<", side) & split == min(split))],
-                      keyby = .(node, var, side)]
+                      keyby = list(node, variable, side)]
 
     ## Get the coords data frame
     if (flipaxes) {
@@ -110,16 +114,16 @@ parttree.rpart =
       }
     part_coords =
       part_dt[, `:=`(split = as.double(split))][
-        , `:=`(xvar = var == ..vars[1], yvar = var == ..vars[2])][
+        , `:=`(xvar = variable == ..vars[1], yvar = variable == ..vars[2])][
           , `:=`(xmin = ifelse(xvar, ifelse(grepl(">", side), split, NA), NA),
                  xmax = ifelse(xvar, ifelse(grepl("<", side), split, NA), NA),
                  ymin = ifelse(yvar, ifelse(grepl(">", side), split, NA), NA),
                  ymax = ifelse(yvar, ifelse(grepl("<", side), split, NA), NA))][
-                   , .(xmin = mean(xmin, na.rm = TRUE),
-                       xmax = mean(xmax, na.rm = TRUE),
-                       ymin = mean(ymin, na.rm = TRUE),
-                       ymax = mean(ymax, na.rm = TRUE)),
-                   keyby = .(node, yvals, path)][
+                   , list(xmin = mean(xmin, na.rm = TRUE),
+                          xmax = mean(xmax, na.rm = TRUE),
+                          ymin = mean(ymin, na.rm = TRUE),
+                          ymax = mean(ymax, na.rm = TRUE)),
+                   keyby = list(node, yvals, path)][
                      , `:=`(xmin = ifelse(is.na(xmin), -Inf, xmin),
                             xmax = ifelse(is.na(xmax), Inf, xmax),
                             ymin = ifelse(is.na(ymin), -Inf, ymin),
