@@ -39,6 +39,7 @@ Imports:
     partykit,
     rlang
 Suggests: 
+    tinytest,
     mlr3,
     parsnip,
     workflows
