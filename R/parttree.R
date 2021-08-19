@@ -89,7 +89,7 @@ parttree.rpart =
           pd$variable = gsub("<.+|<=.+|>.+|>=.+", "", pv)
           #pd$split = gsub(".+[[:punct:]]", "", pv) ## Use below since we want to keep - and . in split values (e.g. -2.5)
           pd$split = as.numeric(gsub(".+<|.+<=|>|.+>=", "", pv))
-          pd$side = gsub("\\w|\\.", "", pv)
+          pd$side = gsub("\\s$", "", gsub("\\w|\\.", "", pv))
           pd$yvals = yvals[nodes==node]
           return(pd)
         }
