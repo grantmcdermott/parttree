@@ -27,16 +27,16 @@
 #' @examples
 #' ## rpart trees
 #' library("rpart")
-#' rp <- rpart(Species ~ Petal.Length + Petal.Width, data = iris)
+#' rp = rpart(Species ~ Petal.Length + Petal.Width, data = iris)
 #' parttree(rp)
 #'
 #' ## conditional inference trees
 #' library("partykit")
-#' ct <- ctree(Species ~ Petal.Length + Petal.Width, data = iris)
+#' ct = ctree(Species ~ Petal.Length + Petal.Width, data = iris)
 #' parttree(ct)
 #'
 #' ## rpart via partykit
-#' rp2 <- as.party(rp)
+#' rp2 = as.party(rp)
 #' parttree(rp2)
 parttree =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
@@ -264,9 +264,9 @@ parttree.constparty =
         ints[i, c(2L, 4L)] = apply(its[c(2L, 4L), , drop = FALSE], 1L, min, na.rm = TRUE)
       }
     } else {
-      paths <- list(1L)
-      labs <- ""
-      ints <- matrix(c(-Inf, Inf, -Inf, Inf), nrow = 1L, ncol = 4L)
+      paths = list(1L)
+      labs = ""
+      ints = matrix(c(-Inf, Inf, -Inf, Inf), nrow = 1L, ncol = 4L)
     }
 
     ## obtain fitted response

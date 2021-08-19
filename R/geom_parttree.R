@@ -102,12 +102,12 @@
 #'
 #' ## Better to scale fill to the original data
 #' p3 + scale_fill_continuous(limits = range(iris$Petal.Length))
-geom_parttree <-
+geom_parttree =
   function(mapping = NULL, data = NULL,
            stat = "identity", position = "identity",
            linejoin = "mitre", na.rm = FALSE, show.legend = NA,
            inherit.aes = TRUE, flipaxes = FALSE, ...) {
-    pdata <- parttree(data, flipaxes = flipaxes)
+    pdata = parttree(data, flipaxes = flipaxes)
     mapping_null = is.null(mapping)
     mapping$xmin = quote(xmin)
     mapping$xmax = quote(xmax)
@@ -128,7 +128,7 @@ geom_parttree <-
   }
 
 ## Underlying ggproto object
-GeomParttree <-
+GeomParttree =
   ggproto(
     "GeomParttree", GeomRect,
     default_aes = aes(colour = "black", size = 0.5, linetype = 1,

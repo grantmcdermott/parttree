@@ -4,6 +4,7 @@
 # parttree
 
 <!-- badges: start -->
+
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/workflows/R-CMD-check/badge.svg)](https://github.com/grantmcdermott/parttree/actions)
 <!-- badges: end -->
 
@@ -236,10 +237,10 @@ ct = ctree(species ~ flipper_length_mm + bill_length_mm, data = penguins)
 pt = parttree(ct)
 
 ## Color palette
-pal <- palette.colors(4, "R4")[-1]
+pal = palette.colors(4, "R4")[-1]
 
 ## Maximum/minimum for plotting range as rect() does not handle Inf well
-m <- 1000
+m = 1000
 
 ## scatter plot() with added rect()
 plot(bill_length_mm ~ flipper_length_mm, data = penguins, col = pal[species], pch = 19)
