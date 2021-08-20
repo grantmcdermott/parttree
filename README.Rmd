@@ -19,16 +19,14 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/workflows/R-CMD-check/badge.svg)](https://github.com/grantmcdermott/parttree/actions)
 <!-- badges: end -->
 
-A set of simple functions for visualizing decision tree partitions in R. The
+Visualize simple 2-D decision tree partitions in R. The
 package is optimised to work with [**ggplot2**](https://ggplot2.tidyverse.org/),
 although it can be used to visualize tree partitions with base R graphics too.
 
 
-- [Installation](#installation)
-- [Examples](#examples)
-- [Supported model classes](#supported-model-classes)
-- [Plot orientation](#plot-orientation)
-- [Base graphics](#base-graphics)
+[`Installation`](#installation) | [`Examples`](#examples) | 
+[`Supported model classes`](#supported-model-classes) | 
+[`Plot orientation`](#plot-orientation) | [`Base graphics`](#base-graphics)
 
 ## Installation
 
