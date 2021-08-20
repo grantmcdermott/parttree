@@ -75,18 +75,15 @@ p2 =
 ## Legend scales don't quite match (try it yourself)
 # p2
 
-## Better to scale fill to the original data
-
-## This does the job but is still kind of hard to make out (again, try yourself)
+## Better to scale fill to the original data. This does the job but is still 
+## kind of hard to make out (again, try yourself)
 # p2 + 
 #   scale_fill_continuous(limits = range(penguins$body_mass_g, na.rm = TRUE))
 
-## Even better to combine fill scaling with a mixed colour palette
+## Best and simplest just to specify colour and fill aesthetics together in
+## single palette
 p2 + 
-  scale_colour_viridis_c(
-    limits = range(penguins$body_mass_g, na.rm = TRUE), 
-    aesthetics = c('colour', 'fill')
-    )
+  scale_colour_viridis_c(aesthetics = c('colour', 'fill'))
 #> Warning: Removed 2 rows containing missing values (geom_point).
 ```
 
