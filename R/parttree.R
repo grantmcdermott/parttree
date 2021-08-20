@@ -157,12 +157,12 @@ parttree._rpart =
 parttree.workflow =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     ## workflow front-end
-    if (!workflows::is_trained_workflow(fitted)) {
+    if (!workflows::is_trained_workflow(tree)) {
       stop("No model detected.\n",
            "Did you forget to fit a model? See `?workflows::fit`.")
     }
+    y_name = names(tree$pre$mold$outcomes)[[1]]
     tree = workflows::extract_fit_engine(tree)
-    y_name = names(fitted$pre$mold$outcomes)[[1]]
     attr(tree$terms, "variables")[[2]] = y_name
     names(attr(tree$terms, "dataClasses"))[[1]] = y_name
     parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
