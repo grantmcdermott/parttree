@@ -2,6 +2,7 @@
 
 S3method(parttree,"_rpart")
 S3method(parttree,LearnerClassifRpart)
+S3method(parttree,LearnerRegrRpart)
 S3method(parttree,constparty)
 S3method(parttree,rpart)
 S3method(parttree,workflow)

@@ -169,7 +169,7 @@ parttree.workflow =
   }
 
 #' @export
-parttree.LearnerClassifRpart <- parttree.LearnerRegrRpart <-
+parttree.LearnerClassifRpart =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     ## mlr3 front-end
     if (is.null(tree$model)) {
@@ -179,6 +179,9 @@ parttree.LearnerClassifRpart <- parttree.LearnerRegrRpart <-
     tree = tree$model
     parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
   }
+
+#' @export
+parttree.LearnerRegrRpart = parttree.LearnerClassifRpart
 
 #' @export
 parttree.constparty =
