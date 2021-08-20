@@ -1,30 +1,30 @@
-## Comparison data
-d =
-  data.frame(
-    node = c(2, 6, 7),
-    Species = factor(c("setosa", "versicolor", "virginica")),
-    path = c("Petal.Length < 2.45",
-             "Petal.Length >= 2.45 --> Petal.Width < 1.75",
-             "Petal.Length >= 2.45 --> Petal.Width >= 1.75"),
-    xmin = c(-Inf, 2.45, 2.45),
-    xmax = c(2.45, Inf, Inf),
-    ymin = c(-Inf, -Inf, 1.75),
-    ymax = c(Inf, 1.75, Inf)
-  )
+#
+# Classification
+#
 
-## Formula
-fml = formula(Species ~ Petal.Length + Petal.Width)
+# Comparison data
+source('known_output/parttree_rpart_classification.R')
 
-## rpart
-rp = rpart::rpart(fml, data = iris)
-expect_equal(d, parttree(rp))
+# rpart
+rp = rpart::rpart(Species ~ Petal.Length + Petal.Width, data = iris)
+expect_equal(pt_cl_known, parttree(rp))
 
-## partykit
+# partykit
 if (require(partykit)) {
   rp2 = as.party(rp)
-  pt_rp2 = parttree(rp2)
-  row.names(pt_rp2) = NULL
-  expect_equal(d[, setdiff(names(d), 'node')],
-               pt_rp2[, setdiff(names(pt_rp2), 'node')])
+  rp2 = parttree(rp2)
+  row.names(rp2) = NULL
+  expect_equal(pt_cl_known[, setdiff(names(pt_cl_known), 'node')],
+               rp2[, setdiff(names(rp2), 'node')])
 }
 
+
+#
+# Regression
+#
+
+# Comparison data
+source('known_output/parttree_rpart_regression.R')
+
+rp = rpart::rpart(Sepal.Length ~ Petal.Length + Sepal.Width, data = iris)
+expect_equal(pt_reg_known, parttree(rp), tolerance = 1e-7)

@@ -1,5 +1,5 @@
-## Comparison data
-d =
+## parttree(rpart::rpart(Sepal.Length ~ Petal.Length + Sepal.Width, data = iris))
+pt_reg_known =
   data.frame(
     node = c(5, 7, 8, 9, 13, 24, 25),
     Sepal.Length = c(5.640000, 7.577778, 4.735000, 5.169697, 6.604000, 6.054545, 6.530000),
@@ -14,7 +14,4 @@ d =
     xmax = c(4.25, Inf, 3.40, 3.40, 6.05, 5.15, 5.15),
     ymin = c(-Inf, -Inf, -Inf, 3.25, -Inf, -Inf, 3.05),
     ymax = c(Inf, Inf, 3.25, Inf, Inf, 3.05, Inf)
-  )
-
-rp = rpart::rpart(Sepal.Length ~ Petal.Length + Sepal.Width, data = iris)
-expect_equal(d, parttree(rp), tolerance = 1e-7)
+    )
