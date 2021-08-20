@@ -1,5 +1,5 @@
 Package: parttree
-Title: Simple functions for plotting 2D decision tree partition plots
+Title: Visualise simple decision tree partitions
 Version: 0.0.1.9000
 Authors@R: c(
     person(given = "Grant",
