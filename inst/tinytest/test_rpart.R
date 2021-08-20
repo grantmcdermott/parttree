@@ -20,6 +20,15 @@ if (require(partykit)) {
 
 
 #
+# flipaxes
+#
+
+# Comparison data
+source('known_output/parttree_rpart_classification_flip.R')
+expect_equal(pt_cl_known_flip, parttree(rp, flipaxes = TRUE))
+
+
+#
 # Regression
 #
 
