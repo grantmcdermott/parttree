@@ -44,16 +44,16 @@ containing one or (at most) two numeric predictors.
 \examples{
 ## rpart trees
 library("rpart")
-rp <- rpart(Species ~ Petal.Length + Petal.Width, data = iris)
+rp = rpart(Species ~ Petal.Length + Petal.Width, data = iris)
 parttree(rp)
 
 ## conditional inference trees
 library("partykit")
-ct <- ctree(Species ~ Petal.Length + Petal.Width, data = iris)
+ct = ctree(Species ~ Petal.Length + Petal.Width, data = iris)
 parttree(ct)
 
 ## rpart via partykit
-rp2 <- as.party(rp)
+rp2 = as.party(rp)
 parttree(rp2)
 }
 \seealso{
