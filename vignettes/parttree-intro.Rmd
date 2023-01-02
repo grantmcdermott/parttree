@@ -106,16 +106,16 @@ titanic_train$Survived = as.factor(titanic_train$Survived)
 
 ## Build our tree using parsnip (but with rpart as the model engine)
 ti_tree =
-  decision_tree() %>%
-  set_engine("rpart") %>%
-  set_mode("classification") %>%
+  decision_tree() |>
+  set_engine("rpart") |>
+  set_mode("classification") |>
   fit(Survived ~ Pclass + Age, data = titanic_train)
 
 ## Plot the data and model partitions
-titanic_train %>%
+titanic_train |>
   ggplot(aes(x=Pclass, y=Age)) +
-  geom_jitter(aes(col=Survived), alpha=0.7) +
-  geom_parttree(data = ti_tree, aes(fill=Survived), alpha = 0.1)
+  geom_parttree(data = ti_tree, aes(fill=Survived), alpha = 0.1) +
+  geom_jitter(aes(col=Survived), alpha=0.7)
 ```
 
 ## Plot orientation
@@ -200,7 +200,12 @@ pal = palette.colors(4, "R4")[-1]
 m = 1000
 
 ## scatter plot() with added rect()
-plot(bill_length_mm ~ flipper_length_mm, data = penguins, col = pal[species], pch = 19)
-rect(pmax(-m, pt$xmin), pmax(-m, pt$ymin), pmin(m, pt$xmax), pmin(m, pt$ymax),
-  col = adjustcolor(pal, alpha.f = 0.1)[pt$species])
+plot(
+  bill_length_mm ~ flipper_length_mm, 
+  data = penguins, col = pal[species], pch = 19
+  )
+rect(
+  pmax(-m, pt$xmin), pmax(-m, pt$ymin), pmin(m, pt$xmax), pmin(m, pt$ymax),
+  col = adjustcolor(pal, alpha.f = 0.1)[pt$species]
+  )
 ```

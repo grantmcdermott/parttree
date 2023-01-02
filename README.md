@@ -45,8 +45,8 @@ library(parttree)  # This package (will automatically load ggplot2 too)
 fit = rpart(Kyphosis ~ Start + Age, data = kyphosis)
 
 ggplot(kyphosis, aes(x = Start, y = Age)) +
+  geom_parttree(data = fit, alpha = 0.1, aes(fill = Kyphosis)) + # <-- key layer
   geom_point(aes(col = Kyphosis)) +
-  geom_parttree(data = fit, alpha = 0.3, aes(fill = Kyphosis)) + # <-- key layer
   labs(
     x = "No. of topmost vertebra operated on", y = "Patient age (months)",
     caption = "Note: Points denote observations. Shading denotes model predictions."
