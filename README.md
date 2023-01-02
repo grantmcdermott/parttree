@@ -8,10 +8,10 @@
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/workflows/R-CMD-check/badge.svg)](https://github.com/grantmcdermott/parttree/actions)
 <!-- badges: end -->
 
-Visualize simple 2-D decision tree partitions in R. The package is
-optimised to work with [**ggplot2**](https://ggplot2.tidyverse.org/),
-although it can be used to visualize tree partitions with base R
-graphics too.
+Visualize simple 2-D decision tree partitions in R. The **parttree**
+package is optimised to work with
+[**ggplot2**](https://ggplot2.tidyverse.org/), although it can be used
+to visualize tree partitions with base R graphics too.
 
 [`Installation`](#installation) \| [`Examples`](#examples) \|
 [`Supported model classes`](#supported-model-classes) \|
@@ -53,7 +53,9 @@ tree = rpart(species ~ flipper_length_mm + bill_length_mm, data = penguins)
 p +  
   geom_parttree(data = tree, aes(fill=species), alpha = 0.1) +
   labs(caption = "Note: Points denote observed data. Shaded regions denote tree predictions.")
-#> Warning: Removed 2 rows containing missing values (geom_point).
+#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
+#> Warning: Removed 2 rows containing missing values (`geom_point()`).
 ```
 
 <img src="man/figures/README-penguin_plot-1.png" width="100%" />
@@ -84,7 +86,7 @@ p2 =
 ## single palette
 p2 + 
   scale_colour_viridis_c(aesthetics = c('colour', 'fill'))
-#> Warning: Removed 2 rows containing missing values (geom_point).
+#> Warning: Removed 2 rows containing missing values (`geom_point()`).
 ```
 
 <img src="man/figures/README-penguin_plot2-1.png" width="100%" />
@@ -122,7 +124,7 @@ titanic_train %>%
   geom_jitter(aes(col=Survived), alpha=0.7) +
   geom_parttree(data = ti_tree, aes(fill=Survived), alpha = 0.1) +
   theme_minimal()
-#> Warning: Removed 177 rows containing missing values (geom_point).
+#> Warning: Removed 177 rows containing missing values (`geom_point()`).
 ```
 
 <img src="man/figures/README-titanic_plot-1.png" width="100%" />
@@ -153,10 +155,10 @@ And here’s what we get after we feed it to `parttree()`.
 
 ``` r
 parttree(tree)
-#>   node   species                                                   path  xmin
-#> 1    3    Gentoo                             flipper_length_mm >= 206.5 206.5
-#> 2    4    Adelie flipper_length_mm <  206.5 --> bill_length_mm <  43.35  -Inf
-#> 3    5 Chinstrap flipper_length_mm <  206.5 --> bill_length_mm >= 43.35  -Inf
+#>   node   species                                                  path  xmin
+#> 1    3    Gentoo                            flipper_length_mm >= 206.5 206.5
+#> 2    4    Adelie  flipper_length_mm < 206.5 --> bill_length_mm < 43.35  -Inf
+#> 3    5 Chinstrap flipper_length_mm < 206.5 --> bill_length_mm >= 43.35  -Inf
 #>    xmax  ymin  ymax
 #> 1   Inf  -Inf   Inf
 #> 2 206.5  -Inf 43.35
@@ -193,7 +195,7 @@ p3 +
     title = "Oops!",
     subtitle = "Looks like a mismatch between our x and y axes..."
     )
-#> Warning: Removed 2 rows containing missing values (geom_point).
+#> Warning: Removed 2 rows containing missing values (`geom_point()`).
 ```
 
 <img src="man/figures/README-tree_plot_mismatch-1.png" width="100%" />
@@ -210,7 +212,7 @@ p3 +
     flipaxes = TRUE  ## Flip the orientation
     ) +
   labs(title = "That's better")
-#> Warning: Removed 2 rows containing missing values (geom_point).
+#> Warning: Removed 2 rows containing missing values (`geom_point()`).
 ```
 
 <img src="man/figures/README-tree_plot_flip-1.png" width="100%" />
