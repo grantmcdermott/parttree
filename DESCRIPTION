@@ -1,6 +1,6 @@
 Package: parttree
 Title: Visualise simple decision tree partitions
-Version: 0.0.1.9000
+Version: 0.0.1.9001
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
@@ -27,13 +27,13 @@ Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 LazyData: true
 URL: https://github.com/grantmcdermott/parttree,
     http://grantmcdermott.com/parttree
 BugReports: https://github.com/grantmcdermott/parttree/issues
 Depends:
-    ggplot2
+    ggplot2 (>= 3.4.0)
 Imports: 
     rpart,
     data.table,

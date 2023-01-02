@@ -1,6 +1,8 @@
-# parttree 0.0.1.9000
+# parttree 0.0.1.9001
 
 To be released as 0.1
+
+#### Improvements
 
 * Add method for tidymodels workflows objects fitted with `"rpart"` engine. (#7 by @juliasilge)
 
@@ -8,6 +10,10 @@ To be released as 0.1
 
 * Support for negative values (#6 by @pjgeens).
 * Better handling of single-level factors and `flipaxes` (#5).
+
+#### Internals
+
+Bump ggplot2 version dependency to match deprecated functions from 3.4.0.
 
 # parttree 0.0.1
 

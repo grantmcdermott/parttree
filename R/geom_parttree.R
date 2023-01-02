@@ -131,7 +131,7 @@ geom_parttree =
 GeomParttree =
   ggproto(
     "GeomParttree", GeomRect,
-    default_aes = aes(colour = "black", size = 0.5, linetype = 1,
+    default_aes = aes(colour = "black", linewidth = 0.5, linetype = 1,
                       x=NULL, y = NULL,
                       fill = NA, alpha = NA
     ),
