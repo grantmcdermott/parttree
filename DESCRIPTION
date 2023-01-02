@@ -41,6 +41,8 @@ Imports:
     rlang
 Suggests: 
     tinytest,
+    palmerpenguins,
+    titanic,
     mlr3,
     parsnip,
     workflows,
