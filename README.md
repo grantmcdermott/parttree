@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# parttree
+# parttree <a href='https://grantmcdermott.com/parttree/'><img src='man/figures/hex.png' align="right" width="120" /></a>
 
 <!-- badges: start -->
 

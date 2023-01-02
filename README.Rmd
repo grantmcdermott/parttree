@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# parttree
+# parttree <a href='https://grantmcdermott.com/parttree/'><img src='man/figures/hex.png' align="right" width="120" /></a>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml)
