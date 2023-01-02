@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml)
+[![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/parttree/index.html)
 <!-- badges: end -->
 
 Visualize simple 2-D decision tree partitions in R. The **parttree**
