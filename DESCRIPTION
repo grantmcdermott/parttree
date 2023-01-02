@@ -43,4 +43,7 @@ Suggests:
     tinytest,
     mlr3,
     parsnip,
-    workflows
+    workflows,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
