@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">parttree</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,12 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/parttree-intro.html">Introduction to parttree</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
@@ -61,12 +67,12 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="parttree">parttree<a class="anchor" aria-label="anchor" href="#parttree"></a>
+<div class="page-header"><h1 id="parttree-">parttree <a href="https://grantmcdermott.com/parttree/"><img src="reference/figures/hex.png" align="right" width="120"></a>
+<a class="anchor" aria-label="anchor" href="#parttree-"></a>
 </h1></div>
 <!-- badges: start -->
 
 <p>Visualize simple 2-D decision tree partitions in R. The <strong>parttree</strong> package is optimised to work with <a href="https://ggplot2.tidyverse.org/" class="external-link"><strong>ggplot2</strong></a>, although it can be used to visualize tree partitions with base R graphics too.</p>
-<p><a href="#installation"><code>Installation</code></a> | <a href="#examples"><code>Examples</code></a> | <a href="#supported-model-classes"><code>Supported model classes</code></a> | <a href="#plot-orientation"><code>Plot orientation</code></a> | <a href="#base-graphics"><code>Base graphics</code></a></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -76,166 +82,25 @@
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"grantmcdermott/parttree"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+<h2 id="quickstart">Quickstart<a class="anchor" aria-label="anchor" href="#quickstart"></a>
 </h2>
-<p>The main function that users will interact with is <code><a href="reference/geom_parttree.html">geom_parttree()</a></code>. Here’s a simple example using the <a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">palmerpenguins</a> dataset.</p>
+<p>The <strong>parttree</strong> <a href="https://grantmcdermott.com/parttree/index.html">homepage</a> includes an introductory vignette and detailed documentation. But here’s a quickstart example using the <a href="https://search.r-project.org/CRAN/refmans/rpart/html/kyphosis.html" class="external-link">“kyphosis”</a> dataset that comes bundled with the <strong>rpart</strong> package. In this case, we are interested in predicting kyphosis recovery after spinal surgery, as a function of 1) the number of topmost vertebra that were operated, and 2) patient age. The key visualization layer below—provided by this package—is <code>geom_partree()</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://allisonhorst.github.io/palmerpenguins/" class="external-link">"palmerpenguins"</a></span><span class="op">)</span> <span class="co">## For 'penguins' dataset</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/bethatkinson/rpart" class="external-link">"rpart"</a></span><span class="op">)</span>          <span class="co">## For fitting decisions trees</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/grantmcdermott/parttree" class="external-link">"parttree"</a></span><span class="op">)</span>       <span class="co">## This package (will automatically load ggplot2 too)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bethatkinson/rpart" class="external-link">rpart</a></span><span class="op">)</span>     <span class="co"># For the dataset and fitting decisions trees</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/grantmcdermott/parttree" class="external-link">parttree</a></span><span class="op">)</span>  <span class="co"># This package (will automatically load ggplot2 too)</span></span>
 <span><span class="co">#&gt; Loading required package: ggplot2</span></span>
 <span></span>
-<span><span class="co">## First construct a scatterplot of the raw penguin data</span></span>
-<span><span class="va">p</span> <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>, y <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart</a></span><span class="op">(</span><span class="va">Kyphosis</span> <span class="op">~</span> <span class="va">Start</span> <span class="op">+</span> <span class="va">Age</span>, data <span class="op">=</span> <span class="va">kyphosis</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Fit a decision tree using the same variables as the above plot</span></span>
-<span><span class="va">tree</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">bill_length_mm</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Visualise the tree partitions by adding it via geom_parttree()</span></span>
-<span><span class="va">p</span> <span class="op">+</span>  </span>
-<span>  <span class="fu"><a href="reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tree</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">species</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">"Note: Points denote observed data. Shaded regions denote tree predictions."</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.</span></span>
-<span><span class="co">#&gt; ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.</span></span>
-<span><span class="co">#&gt; Warning: Removed 2 rows containing missing values (`geom_point()`).</span></span></code></pre></div>
-<p><img src="reference/figures/README-penguin_plot-1.png" width="100%"></p>
-<p>Trees with continuous independent variables are also supported. However, I recommend adjusting the plot fill aesthetic, since your tree will likely partition the data into intervals that don’t match up exactly with the raw data.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tree2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart</a></span><span class="op">(</span><span class="va">body_mass_g</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">bill_length_mm</span>, data<span class="op">=</span><span class="va">penguins</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">p2</span> <span class="op">=</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>, y <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tree2</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">body_mass_g</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  </span>
-<span><span class="co">## Legend scales don't quite match (try it yourself)</span></span>
-<span><span class="co"># p2</span></span>
-<span></span>
-<span><span class="co">## Better to scale fill to the original data. This does the job but is still </span></span>
-<span><span class="co">## kind of hard to make out (again, try yourself)</span></span>
-<span><span class="co"># p2 + </span></span>
-<span><span class="co">#   scale_fill_continuous(limits = range(penguins$body_mass_g, na.rm = TRUE))</span></span>
-<span></span>
-<span><span class="co">## Best and simplest just to specify colour and fill aesthetics together in</span></span>
-<span><span class="co">## single palette</span></span>
-<span><span class="va">p2</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_colour_viridis_c</a></span><span class="op">(</span>aesthetics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'colour'</span>, <span class="st">'fill'</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 2 rows containing missing values (`geom_point()`).</span></span></code></pre></div>
-<p><img src="reference/figures/README-penguin_plot2-1.png" width="100%"></p>
-</div>
-<div class="section level2">
-<h2 id="supported-model-classes">Supported model classes<a class="anchor" aria-label="anchor" href="#supported-model-classes"></a>
-</h2>
-<p>Currently, the package works with decision trees created by the <a href="https://CRAN.R-project.org/web/package=rpart" class="external-link"><strong>rpart</strong></a> and <a href="https://CRAN.R-project.org/web/package=partykit" class="external-link"><strong>partykit</strong></a> packages. Moreover, it supports other front-end modes that call <code><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart::rpart()</a></code> as the underlying engine; in particular the <a href="https://www.tidymodels.org/" class="external-link"><strong>tidymodels</strong></a> (<a href="https://parsnip.tidymodels.org/" class="external-link">parsnip</a> or <a href="https://workflows.tidymodels.org/" class="external-link">workflows</a>) and <a href="https://mlr3.mlr-org.com/" class="external-link"><strong>mlr3</strong></a> packages. Here’s an example with parsnip.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/tidymodels/parsnip" class="external-link">"parsnip"</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/paulhendricks/titanic" class="external-link">"titanic"</a></span><span class="op">)</span> <span class="co">## Just for a different data set</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span> <span class="co">## For consistent jitter</span></span>
-<span></span>
-<span><span class="va">titanic_train</span><span class="op">$</span><span class="va">Survived</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">titanic_train</span><span class="op">$</span><span class="va">Survived</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Build our tree using parsnip (but with rpart as the model engine)</span></span>
-<span><span class="va">ti_tree</span> <span class="op">=</span></span>
-<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/decision_tree.html" class="external-link">decision_tree</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html" class="external-link">set_engine</a></span><span class="op">(</span><span class="st">"rpart"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_args.html" class="external-link">set_mode</a></span><span class="op">(</span><span class="st">"classification"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span><span class="va">Survived</span> <span class="op">~</span> <span class="va">Pclass</span> <span class="op">+</span> <span class="va">Age</span>, data <span class="op">=</span> <span class="va">titanic_train</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Plot the data and model partitions</span></span>
-<span><span class="va">titanic_train</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">Pclass</span>, y<span class="op">=</span><span class="va">Age</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_jitter.html" class="external-link">geom_jitter</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col<span class="op">=</span><span class="va">Survived</span><span class="op">)</span>, alpha<span class="op">=</span><span class="fl">0.7</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ti_tree</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">Survived</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 177 rows containing missing values (`geom_point()`).</span></span></code></pre></div>
-<p><img src="reference/figures/README-titanic_plot-1.png" width="100%"></p>
-</div>
-<div class="section level2">
-<h2 id="plot-orientation">Plot orientation<a class="anchor" aria-label="anchor" href="#plot-orientation"></a>
-</h2>
-<p>Underneath the hood, <code><a href="reference/geom_parttree.html">geom_parttree()</a></code> is calling the companion <code><a href="reference/parttree.html">parttree()</a></code> function, which coerces the <strong>rpart</strong> tree object into a data frame that is easily understood by <strong>ggplot2</strong>. For example, consider again our first “tree” model from earlier. Here’s the print output of the raw model.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">tree</span></span>
-<span><span class="co">#&gt; n=342 (2 observations deleted due to missingness)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; node), split, n, loss, yval, (yprob)</span></span>
-<span><span class="co">#&gt;       * denotes terminal node</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; 1) root 342 191 Adelie (0.441520468 0.198830409 0.359649123)  </span></span>
-<span><span class="co">#&gt;   2) flipper_length_mm&lt; 206.5 213  64 Adelie (0.699530516 0.295774648 0.004694836)  </span></span>
-<span><span class="co">#&gt;     4) bill_length_mm&lt; 43.35 150   5 Adelie (0.966666667 0.033333333 0.000000000) *</span></span>
-<span><span class="co">#&gt;     5) bill_length_mm&gt;=43.35 63   5 Chinstrap (0.063492063 0.920634921 0.015873016) *</span></span>
-<span><span class="co">#&gt;   3) flipper_length_mm&gt;=206.5 129   7 Gentoo (0.015503876 0.038759690 0.945736434) *</span></span></code></pre></div>
-<p>And here’s what we get after we feed it to <code><a href="reference/parttree.html">parttree()</a></code>.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/parttree.html">parttree</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   node   species                                                  path  xmin</span></span>
-<span><span class="co">#&gt; 1    3    Gentoo                            flipper_length_mm &gt;= 206.5 206.5</span></span>
-<span><span class="co">#&gt; 2    4    Adelie  flipper_length_mm &lt; 206.5 --&gt; bill_length_mm &lt; 43.35  -Inf</span></span>
-<span><span class="co">#&gt; 3    5 Chinstrap flipper_length_mm &lt; 206.5 --&gt; bill_length_mm &gt;= 43.35  -Inf</span></span>
-<span><span class="co">#&gt;    xmax  ymin  ymax</span></span>
-<span><span class="co">#&gt; 1   Inf  -Inf   Inf</span></span>
-<span><span class="co">#&gt; 2 206.5  -Inf 43.35</span></span>
-<span><span class="co">#&gt; 3 206.5 43.35   Inf</span></span></code></pre></div>
-<p>Again, the resulting data frame is designed to be amenable to a <strong>ggplot2</strong> geom layer, with columns like <code>xmin</code>, <code>xmax</code>, etc. specifying aesthetics that <strong>ggplot2</strong> recognises. (Fun fact: <code><a href="reference/geom_parttree.html">geom_parttree()</a></code> is really just a thin wrapper around <code><a href="https://ggplot2.tidyverse.org/reference/geom_tile.html" class="external-link">geom_rect()</a></code>.) The goal of the package is to abstract away these kinds of details from the user, so we can just specify <code><a href="reference/geom_parttree.html">geom_parttree()</a></code> — with a valid tree object as the data input — and be done with it. However, while this generally works well, it can sometimes lead to unexpected behaviour in terms of plot orientation. That’s because it’s hard to guess ahead of time what the user will specify as the x and y variables (i.e. axes) in their other plot layers. To see what I mean, let’s redo our penguin plot from earlier, but this time switch the axes in the main <code><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot()</a></code> call.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## First, redo our first plot but this time switch the x and y variables</span></span>
-<span><span class="va">p3</span> <span class="op">=</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">penguins</span>, </span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_length_mm</span>, y <span class="op">=</span> <span class="va">flipper_length_mm</span><span class="op">)</span> <span class="co">## Switched!</span></span>
-<span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Add on our tree (and some preemptive titling..)</span></span>
-<span><span class="va">p3</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tree</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">species</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">kyphosis</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Start</span>, y <span class="op">=</span> <span class="va">Age</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">Kyphosis</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">fit</span>, alpha <span class="op">=</span> <span class="fl">0.3</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">Kyphosis</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="co"># &lt;-- key layer</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Oops!"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"Looks like a mismatch between our x and y axes..."</span></span>
-<span>    <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 2 rows containing missing values (`geom_point()`).</span></span></code></pre></div>
-<p><img src="reference/figures/README-tree_plot_mismatch-1.png" width="100%"></p>
-<p>As was the case here, this kind of orientation mismatch is normally (hopefully) pretty easy to recognize. To fix, we can use the <code>flipaxes = TRUE</code> argument to flip the orientation of the <code>geom_parttree</code> layer.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p3</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">tree</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">species</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span>,</span>
-<span>    flipaxes <span class="op">=</span> <span class="cn">TRUE</span>  <span class="co">## Flip the orientation</span></span>
+<span>    x <span class="op">=</span> <span class="st">"No. of topmost vertebra operated on"</span>, y <span class="op">=</span> <span class="st">"Patient age (months)"</span>,</span>
+<span>    caption <span class="op">=</span> <span class="st">"Note: Points denote observations. Shading denotes model predictions."</span></span>
 <span>    <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"That's better"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 2 rows containing missing values (`geom_point()`).</span></span></code></pre></div>
-<p><img src="reference/figures/README-tree_plot_flip-1.png" width="100%"></p>
-</div>
-<div class="section level2">
-<h2 id="base-graphics">Base graphics<a class="anchor" aria-label="anchor" href="#base-graphics"></a>
-</h2>
-<p>While the package has been primarily designed to work with <strong>ggplot2</strong>, the <code><a href="reference/parttree.html">parttree()</a></code> infrastructure can also be used to generate plots with base graphics. Here, the <code><a href="https://rdrr.io/pkg/partykit/man/ctree.html" class="external-link">ctree()</a></code> function from <strong>partykit</strong> is used for fitting the tree.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="http://partykit.r-forge.r-project.org/partykit/" class="external-link">"partykit"</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Loading required package: grid</span></span>
-<span><span class="co">#&gt; Loading required package: libcoin</span></span>
-<span><span class="co">#&gt; Loading required package: mvtnorm</span></span>
-<span></span>
-<span><span class="co">## CTree and corresponding partition</span></span>
-<span><span class="va">ct</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/partykit/man/ctree.html" class="external-link">ctree</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">bill_length_mm</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></span>
-<span><span class="va">pt</span> <span class="op">=</span> <span class="fu"><a href="reference/parttree.html">parttree</a></span><span class="op">(</span><span class="va">ct</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Color palette</span></span>
-<span><span class="va">pal</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palette.html" class="external-link">palette.colors</a></span><span class="op">(</span><span class="fl">4</span>, <span class="st">"R4"</span><span class="op">)</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co">## Maximum/minimum for plotting range as rect() does not handle Inf well</span></span>
-<span><span class="va">m</span> <span class="op">=</span> <span class="fl">1000</span></span>
-<span></span>
-<span><span class="co">## scatter plot() with added rect()</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">flipper_length_mm</span>, data <span class="op">=</span> <span class="va">penguins</span>, col <span class="op">=</span> <span class="va">pal</span><span class="op">[</span><span class="va">species</span><span class="op">]</span>, pch <span class="op">=</span> <span class="fl">19</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/rect.html" class="external-link">rect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="op">-</span><span class="va">m</span>, <span class="va">pt</span><span class="op">$</span><span class="va">xmin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmax</a></span><span class="op">(</span><span class="op">-</span><span class="va">m</span>, <span class="va">pt</span><span class="op">$</span><span class="va">ymin</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">pt</span><span class="op">$</span><span class="va">xmax</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">pmin</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">pt</span><span class="op">$</span><span class="va">ymax</span><span class="op">)</span>,</span>
-<span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/adjustcolor.html" class="external-link">adjustcolor</a></span><span class="op">(</span><span class="va">pal</span>, alpha.f <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">[</span><span class="va">pt</span><span class="op">$</span><span class="va">species</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="reference/figures/README-ctree_base_graphics-1.png" width="100%"></p>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-quickstart-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -274,6 +139,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://grantmcdermott.com/parttree/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" alt="Docs"></a></li>
 </ul>
 </div>
 
