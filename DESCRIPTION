@@ -1,6 +1,6 @@
 Package: parttree
 Title: Visualise simple decision tree partitions
-Version: 0.0.1.9002
+Version: 0.0.1.9003
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
@@ -46,6 +46,8 @@ Suggests:
     mlr3,
     parsnip,
     workflows,
+    magick,
+    imager,
     knitr,
     rmarkdown
 VignetteBuilder: knitr
