@@ -23,6 +23,7 @@
 #'   and a final column corresponding to the predicted value for that leaf.
 #' @importFrom data.table :=
 #' @importFrom data.table .SD
+#' @importFrom data.table fifelse
 #' @export
 #' @examples
 #' ## rpart trees
@@ -86,12 +87,21 @@ parttree.rpart =
 
     ## Trim irrelevant parts of tree
     data.table::setorder(part_dt, node)
-    part_dt[, path := paste(variable, side, split, collapse = " --> "), by = node]
-    part_dt = part_dt[,
-                      .SD[(grepl(">", side) & split == max(split)) | (grepl("<", side) & split == min(split))],
-                      keyby = list(node, variable, side)]
+
+    part_dt[
+      ,
+      path := paste(variable, side, split, collapse = " --> "),
+      by = node
+    ]
+
+    part_dt = part_dt[
+      ,
+      .SD[(grepl(">", side) & split == max(split)) | (grepl("<", side) & split == min(split))],
+      keyby = list(node, variable, side)
+    ]
 
     ## Get the coords data frame
+
     if (flipaxes) {
       vars = rev(vars)
       ## Handle edge cases with only 1 level
@@ -99,23 +109,33 @@ parttree.rpart =
         missing_var = setdiff(attr(tree$terms, 'term.labels'), vars)
         vars = c(missing_var, vars)
       }
-      }
+    }
+
     part_coords =
       part_dt[
-        , `:=`(xvar = variable == ..vars[1], yvar = variable == ..vars[2])][
-          , `:=`(xmin = ifelse(xvar, ifelse(grepl(">", side), split, NA), NA),
-                 xmax = ifelse(xvar, ifelse(grepl("<", side), split, NA), NA),
-                 ymin = ifelse(yvar, ifelse(grepl(">", side), split, NA), NA),
-                 ymax = ifelse(yvar, ifelse(grepl("<", side), split, NA), NA))][
-                   , list(xmin = mean(xmin, na.rm = TRUE),
-                          xmax = mean(xmax, na.rm = TRUE),
-                          ymin = mean(ymin, na.rm = TRUE),
-                          ymax = mean(ymax, na.rm = TRUE)),
-                   keyby = list(node, yvals, path)][
-                     , `:=`(xmin = ifelse(is.na(xmin), -Inf, xmin),
-                            xmax = ifelse(is.na(xmax), Inf, xmax),
-                            ymin = ifelse(is.na(ymin), -Inf, ymin),
-                            ymax = ifelse(is.na(ymax), Inf, ymax))]
+        ,
+        `:=` (xvar = variable == ..vars[1],
+              yvar = variable == ..vars[2])
+      ][
+        ,
+        `:=` (xmin = fifelse(xvar, fifelse(grepl(">", side), split, NA), NA),
+              xmax = fifelse(xvar, fifelse(grepl("<", side), split, NA), NA),
+              ymin = fifelse(yvar, fifelse(grepl(">", side), split, NA), NA),
+              ymax = fifelse(yvar, fifelse(grepl("<", side), split, NA), NA))
+      ][
+        ,
+        list(xmin = mean(xmin, na.rm = TRUE),
+             xmax = mean(xmax, na.rm = TRUE),
+             ymin = mean(ymin, na.rm = TRUE),
+             ymax = mean(ymax, na.rm = TRUE)),
+        keyby = list(node, yvals, path)
+      ][
+        ,
+        `:=` (xmin = fifelse(is.na(xmin), -Inf, xmin),
+              xmax = fifelse(is.na(xmax),  Inf, xmax),
+              ymin = fifelse(is.na(ymin), -Inf, ymin),
+              ymax = fifelse(is.na(ymax),  Inf, ymax))
+      ]
 
     if (y_factored) {
       part_coords$yvals = factor(part_coords$yvals, levels = ylevs)
