@@ -48,7 +48,7 @@ parttree.rpart =
   function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
     ## Silence NSE notes in R CMD check. See:
     ## https://cran.r-project.org/web/packages/data.table/vignettes/datatable-importing.html#globals
-    node = path = variable = side = ..vars = xvar = yvar = xmin = xmax = ymin = ymax = NULL
+    V1 = node = path = variable = side = ..vars = xvar = yvar = xmin = xmax = ymin = ymax = NULL
 
     if (nrow(tree$frame)<=1) {
       stop("Cannot plot single node tree.")
@@ -73,28 +73,16 @@ parttree.rpart =
       yvals = ylevs[yvals]
     }
 
-    part_list =
-      lapply(
-        nodes,
-        function(n) {
-          pv = rpart::path.rpart(tree, node=n, print.it = FALSE)
-          node = as.integer(paste0(names(pv)))
-          pv = unlist(pv)
+    part_list = rpart::path.rpart(tree, node=nodes, print.it = FALSE)
+    part_list = lapply(part_list, data.table::as.data.table)
+    part_dt = data.table::rbindlist(part_list, idcol="node")[V1!="root"]
+    part_dt[, c("variable", "split") := data.table::tstrsplit(V1, split = "+<|+<=|>|+>=")][]
+    part_dt[, side := gsub("\\s$", "", gsub("\\w|\\.", "", V1))][]
 
-          pd = data.frame(node = rep(node, times = length(pv)-1))
+    yvals_dt = data.table::data.table(yvals, node = nodes)
 
-          pv = sapply(2:length(pv), function(i) pv[i])
-
-          # pd$variable = gsub("[[:punct:]].+", "", pv) ## Causes problems when punctuation mark in name, so use below
-          pd$variable = gsub("<.+|<=.+|>.+|>=.+", "", pv)
-          #pd$split = gsub(".+[[:punct:]]", "", pv) ## Use below since we want to keep - and . in split values (e.g. -2.5)
-          pd$split = as.numeric(gsub(".+<|.+<=|>|.+>=", "", pv))
-          pd$side = gsub("\\s$", "", gsub("\\w|\\.", "", pv))
-          pd$yvals = yvals[nodes==node]
-          return(pd)
-        }
-      )
-    part_dt = data.table::rbindlist(part_list)
+    part_dt = part_dt[yvals_dt, on = "node", all = TRUE]
+    part_dt[, V1 := NULL][, node := as.integer(node)][, split := as.double(split)][]
 
     ## Trim irrelevant parts of tree
     data.table::setorder(part_dt, node)
@@ -113,7 +101,7 @@ parttree.rpart =
       }
       }
     part_coords =
-      part_dt[, `:=`(split = as.double(split))][
+      part_dt[
         , `:=`(xvar = variable == ..vars[1], yvar = variable == ..vars[2])][
           , `:=`(xmin = ifelse(xvar, ifelse(grepl(">", side), split, NA), NA),
                  xmax = ifelse(xvar, ifelse(grepl("<", side), split, NA), NA),
