@@ -1,10 +1,11 @@
-# parttree 0.0.1.9002
+# parttree 0.0.1.9003
 
 To be released as 0.1
 
 #### Improvements
 
-* Add method for tidymodels workflows objects fitted with `"rpart"` engine. (#7 by @juliasilge)
+* Major speed-up for extracting parttree nodes and coordinates on complicated trees (#15).
+* Add method for tidymodels workflows objects fitted with `"rpart"` engine (#7 by @juliasilge).
 
 #### Bug fixes
 
@@ -13,9 +14,9 @@ To be released as 0.1
 
 #### Internals
 
-- Bump ggplot2 version dependency to match deprecated functions from 3.4.0.
-- Switched to "main" as primary GitHub branch for development.
-- Added dedicated vignette.
+* Bump ggplot2 version dependency to match deprecated functions from 3.4.0.
+* Switched to "main" as primary GitHub branch for development.
+* Added dedicated vignette.
 
 # parttree 0.0.1
 
