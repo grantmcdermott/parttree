@@ -118,10 +118,10 @@ parttree.rpart =
               yvar = variable == ..vars[2])
       ][
         ,
-        `:=` (xmin = fifelse(xvar & grepl(">", side), split, NA),
-              xmax = fifelse(xvar & grepl("<", side), split, NA),
-              ymin = fifelse(yvar & grepl(">", side), split, NA),
-              ymax = fifelse(yvar & grepl("<", side), split, NA))
+        `:=` (xmin = fifelse(xvar & grepl(">", side), split, NA_real_),
+              xmax = fifelse(xvar & grepl("<", side), split, NA_real_),
+              ymin = fifelse(yvar & grepl(">", side), split, NA_real_),
+              ymax = fifelse(yvar & grepl("<", side), split, NA_real_))
       ][
         ,
         list(xmin = mean(xmin, na.rm = TRUE),
