@@ -1,4 +1,4 @@
-# parttree 0.0.1.9003
+# parttree 0.0.1.9004
 
 To be released as 0.1
 
@@ -16,7 +16,7 @@ To be released as 0.1
 
 * Bump ggplot2 version dependency to match deprecated functions from 3.4.0.
 * Switched to "main" as primary GitHub branch for development.
-* Added dedicated vignette.
+* Added two dedicated vignettes.
 
 # parttree 0.0.1
 
