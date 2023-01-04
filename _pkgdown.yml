@@ -1,4 +1,21 @@
 url: https://grantmcdermott.com/parttree
+
 template:
   bootstrap: 5
 
+navbar:
+  type: default
+  left:
+  - text: Vignettes
+    menu:
+    - text: Introduction to parttree
+      href: articles/parttree-intro.html
+    - text: Abstract art with parttree and friends
+      href: articles/parttree-art.html
+  - text: News
+    href: news/index.html
+  - text: Reference
+    href: reference/index.html
+  right:
+  - icon: fa-github fa-lg
+    href: https://github.com/grantmcdermott/parttree
