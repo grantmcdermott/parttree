@@ -102,6 +102,10 @@ parttree.rpart =
 
     ## Get the coords data frame
 
+    if (length(vars)==2) {
+      ## special case we can assume is likely wrong, notwithstanding ability to still flip axes
+      if (vars[1]=="y" & vars[2]=="x") vars = rev(vars)
+    }
     if (flipaxes) {
       vars = rev(vars)
       ## Handle edge cases with only 1 level
