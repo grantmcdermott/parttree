@@ -64,7 +64,8 @@ parttree.rpart =
 
     ## Get details about y variable for later
     ### y variable string (i.e. name)
-    y_var = attr(tree$terms, "variables")[[2]]
+    y_var = paste(tree$terms)[2]
+    # y_var = attr(tree$terms, "variables")[[2]]
     ### y values
     yvals = tree$frame[tree$frame$var == "<leaf>", ]$yval
     y_factored = attr(tree$terms, "dataClasses")[paste(y_var)] == "factor"
@@ -114,6 +115,8 @@ parttree.rpart =
         vars = c(missing_var, vars)
       }
     }
+    xvar = vars[1]
+    yvar = vars[2]
 
     part_coords =
       part_dt[
@@ -149,6 +152,17 @@ parttree.rpart =
     if (!keep_as_dt) {
       part_coords = as.data.frame(part_coords)
     }
+
+    class(part_coords) = c("parttree", class(part_coords))
+    attr(part_coords, "parttree") = list(
+      xvar = xvar,
+      yvar = yvar,
+      xrange = range(eval(tree$call$data)[[xvar]]),
+      yrange = range(eval(tree$call$data)[[yvar]]),
+      response = y_var,
+      call = tree$call,
+      na.action = tree$na.action
+      )
 
     return(part_coords)
   }
