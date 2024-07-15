@@ -323,5 +323,17 @@ parttree.constparty =
     ## turn into data.table?
     if(keep_as_dt) rval = data.table::as.data.table(rval)
 
+    class(rval) = c("parttree", class(rval))
+    attr(rval, "parttree") = list(
+      xvar = mx[1],
+      yvar = mx[2],
+      xrange = range(eval(tree$data)[[mx[1]]]),
+      yrange = range(eval(tree$data)[[mx[2]]]),
+      response = my,
+      # call = tree$call,
+      # na.action = tree$na.action,
+      raw_data = substitute(tree$data)
+      )
+
     return(rval)
 }
