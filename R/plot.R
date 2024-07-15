@@ -67,19 +67,10 @@ plot.parttree =
 
         }
 
-        plot_fml = reformulate(paste(xvar, "|", response), response = yvar)
+        ## First adjust our parttree object to better fit some base R graphics
+        ## requirements
 
         object$response = object[[response]]
-
-        # tinyplot(
-        #     plot_fml,
-        #     data = raw_data,
-        #     type = "n",
-        #     col = border,
-        #     legend = list(pt.cex = 3.5, pch = 22, y.intersp = 1.25, x.intersp = 1.25),
-        #     fill = fill_alpha,
-        #     ...
-        # )
 
         xmin_idxr = object$xmin == -Inf
         xmax_idxr = object$xmax == Inf
@@ -93,6 +84,12 @@ plot.parttree =
         object$ymin[ymin_idxr] = yrange[1]
         object$ymax[ymax_idxr] = yrange[2]
 
+        ## Start plotting...
+
+        plot_fml = reformulate(paste(xvar, "|", response), response = yvar)
+
+        # First draw empty plot (since we need the plot corners to correctly
+        # expand the partition limits to the edges of the plot)
         with(
             object,
             tinyplot(
@@ -107,19 +104,14 @@ plot.parttree =
             )
         )
 
+        # Grab the plot corners and adjust the partition limits
         corners = par("usr")
-
-        # object$xmin[object$xmin == -Inf] = corners[1]
-        # object$xmax[object$xmax == Inf] = corners[2]
-        # object$ymin[object$ymin == -Inf] = corners[3]
-        # object$ymax[object$ymax == Inf] = corners[4]
         object$xmin[xmin_idxr] = corners[1]
         object$xmax[xmax_idxr] = corners[2]
         object$ymin[ymin_idxr] = corners[3]
         object$ymax[ymax_idxr] = corners[4]
 
-
-
+        # Add the (adjusted) partition rectangles
         with(
             object,
             tinyplot(
@@ -133,6 +125,7 @@ plot.parttree =
             )
         )
 
+        # Add the original data points (if requested)
         if (isTRUE(raw)) {
             tinyplot(
                 plot_fml,
