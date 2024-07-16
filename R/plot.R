@@ -94,7 +94,7 @@ plot.parttree =
 
         plot_fml = reformulate(paste(xvar, "|", response), response = yvar)
 
-        # First draw empty plot (since we need the plot corners to correctly
+        # First draw an empty plot (since we need the plot corners to correctly
         # expand the partition limits to the edges of the plot). We'll create a
         # dummy object for this task.
         dobj = data.frame(
