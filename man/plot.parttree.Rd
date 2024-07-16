@@ -4,7 +4,15 @@
 \alias{plot.parttree}
 \title{Plot decision tree partitions}
 \usage{
-\method{plot}{parttree}(object, raw = TRUE, border = "black", fill_alpha = 0.3, ...)
+\method{plot}{parttree}(
+  object,
+  raw = TRUE,
+  border = "black",
+  fill_alpha = 0.3,
+  xlab = NULL,
+  ylab = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{A \link{parttree} data frame.}
@@ -44,7 +52,7 @@ plot(
     pt,
     border  = NA,                                     # no partition borders
     pch     = 19,                                     # filled points
-    alpha   = 0.7,                                    # point transparency
+    alpha   = 0.6,                                    # point transparency
     grid    = TRUE,                                   # background grid
     palette = "classic",                              # new colour palette
     xlab    = "Topmost vertebra operated on",         # custom x title

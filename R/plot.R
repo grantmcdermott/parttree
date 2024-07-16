@@ -31,7 +31,7 @@
 #'     pt,
 #'     border  = NA,                                     # no partition borders
 #'     pch     = 19,                                     # filled points
-#'     alpha   = 0.7,                                    # point transparency
+#'     alpha   = 0.6,                                    # point transparency
 #'     grid    = TRUE,                                   # background grid
 #'     palette = "classic",                              # new colour palette
 #'     xlab    = "Topmost vertebra operated on",         # custom x title
@@ -39,7 +39,14 @@
 #'     main    = "Tree predictions: Kyphosis recurrence" # custom title
 #' )
 plot.parttree =
-    function(object, raw = TRUE, border = "black", fill_alpha = 0.3, ...) {
+    function(
+        object,
+        raw = TRUE,
+        border = "black",
+        fill_alpha = 0.3,
+        xlab = NULL,
+        ylab = NULL,
+        ...) {
 
         xvar = attr(object, "parttree")[["xvar"]]
         yvar = attr(object, "parttree")[["yvar"]]
@@ -49,6 +56,9 @@ plot.parttree =
         raw_data = attr(object, "parttree")[["raw_data"]]
         orig_call = attr(object, "parttree")[["call"]]
         orig_na_idx = attr(object, "parttree")[["na.action"]]
+
+        if (is.null(xlab)) xlab = xvar
+        if (is.null(ylab)) ylab = yvar
 
         if (isTRUE(raw)) {
             if (!is.null(raw_data)) {
@@ -70,14 +80,10 @@ plot.parttree =
         ## First adjust our parttree object to better fit some base R graphics
         ## requirements
 
-        object$response = object[[response]]
-
         xmin_idxr = object$xmin == -Inf
         xmax_idxr = object$xmax == Inf
         ymin_idxr = object$ymin == -Inf
         ymax_idxr = object$ymax == Inf
-
-        object$response = object[[response]]
 
         object$xmin[xmin_idxr] = xrange[1]
         object$xmax[xmax_idxr] = xrange[2]
@@ -89,20 +95,42 @@ plot.parttree =
         plot_fml = reformulate(paste(xvar, "|", response), response = yvar)
 
         # First draw empty plot (since we need the plot corners to correctly
-        # expand the partition limits to the edges of the plot)
-        with(
-            object,
-            tinyplot(
-                x = xmin,
-                xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax,
-                by = response,
+        # expand the partition limits to the edges of the plot). We'll create a
+        # dummy object for this task.
+        dobj = data.frame(
+            response = rep(object[[response]], 2),
+            x = c(object[["xmin"]], object[["xmax"]]),
+            y = c(object[["ymin"]], object[["ymax"]])
+        )
+        colnames(dobj) = c(response, xvar, yvar)
+
+        tinyplot(
+                plot_fml,
+                data = dobj,
                 type = "rect",
                 col = border,
                 fill = fill_alpha,
                 empty = TRUE,
                 ...
-            )
         )
+        object$response = object[[response]]
+
+        # # First draw empty plot (since we need the plot corners to correctly
+        # # expand the partition limits to the edges of the plot)
+        # with(
+        #     object,
+        #     tinyplot(
+        #         xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax,
+        #         by = response,
+        #         type = "rect",
+        #         col = border,
+        #         fill = fill_alpha,
+        #         xlab = xlab, ylab = ylab,
+        #         legend = list(title = NULL),
+        #         empty = TRUE,
+        #         ...
+        #     )
+        # )
 
         # Grab the plot corners and adjust the partition limits
         corners = par("usr")
