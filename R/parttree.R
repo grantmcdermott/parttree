@@ -158,12 +158,12 @@ parttree.rpart =
     if (!is.null(dots[["xvar"]])) {
       xvar = dots[["xvar"]]
     } else {
-      xvar = vars[1]
+      xvar = ifelse(isFALSE(flipaxes), vars[1], vars[2])
     }
     if (!is.null(dots[["yvar"]])) {
       yvar = dots[["yvar"]]
     } else {
-      yvar = vars[2]
+      yvar = ifelse(isFALSE(flipaxes), vars[2], vars[1])
     }
     if (!is.null(dots[["xrange"]])) {
       xrange = dots[["xrange"]]
@@ -211,8 +211,8 @@ parttree._rpart =
     # pass some extra attribute arguments through ... to parttree.rpart
     raw_data = attr(tree$terms, ".Environment")$data
     vars = attr(tree$terms, "term.labels")
-    xvar = vars[1]
-    yvar = vars[2]
+    xvar = ifelse(isFALSE(flipaxes), vars[1], vars[2])
+    yvar = ifelse(isFALSE(flipaxes), vars[2], vars[1])
     xrange = range(raw_data[[xvar]])
     yrange = range(raw_data[[yvar]])
     raw_data = raw_data
@@ -369,11 +369,13 @@ parttree.constparty =
     if(keep_as_dt) rval = data.table::as.data.table(rval)
 
     class(rval) = c("parttree", class(rval))
+    xvar = ifelse(isFALSE(flipaxes), mx[1], mx[2])
+    yvar = ifelse(isFALSE(flipaxes), mx[2], mx[1])
     attr(rval, "parttree") = list(
-      xvar = mx[1],
-      yvar = mx[2],
-      xrange = range(eval(tree$data)[[mx[1]]], na.rm = TRUE),
-      yrange = range(eval(tree$data)[[mx[2]]], na.rm = TRUE),
+      xvar = xvar,
+      yvar = yvar,
+      xrange = range(eval(tree$data)[[xvar]], na.rm = TRUE),
+      yrange = range(eval(tree$data)[[yvar]], na.rm = TRUE),
       response = my,
       call = NULL,
       na.action = NULL,
