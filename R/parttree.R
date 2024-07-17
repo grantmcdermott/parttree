@@ -208,14 +208,15 @@ parttree._rpart =
     	   "Did you forget to fit a model? See `?parsnip::fit`.")
     }
     tree = tree$fit
-    # pass some extra attribute arguments through ... to parttree.rpart
+    # extra attribute arguments to pass through ... to parttree.rpart
     raw_data = attr(tree$terms, ".Environment")$data
     vars = attr(tree$terms, "term.labels")
     xvar = ifelse(isFALSE(flipaxes), vars[1], vars[2])
     yvar = ifelse(isFALSE(flipaxes), vars[2], vars[1])
     xrange = range(raw_data[[xvar]])
     yrange = range(raw_data[[yvar]])
-    raw_data = raw_data
+    # raw_data = raw_data
+
     parttree.rpart(
       tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes,
       raw_data = raw_data,
@@ -248,7 +249,21 @@ parttree.LearnerClassifRpart =
     	   "Did you forget to assign a learner? See `?mlr3::lrn`.")
     }
     tree = tree$model
-    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+
+    # extra attribute arguments to pass through ... to parttree.rpart
+    raw_data = eval(tree$call$data)
+    vars = attr(tree$terms, "term.labels")
+    xvar = ifelse(isFALSE(flipaxes), vars[1], vars[2])
+    yvar = ifelse(isFALSE(flipaxes), vars[2], vars[1])
+    xrange = range(raw_data[[xvar]])
+    yrange = range(raw_data[[yvar]])
+
+    parttree.rpart(
+      tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes,
+      raw_data = raw_data,
+      xvar = xvar, yvar = yvar,
+      xrange = xrange, yrange = yrange
+      )
   }
 
 #' @export
