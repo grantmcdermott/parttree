@@ -168,13 +168,11 @@ parttree.rpart =
     if (!is.null(dots[["xrange"]])) {
       xrange = dots[["xrange"]]
     } else {
-      # xrange = range(eval(tree$call$data)[[xvar]])
       xrange = range(eval(tree$call$data, envir = attr(tree$terms, ".Environment"))[[xvar]], na.rm = TRUE)
     }
     if (!is.null(dots[["yrange"]])) {
       yrange = dots[["yrange"]]
     } else {
-      # yrange = range(eval(tree$call$data)[[yvar]])
       yrange = range(eval(tree$call$data, envir = attr(tree$terms, ".Environment"))[[yvar]], na.rm = TRUE)
     }
     raw_data = orig_call = orig_na.action = NULL
@@ -215,7 +213,6 @@ parttree._rpart =
     yvar = ifelse(isFALSE(flipaxes), vars[2], vars[1])
     xrange = range(raw_data[[xvar]])
     yrange = range(raw_data[[yvar]])
-    # raw_data = raw_data
 
     parttree.rpart(
       tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes,
