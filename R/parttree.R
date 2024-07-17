@@ -46,7 +46,7 @@ parttree =
 
 #' @export
 parttree.rpart =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flipaxes = FALSE, ...) {
     ## Silence NSE notes in R CMD check. See:
     ## https://cran.r-project.org/web/packages/data.table/vignettes/datatable-importing.html#globals
     V1 = node = path = variable = side = ..vars = xvar = yvar = xmin = xmax = ymin = ymax = NULL
@@ -115,8 +115,6 @@ parttree.rpart =
         vars = c(missing_var, vars)
       }
     }
-    xvar = vars[1]
-    yvar = vars[2]
 
     part_coords =
       part_dt[
@@ -154,14 +152,48 @@ parttree.rpart =
     }
 
     class(part_coords) = c("parttree", class(part_coords))
+
+    # attributes (for plot method)
+    dots = list(...)
+    if (!is.null(dots[["xvar"]])) {
+      xvar = dots[["xvar"]]
+    } else {
+      xvar = vars[1]
+    }
+    if (!is.null(dots[["yvar"]])) {
+      yvar = dots[["yvar"]]
+    } else {
+      yvar = vars[2]
+    }
+    if (!is.null(dots[["xrange"]])) {
+      xrange = dots[["xrange"]]
+    } else {
+      # xrange = range(eval(tree$call$data)[[xvar]])
+      xrange = range(eval(tree$call$data, envir = attr(tree$terms, ".Environment"))[[xvar]], na.rm = TRUE)
+    }
+    if (!is.null(dots[["yrange"]])) {
+      yrange = dots[["yrange"]]
+    } else {
+      # yrange = range(eval(tree$call$data)[[yvar]])
+      yrange = range(eval(tree$call$data, envir = attr(tree$terms, ".Environment"))[[yvar]], na.rm = TRUE)
+    }
+    raw_data = orig_call = orig_na.action = NULL
+    if (!is.null(dots[["raw_data"]])) {
+      raw_data = substitute(dots[["raw_data"]])
+    } else {
+      orig_call = tree$call
+      orig_na.action = tree$na.action
+    }
+
     attr(part_coords, "parttree") = list(
       xvar = xvar,
       yvar = yvar,
-      xrange = range(eval(tree$call$data)[[xvar]]),
-      yrange = range(eval(tree$call$data)[[yvar]]),
+      xrange = xrange,
+      yrange = yrange,
       response = y_var,
-      call = tree$call,
-      na.action = tree$na.action
+      call = orig_call,
+      na.action = orig_na.action,
+      raw_data = raw_data
       )
 
     return(part_coords)
@@ -176,7 +208,20 @@ parttree._rpart =
     	   "Did you forget to fit a model? See `?parsnip::fit`.")
     }
     tree = tree$fit
-    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+    # pass some extra attribute arguments through ... to parttree.rpart
+    raw_data = attr(tree$terms, ".Environment")$data
+    vars = attr(tree$terms, "term.labels")
+    xvar = vars[1]
+    yvar = vars[2]
+    xrange = range(raw_data[[xvar]])
+    yrange = range(raw_data[[yvar]])
+    raw_data = raw_data
+    parttree.rpart(
+      tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes,
+      raw_data = raw_data,
+      xvar = xvar, yvar = yvar,
+      xrange = xrange, yrange = yrange
+    )
   }
 
 #' @export
@@ -327,11 +372,11 @@ parttree.constparty =
     attr(rval, "parttree") = list(
       xvar = mx[1],
       yvar = mx[2],
-      xrange = range(eval(tree$data)[[mx[1]]]),
-      yrange = range(eval(tree$data)[[mx[2]]]),
+      xrange = range(eval(tree$data)[[mx[1]]], na.rm = TRUE),
+      yrange = range(eval(tree$data)[[mx[2]]], na.rm = TRUE),
       response = my,
-      # call = tree$call,
-      # na.action = tree$na.action,
+      call = NULL,
+      na.action = NULL,
       raw_data = substitute(tree$data)
       )
 

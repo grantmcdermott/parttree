@@ -46,6 +46,8 @@ plot.parttree =
         fill_alpha = 0.3,
         xlab = NULL,
         ylab = NULL,
+        add = FALSE,
+        expand = TRUE,
         ...) {
 
         xvar = attr(object, "parttree")[["xvar"]]
@@ -97,14 +99,15 @@ plot.parttree =
         # First draw an empty plot (since we need the plot corners to correctly
         # expand the partition limits to the edges of the plot). We'll create a
         # dummy object for this task.
-        dobj = data.frame(
-            response = rep(object[[response]], 2),
-            x = c(object[["xmin"]], object[["xmax"]]),
-            y = c(object[["ymin"]], object[["ymax"]])
-        )
-        colnames(dobj) = c(response, xvar, yvar)
+        if (isFALSE(add)) {
+            dobj = data.frame(
+                response = rep(object[[response]], 2),
+                x = c(object[["xmin"]], object[["xmax"]]),
+                y = c(object[["ymin"]], object[["ymax"]])
+            )
+            colnames(dobj) = c(response, xvar, yvar)
 
-        tinyplot(
+            tinyplot(
                 plot_fml,
                 data = dobj,
                 type = "rect",
@@ -112,7 +115,9 @@ plot.parttree =
                 fill = fill_alpha,
                 empty = TRUE,
                 ...
-        )
+            )
+        }
+
         object$response = object[[response]]
 
         # # First draw empty plot (since we need the plot corners to correctly
@@ -133,11 +138,14 @@ plot.parttree =
         # )
 
         # Grab the plot corners and adjust the partition limits
-        corners = par("usr")
-        object$xmin[xmin_idxr] = corners[1]
-        object$xmax[xmax_idxr] = corners[2]
-        object$ymin[ymin_idxr] = corners[3]
-        object$ymax[ymax_idxr] = corners[4]
+        if (isTRUE(expand)) {
+            corners = par("usr")
+            object$xmin[xmin_idxr] = corners[1]
+            object$xmax[xmax_idxr] = corners[2]
+            object$ymin[ymin_idxr] = corners[3]
+            object$ymax[ymax_idxr] = corners[4]
+        }
+
 
         # Add the (adjusted) partition rectangles
         with(
