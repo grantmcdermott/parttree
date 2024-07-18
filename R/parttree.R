@@ -231,10 +231,25 @@ parttree.workflow =
            "Did you forget to fit a model? See `?workflows::fit`.")
     }
     y_name = names(tree$pre$mold$outcomes)[[1]]
+    raw_data = cbind(tree$pre$mold$predictors, tree$pre$mold$outcomes)
     tree = workflows::extract_fit_engine(tree)
+    tree$terms[[2]] = y_name
     attr(tree$terms, "variables")[[2]] = y_name
     names(attr(tree$terms, "dataClasses"))[[1]] = y_name
-    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+
+    # extra attribute arguments to pass through ... to parttree.rpart
+    vars = attr(tree$terms, "term.labels")
+    xvar = ifelse(isFALSE(flipaxes), vars[1], vars[2])
+    yvar = ifelse(isFALSE(flipaxes), vars[2], vars[1])
+    xrange = range(raw_data[[xvar]])
+    yrange = range(raw_data[[yvar]])
+
+    parttree.rpart(
+      tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes,
+      raw_data = raw_data,
+      xvar = xvar, yvar = yvar,
+      xrange = xrange, yrange = yrange
+    )
   }
 
 #' @export
@@ -260,7 +275,7 @@ parttree.LearnerClassifRpart =
       raw_data = raw_data,
       xvar = xvar, yvar = yvar,
       xrange = xrange, yrange = yrange
-      )
+    )
   }
 
 #' @export
