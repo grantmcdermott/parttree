@@ -23,6 +23,8 @@
 #' @importFrom data.table := .SD fifelse
 #' @export
 #' @examples
+#' library("parttree")
+#'
 #' ## rpart trees
 #'
 #' library("rpart")
@@ -61,6 +63,30 @@
 #' ## rpart via partykit
 #' rp2 = as.party(rp)
 #' parttree(rp2)
+#'
+#' ## various front-end frameworks are also supported, e.g.
+#'
+#' # tidymodels
+#'
+#' library(parsnip)
+#'
+#' decision_tree() |>
+#'   set_engine("rpart") |>
+#'   set_mode("classification") |>
+#'   fit(Species ~ Petal.Length + Petal.Width, data=iris) |>
+#'   parttree() |>
+#'   plot(main = "This time brought to you via parsnip...")
+#'
+#' # mlr3 (NB: use `keep_model = TRUE` for mlr3 learners)
+#'
+#' library(mlr3)
+#'
+#' task_iris = TaskClassif$new("iris", iris, target = "Species")
+#' task_iris$formula(rhs = "Petal.Length + Petal.Width")
+#' fit_iris = lrn("classif.rpart", keep_model = TRUE) # NB!
+#' fit_iris$train(task_iris)
+#' plot(parttree(fit_iris), main = "... and now mlr3")
+#'
 parttree =
   function(tree, keep_as_dt = FALSE, flip = FALSE) {
     UseMethod("parttree")

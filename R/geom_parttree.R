@@ -39,8 +39,9 @@
 #' @seealso [parttree()], [ggplot2::geom_rect()].
 #' @export
 #' @examples
-#' library(rpart)
-#' library(ggplot2)
+#' library(parttree) # this package
+#' library(rpart)    # decision trees
+#' library(ggplot2)  # ggplot2 must be loaded separately
 #'
 #' ### Simple decision tree (max of two predictor variables)
 #'
@@ -69,7 +70,6 @@
 #' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
 #'
 #' ## Fix with 'flip = TRUE'
-#' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flip = TRUE)
 #'
 #'
 #' ### Various front-end frameworks are also supported, e.g.:
@@ -77,9 +77,9 @@
 #' library(parsnip)
 #'
 #' iris_tree_parsnip =
-#'   decision_tree() |>
-#'   set_engine("rpart") |>
-#'   set_mode("classification") |>
+#'   decision_tree() %>%
+#'   set_engine("rpart") %>%
+#'   set_mode("classification") %>%
 #'   fit(Species ~ Petal.Length + Petal.Width, data=iris)
 #'
 #' p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)
