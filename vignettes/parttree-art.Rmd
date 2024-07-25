@@ -29,6 +29,8 @@ library(parttree) # This package
 library(rpart)    # For decision trees
 library(magick)   # For reading and manipulating images
 library(imager)   # Another image library, with some additional features
+
+op = par(mar = c(0,0,0,0)) # Remove plot margins
 ```
 
 While the exact details will vary depending on the image at hand, the essential
@@ -71,7 +73,8 @@ manipulation.]
 rosalba = image_read("https://upload.wikimedia.org/wikipedia/commons/a/aa/Rembrandt_Peale_-_Portrait_of_Rosalba_Peale_-_Google_Art_Project.jpg")
 
 # Crop around the eyes
-rosalba = image_crop(rosalba, "855x450+890+1350")
+rosalba = image_crop(rosalba, "850x400+890+1350")
+# rosalba = image_crop(rosalba, "750x350+890+1350")
 
 # Convert to cimg (better for in-memory manipulation)
 rosalba = magick2cimg(rosalba)
@@ -85,7 +88,7 @@ With our cropped image in hand, let's walk through the 4-step recipe from above.
 
 Step 1 is converting the image into a data frame.
 
-```{r}
+```{r rosalba_df}
 # Coerce to data frame
 rosalba_df = as.data.frame(rosalba)
 
@@ -98,7 +101,7 @@ head(rosalba_df)
 Step 2 is splitting the image by RGB colour channel. This is the `cc` column
 above, where 1=Red, 2=Green, and 3=Blue.
 
-```{r}
+```{r rosalba_ccs}
 rosalba_ccs = split(rosalba_df, rosalba_df$cc)
 
 # We have a list of three DFs by colour channel. Uncomment if you want to see:
@@ -112,13 +115,14 @@ we see more variation in the final predictions) and trimming each tree to a
 maximum depth of 30 nodes. The next code chunk takes about 15 seconds to run on
 my laptop, but should be much quicker if you downloaded a lower-res image.
 
-```{r}
+```{r trees}
 ## Start creating regression tree for each color channel. We'll adjust some
 ## control parameters to give us the "right" amount of resolution in the final
 ## plots.
 trees = lapply(
   rosalba_ccs, 
-  function(d) rpart(value ~ x + y, data=d, control=list(cp=0.00001, maxdepth=20))
+  # function(d) rpart(value ~ x + y, data=d, control=list(cp=0.00001, maxdepth=20))
+  function(d) rpart(value ~ x + y, data=d, control=list(cp=0.00002, maxdepth=20))
   )
 ```
 
@@ -126,7 +130,7 @@ Step 4 is using our model (colour) predictions to construct our abstracted art
 piece. I was bit glib about it earlier, since it really involves a few
 sub-steps. First, let's grab the predictions for each of our trees.
 
-```{r}
+```{r pred_trees}
 pred = lapply(trees, predict) # get predictions for each tree
 ```
 
@@ -138,7 +142,7 @@ overwriting the "value" column of our original (pre-split) `rosalba_df` data
 frame. We can then coerce the data frame back into a `cimg` object, which comes
 with a bunch of nice plotting methods.
 
-```{r}
+```{r pred_img}
 # The pred object is a list, so we convert it to a vector before overwriting the
 # value column of the original data frame
 rosalba_df$value = do.call("c", pred)
@@ -152,10 +156,7 @@ Now we're ready to draw our abstracted art piece. It's also where
 the partitioned areas of the downscaled pixels. Here's how we can do it using
 base R plotting functions. 
 
-```{r}
-## Maximum/minimum for plotting range as base rect() does not handle Inf well
-m = 1000
-
+```{r rosalba_abstract}
 # get a list of parttree data frames (one for each tree)
 pts = lapply(trees, parttree)
 
@@ -164,22 +165,23 @@ plot(pred_img, axes = FALSE)
 ## ... then layer the partitions as a series of rectangles
 lapply(
   pts, 
-  function(pt) rect(
-    pmax(-m, pt$xmin), pmax(-m, pt$ymin), pmin(m, pt$xmax), pmin(m, pt$ymax),
-    lwd = 0.06, border = "grey15"
-    )
+  function(pt) plot(
+    pt, raw = FALSE, add = TRUE, expand = FALSE,
+    fill_alpha = NULL, lwd = 0.1, border = "grey15"
   )
+)
 ```
 
 We can achieve the same effect with **ggplot2** if you prefer to use that.
 
-```{r}
+```{r rosalba_abstract_gg}
+library(ggplot2)
 ggplot() +
   annotation_raster(pred_img,  ymin=-Inf, ymax=Inf, xmin=-Inf, xmax=Inf) +
   lapply(trees, function(d) geom_parttree(data = d, lwd = 0.05, col = "grey15")) +
   scale_x_continuous(limits=c(0, max(rosalba_df$x)), expand=c(0,0)) +
   scale_y_reverse(limits=c(max(rosalba_df$y), 0), expand=c(0,0)) +
-  coord_fixed(ratio = 0.9) +
+  coord_fixed(ratio = Reduce(x = dim(rosalba)[2:1], f = "/") * 2) +
   theme_void()
 ```
 
@@ -196,7 +198,7 @@ Here are the main image conversion, modeling, and prediction steps. These follow
 the same recipe that we saw in the previous portrait example, so I won't repeat
 my explanations.
 
-```{r}
+```{r bonzai}
 bonzai = load.image("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Japanese_Zelkova_bonsai_16%2C_30_April_2012.JPG/480px-Japanese_Zelkova_bonsai_16%2C_30_April_2012.JPG")
 plot(bonzai, axes = FALSE)
 
@@ -214,7 +216,7 @@ bonzai_ccs = split(bonzai_df, bonzai_df$cc)
 bonzai_trees = lapply(
   bonzai_ccs, 
   function(d) rpart(value ~ x + y, data=d, control=list(cp=0.00001, maxdepth=10))
-  )
+)
 
 # Overwrite value column with predictions vector
 bonzai_df$value = do.call("c", lapply(bonzai_trees, predict))
@@ -232,7 +234,7 @@ I first saw this trick or adapted this function from. But it works particularly
 well in cases like this where we want the partition lines to blend in with the
 main image.]
 
-```{r}
+```{r bonzai_mean_cols}
 mean_cols = function(dat) {
   mcols = tapply(dat$value, dat$cc, FUN = "mean")
   col1 = rgb(mcols[1], mcols[2], mcols[3])
@@ -246,9 +248,33 @@ mean_cols = function(dat) {
 bonzai_mean_cols = mean_cols(bonzai_df)
 ```
 
+The penultimate step is to generate `parttree` objects from each of our colour
+channel-based trees.
+
+```{r bonza_pts}
+bonzai_pts = lapply(bonzai_trees, parttree)
+```
+
 And now we can plot everything together.
 
+```{r bonza_abstract}
+plot(bonzai_pred_img, axes = FALSE)
+Map(
+  function(pt, cols) {
+    plot(
+      pt, raw = FALSE, add = TRUE, expand = FALSE,
+      fill_alpha = 0, lwd = 0.2, border = cols
+    )
+  },
+  pt = bonzai_pts,
+  cols = bonzai_mean_cols
+)
+```
+
+Again, equivalent result for those prefer **ggplot2**.
+
 ```{r}
+# library(ggplot2)
 ggplot() +
   annotation_raster(bonzai_pred_img,  ymin=-Inf, ymax=Inf, xmin=-Inf, xmax=Inf) +
   Map(function(d, cols) geom_parttree(data = d, lwd = 0.1, col = cols), d = bonzai_trees, cols = bonzai_mean_cols) +
@@ -262,7 +288,7 @@ ggplot() +
 
 The individual trees for each colour channel make for nice stained glass prints...
 
-```{r}
+```{r, eval=FALSE, include=FALSE}
 library(patchwork)
 
 ## Aside: We're reversing the y-scale since higher values actually correspond
@@ -286,4 +312,23 @@ g =
 g[[1]] + g[[2]] + g[[3]]
 ```
 
+```{r bonzai_glass}
+lapply(
+  seq_along(bonzai_pts),
+  function(i) {
+    plot(
+      bonzai_pts[[i]], raw = FALSE, expand = FALSE,
+      axes = FALSE, legend = FALSE,
+      main = paste0(c("R", "G", "B")[i]),
+      ## Aside: We're reversing the y-scale since higher values actually
+      ## correspond to points lower on the image, visually.
+      ylim = rev(attr(bonzai_pts[[i]], "parttree")[["yrange"]])
+    ) 
+  }
+)
+```
 
+```{r reset_par}
+# reset the plot margins
+par(op)
+```
