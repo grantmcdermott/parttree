@@ -8,6 +8,10 @@
 #'   remove the borders altogether, specify as `NA`.
 #' @param fill_alpha Numeric in the range `[0,1]`. Alpha transparency of the
 #'   filled partition rectangles. Default is `0.3`.
+#' @param add Logical. Add to an existing plot? Default is `FALSE`.
+#' @param expand Logical. Should the partition limits be expanded to to meet the
+#'   edge of the plot axes? Default is `TRUE`. If `FALSE`, then the partition
+#'   limits will extend only until the range of the raw data.
 #' @param ... Additional arguments passed down to
 #'   \code{\link[graphics]{tinyplot}}[tinyplot].
 #' @param raw Logical. Should the raw (original) data points be plotted too?
@@ -69,10 +73,9 @@ plot.parttree =
                 raw_data = eval(orig_call$data)[, c(response, xvar, yvar)]
                 if (!is.null(orig_na_idx)) raw_data = raw_data[-orig_na_idx, , drop = FALSE]
             }
-            if (is.null(raw_data)){
+            if (is.null(raw_data) || (is.atomic(raw_data) && is.na(raw_data))){
                 warning(
-                    "\nCould not find original data. Ignoring.",
-                    "\n(Did you delete the original model object?)\n"
+                    "\nCould not find original data. Setting `raw = FALSE`.\n"
                 )
                 raw = FALSE
             }
@@ -119,23 +122,6 @@ plot.parttree =
         }
 
         object$response = object[[response]]
-
-        # # First draw empty plot (since we need the plot corners to correctly
-        # # expand the partition limits to the edges of the plot)
-        # with(
-        #     object,
-        #     tinyplot(
-        #         xmin = xmin, ymin = ymin, xmax = xmax, ymax = ymax,
-        #         by = response,
-        #         type = "rect",
-        #         col = border,
-        #         fill = fill_alpha,
-        #         xlab = xlab, ylab = ylab,
-        #         legend = list(title = NULL),
-        #         empty = TRUE,
-        #         ...
-        #     )
-        # )
 
         # Grab the plot corners and adjust the partition limits
         if (isTRUE(expand)) {

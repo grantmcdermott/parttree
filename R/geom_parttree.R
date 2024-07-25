@@ -1,4 +1,4 @@
-#' @title Visualise tree partitions
+#' @title Visualise tree partitions with ggplot2
 #'
 #' @description `geom_parttree()` is a simple extension of
 #'   [ggplot2::geom_rect()]that first calls
@@ -7,12 +7,12 @@
 #' @param data An [rpart::rpart.object] or an object of compatible
 #'   type (e.g. a decision tree constructed via the `partykit`, `tidymodels`, or
 #'   `mlr3` front-ends).
-#' @param flipaxes Logical. By default, the "x" and "y" axes variables for
+#' @param flip Logical. By default, the "x" and "y" axes variables for
 #'   plotting are determined by the first split in the tree. This can cause
 #'   plot orientation mismatches depending on how users specify the other layers
 #'   of their plot. Setting to `TRUE` will flip the "x" and "y" variables for
 #'   the `geom_parttree` layer.
-#' @import ggplot2
+#' @importFrom ggplot2 aes aes_all layer GeomRect ggproto
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::geom_segment
@@ -40,6 +40,7 @@
 #' @export
 #' @examples
 #' library(rpart)
+#' library(ggplot2)
 #'
 #' ### Simple decision tree (max of two predictor variables)
 #'
@@ -67,8 +68,8 @@
 #' ## Oops
 #' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
 #'
-#' ## Fix with 'flipaxes = TRUE'
-#' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flipaxes = TRUE)
+#' ## Fix with 'flip = TRUE'
+#' p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flip = TRUE)
 #'
 #'
 #' ### Various front-end frameworks are also supported, e.g.:
@@ -106,8 +107,8 @@ geom_parttree =
   function(mapping = NULL, data = NULL,
            stat = "identity", position = "identity",
            linejoin = "mitre", na.rm = FALSE, show.legend = NA,
-           inherit.aes = TRUE, flipaxes = FALSE, ...) {
-    pdata = parttree(data, flipaxes = flipaxes)
+           inherit.aes = TRUE, flip = FALSE, ...) {
+    pdata = parttree(data, flip = flip)
     mapping_null = is.null(mapping)
     mapping$xmin = quote(xmin)
     mapping$xmax = quote(xmax)
