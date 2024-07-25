@@ -35,13 +35,13 @@ Imports:
     graphics,
     stats,
     data.table,
-    ggplot2 (>= 3.4.0),
     partykit,
     rlang,
     rpart,
     tinyplot (> 0.1.0)
 Suggests: 
     tinytest,
+    ggplot2 (>= 3.4.0),
     palmerpenguins,
     titanic,
     mlr3,

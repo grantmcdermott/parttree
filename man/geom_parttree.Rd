@@ -107,7 +107,8 @@ lists which parameters it can accept.
 \code{geom_parttree()} is a simple extension of
 \code{\link[ggplot2:geom_tile]{ggplot2::geom_rect()}}that first calls
 \code{\link[=parttree]{parttree()}} to convert the inputted tree object into an
-amenable data frame.
+amenable data frame. Please note that \code{ggplot2} is not a hard dependency
+of \code{parttree} and should thus be installed separately on the user's system.
 }
 \details{
 Because of the way that \code{ggplot2} validates inputs and assembles
@@ -172,9 +173,9 @@ p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flip = TRUE
 library(parsnip)
 
 iris_tree_parsnip =
-  decision_tree() \%>\%
-  set_engine("rpart") \%>\%
-  set_mode("classification") \%>\%
+  decision_tree() |>
+  set_engine("rpart") |>
+  set_mode("classification") |>
   fit(Species ~ Petal.Length + Petal.Width, data=iris)
 
 p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)

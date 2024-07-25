@@ -3,7 +3,8 @@
 #' @description `geom_parttree()` is a simple extension of
 #'   [ggplot2::geom_rect()]that first calls
 #'   [parttree()] to convert the inputted tree object into an
-#'   amenable data frame.
+#'   amenable data frame. Please note that `ggplot2` is not a hard dependency
+#'   of `parttree` and should thus be installed separately on the user's system.
 #' @param data An [rpart::rpart.object] or an object of compatible
 #'   type (e.g. a decision tree constructed via the `partykit`, `tidymodels`, or
 #'   `mlr3` front-ends).
@@ -12,7 +13,6 @@
 #'   plot orientation mismatches depending on how users specify the other layers
 #'   of their plot. Setting to `TRUE` will flip the "x" and "y" variables for
 #'   the `geom_parttree` layer.
-#' @importFrom ggplot2 aes aes_all layer GeomRect ggproto
 #' @inheritParams ggplot2::layer
 #' @inheritParams ggplot2::geom_point
 #' @inheritParams ggplot2::geom_segment
@@ -77,9 +77,9 @@
 #' library(parsnip)
 #'
 #' iris_tree_parsnip =
-#'   decision_tree() %>%
-#'   set_engine("rpart") %>%
-#'   set_mode("classification") %>%
+#'   decision_tree() |>
+#'   set_engine("rpart") |>
+#'   set_mode("classification") |>
 #'   fit(Species ~ Petal.Length + Petal.Width, data=iris)
 #'
 #' p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)
@@ -108,6 +108,15 @@ geom_parttree =
            stat = "identity", position = "identity",
            linejoin = "mitre", na.rm = FALSE, show.legend = NA,
            inherit.aes = TRUE, flip = FALSE, ...) {
+
+    ggplot2_installed = requireNamespace("ggplot2", quietly = TRUE)
+    if (isFALSE(ggplot2_installed)) {
+      stop("Please install the ggplot2 package.", .call = FALSE)
+    } else if (utils::packageVersion("ggplot2") < "3.4.0") {
+      stop("Please install a newer version of ggplot2 (>= 3.4.0).")
+    }
+
+
     pdata = parttree(data, flip = flip)
     mapping_null = is.null(mapping)
     mapping$xmin = quote(xmin)
@@ -115,11 +124,11 @@ geom_parttree =
     mapping$ymin = quote(ymin)
     mapping$ymax = quote(ymax)
     if (mapping_null) {
-      mapping = aes_all(mapping)
+      mapping = ggplot2::aes_all(mapping)
     }
     mapping$x = rlang::quo(NULL)
     mapping$y = rlang::quo(NULL)
-    layer(
+    ggplot2::layer(
       stat = stat, geom = GeomParttree,
       data = pdata,
       mapping = mapping,
@@ -130,11 +139,13 @@ geom_parttree =
 
 ## Underlying ggproto object
 GeomParttree =
-  ggproto(
-    "GeomParttree", GeomRect,
-    default_aes = aes(colour = "black", linewidth = 0.5, linetype = 1,
+  ggplot2::ggproto(
+    "GeomParttree", ggplot2::GeomRect,
+    default_aes = ggplot2::aes(colour = "black", linewidth = 0.5, linetype = 1,
                       x=NULL, y = NULL,
                       fill = NA, alpha = NA
     ),
     non_missing_aes = c("x", "y", "xmin", "xmax", "ymin", "ymax")
   )
+
+
