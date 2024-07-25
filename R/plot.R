@@ -8,10 +8,13 @@
 #'   remove the borders altogether, specify as `NA`.
 #' @param fill_alpha Numeric in the range `[0,1]`. Alpha transparency of the
 #'   filled partition rectangles. Default is `0.3`.
-#' @param add Logical. Add to an existing plot? Default is `FALSE`.
 #' @param expand Logical. Should the partition limits be expanded to to meet the
 #'   edge of the plot axes? Default is `TRUE`. If `FALSE`, then the partition
 #'   limits will extend only until the range of the raw data.
+#' @param jitter Logical. Should the raw points be jittered? Default is `FALSE`.
+#'   Only evaluated if `raw = TRUE`.
+#' @param xlab,ylab Character string(s). Custom labels for the x and y axes.
+#' @param add Logical. Add to an existing plot? Default is `FALSE`.
 #' @param ... Additional arguments passed down to
 #'   \code{\link[graphics]{tinyplot}}[tinyplot].
 #' @param raw Logical. Should the raw (original) data points be plotted too?
@@ -48,10 +51,11 @@ plot.parttree =
         raw = TRUE,
         border = "black",
         fill_alpha = 0.3,
+        expand = TRUE,
+        jitter = FALSE,
         xlab = NULL,
         ylab = NULL,
         add = FALSE,
-        expand = TRUE,
         ...) {
 
         xvar = attr(object, "parttree")[["xvar"]]
@@ -110,6 +114,11 @@ plot.parttree =
             )
             colnames(dobj) = c(response, xvar, yvar)
 
+            if (isTRUE(raw) && isTRUE(jitter)) {
+                dobj[[xvar]] = range(c(dobj[[xvar]], jitter(raw_data[[xvar]])), na.rm = TRUE)
+                dobj[[yvar]] = range(c(dobj[[yvar]], jitter(raw_data[[yvar]])), na.rm = TRUE)
+            }
+
             tinyplot(
                 plot_fml,
                 data = dobj,
@@ -149,10 +158,11 @@ plot.parttree =
 
         # Add the original data points (if requested)
         if (isTRUE(raw)) {
+            ptype = ifelse(isTRUE(jitter), "j", "p")
             tinyplot(
                 plot_fml,
                 data = raw_data,
-                type = "p",
+                type = ptype,
                 add = TRUE,
                 ...
             )

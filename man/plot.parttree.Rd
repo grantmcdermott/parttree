@@ -9,10 +9,11 @@
   raw = TRUE,
   border = "black",
   fill_alpha = 0.3,
+  expand = TRUE,
+  jitter = FALSE,
   xlab = NULL,
   ylab = NULL,
   add = FALSE,
-  expand = TRUE,
   ...
 )
 }
@@ -28,11 +29,16 @@ remove the borders altogether, specify as \code{NA}.}
 \item{fill_alpha}{Numeric in the range \verb{[0,1]}. Alpha transparency of the
 filled partition rectangles. Default is \code{0.3}.}
 
-\item{add}{Logical. Add to an existing plot? Default is \code{FALSE}.}
-
 \item{expand}{Logical. Should the partition limits be expanded to to meet the
 edge of the plot axes? Default is \code{TRUE}. If \code{FALSE}, then the partition
 limits will extend only until the range of the raw data.}
+
+\item{jitter}{Logical. Should the raw points be jittered? Default is \code{FALSE}.
+Only evaluated if \code{raw = TRUE}.}
+
+\item{xlab, ylab}{Character string(s). Custom labels for the x and y axes.}
+
+\item{add}{Logical. Add to an existing plot? Default is \code{FALSE}.}
 
 \item{...}{Additional arguments passed down to
 \code{\link[graphics]{tinyplot}}\link{tinyplot}.}
