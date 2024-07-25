@@ -9,17 +9,23 @@ if (require(tidymodels)) {
   fml_cl = Species ~ Petal.Length + Petal.Width
 
   # parsnip
-  ps_cl = decision_tree() %>%
-    set_engine("rpart") %>%
-    set_mode("classification") %>%
-    fit(fml_cl, data = iris)
-  expect_equal(pt_cl_known, parttree(ps_cl))
+  ps_cl_pt = decision_tree() |>
+    set_engine("rpart") |>
+    set_mode("classification") |>
+    fit(fml_cl, data = iris) |>
+    parttree()
+  attr(ps_cl_pt, "parttree") = NULL
+  class(ps_cl_pt) = "data.frame"
+  expect_equal(pt_cl_known, ps_cl_pt)
 
   # workflows
-  wf_spec_cl = decision_tree() %>% set_mode("classification")
+  wf_spec_cl = decision_tree() |> set_mode("classification")
   wf_tree_cl = workflow(fml_cl, spec = wf_spec_cl)
   wf_cl = fit(wf_tree_cl, iris)
-  expect_equal(pt_cl_known, parttree(wf_cl))
+  wf_cl_pt = parttree(wf_cl)
+  attr(wf_cl_pt, "parttree") = NULL
+  class(wf_cl_pt) = "data.frame"
+  expect_equal(pt_cl_known, wf_cl_pt)
 }
 
 #
@@ -33,15 +39,21 @@ if (require(tidymodels)) {
   fml_reg = Sepal.Length ~ Petal.Length + Sepal.Width
 
   # parsnip
-  ps_reg = decision_tree() %>%
-    set_engine("rpart") %>%
-    set_mode("regression") %>%
-    fit(fml_reg, data = iris)
-  expect_equal(pt_reg_known, parttree(ps_reg), tolerance = 1e-7)
+  ps_reg_pt = decision_tree() |>
+    set_engine("rpart") |>
+    set_mode("regression") |>
+    fit(fml_reg, data = iris) |>
+    parttree()
+  attr(ps_reg_pt, "parttree") = NULL
+  class(ps_reg_pt) = "data.frame"
+  expect_equal(pt_reg_known, ps_reg_pt, tolerance = 1e-7)
 
   # workflows
-  wf_spec_reg = decision_tree() %>% set_mode("regression")
+  wf_spec_reg = decision_tree() |> set_mode("regression")
   wf_tree_reg = workflow(fml_reg, spec = wf_spec_reg)
   wf_reg = fit(wf_tree_reg, iris)
-  expect_equal(pt_reg_known, parttree(wf_reg), tolerance = 1e-7)
+  wf_reg_pt = parttree(wf_reg)
+  attr(wf_reg_pt, "parttree") = NULL
+  class(wf_reg_pt) = "data.frame"
+  expect_equal(pt_reg_known, wf_reg_pt, tolerance = 1e-7)
 }

@@ -7,25 +7,33 @@ source('known_output/parttree_rpart_classification.R')
 
 # rpart
 rp = rpart::rpart(Species ~ Petal.Length + Petal.Width, data = iris)
-expect_equal(pt_cl_known, parttree(rp))
+rp_pt = parttree(rp)
+attr(rp_pt, "parttree") = NULL
+class(rp_pt) = "data.frame"
+expect_equal(pt_cl_known, rp_pt)
 
 # partykit
 if (require(partykit)) {
   rp2 = as.party(rp)
-  rp2 = parttree(rp2)
-  row.names(rp2) = NULL
+  rp2_pt = parttree(rp2)
+  row.names(rp2_pt) = NULL
+  attr(rp2_pt, "parttree") = NULL
+  class(rp2_pt) = "data.frame"
   expect_equal(pt_cl_known[, setdiff(names(pt_cl_known), 'node')],
-               rp2[, setdiff(names(rp2), 'node')])
+               rp2_pt[, setdiff(names(rp2_pt), 'node')])
 }
 
 
 #
-# flipaxes
+# flip
 #
 
 # Comparison data
 source('known_output/parttree_rpart_classification_flip.R')
-expect_equal(pt_cl_known_flip, parttree(rp, flipaxes = TRUE))
+rp_pt_flip = parttree(rp, flip = TRUE)
+attr(rp_pt_flip, "parttree") = NULL
+class(rp_pt_flip) = "data.frame"
+expect_equal(pt_cl_known_flip, rp_pt_flip)
 
 
 #
@@ -35,5 +43,8 @@ expect_equal(pt_cl_known_flip, parttree(rp, flipaxes = TRUE))
 # Comparison data
 source('known_output/parttree_rpart_regression.R')
 
-rp = rpart::rpart(Sepal.Length ~ Petal.Length + Sepal.Width, data = iris)
-expect_equal(pt_reg_known, parttree(rp), tolerance = 1e-7)
+rp_reg = rpart::rpart(Sepal.Length ~ Petal.Length + Sepal.Width, data = iris)
+rp_reg_pt = parttree(rp_reg)
+attr(rp_reg_pt, "parttree") = NULL
+class(rp_reg_pt) = "data.frame"
+expect_equal(pt_reg_known, rp_reg_pt, tolerance = 1e-7)
