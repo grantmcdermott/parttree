@@ -5,7 +5,7 @@
 \title{Plot decision tree partitions}
 \usage{
 \method{plot}{parttree}(
-  object,
+  x,
   raw = TRUE,
   border = "black",
   fill_alpha = 0.3,
@@ -18,7 +18,7 @@
 )
 }
 \arguments{
-\item{object}{A \link{parttree} data frame.}
+\item{x}{A \link{parttree} data frame.}
 
 \item{raw}{Logical. Should the raw (original) data points be plotted too?
 Default is TRUE.}
@@ -41,36 +41,53 @@ Only evaluated if \code{raw = TRUE}.}
 \item{add}{Logical. Add to an existing plot? Default is \code{FALSE}.}
 
 \item{...}{Additional arguments passed down to
-\code{\link[graphics]{tinyplot}}\link{tinyplot}.}
+\code{\link[tinyplot]{tinyplot}}.}
 }
 \value{
 No return value, called for side effect of producing a plot.
+
+No return value; called for its side effect of producing a plot.
 }
 \description{
 Provides a plot method for parttree objects.
 }
 \examples{
-## rpart tree example
+## rpart trees
+
 library("rpart")
 rp = rpart(Kyphosis ~ Start + Age, data = kyphosis)
-pt = parttree(rp)
 
-## simple plot
-plot(pt)
+# A parttree object is just a data frame with additional attributes
+(rp_pt = parttree(rp))
+attr(rp_pt, "parttree")
 
-## removing the (recursive) partition borders helps to emphasise overall fit
-plot(pt, border = NA)
+# simple plot
+plot(rp_pt)
 
-## customize further by passing extra options to (tiny)plot
+# removing the (recursive) partition borders helps to emphasise overall fit
+plot(rp_pt, border = NA)
+
+# customize further by passing extra options to (tiny)plot
 plot(
-    pt,
-    border  = NA,                                     # no partition borders
-    pch     = 19,                                     # filled points
-    alpha   = 0.6,                                    # point transparency
-    grid    = TRUE,                                   # background grid
-    palette = "classic",                              # new colour palette
-    xlab    = "Topmost vertebra operated on",         # custom x title
-    ylab    = "Patient age (months)",                 # custom y title
-    main    = "Tree predictions: Kyphosis recurrence" # custom title
+   rp_pt,
+   border  = NA, # no partition borders
+   pch     = 19, # filled points
+   alpha   = 0.6, # point transparency
+   grid    = TRUE, # background grid
+   palette = "classic", # new colour palette
+   xlab    = "Topmost vertebra operated on", # custom x title
+   ylab    = "Patient age (months)", # custom y title
+   main    = "Tree predictions: Kyphosis recurrence" # custom title
 )
+
+## conditional inference trees from partyit
+
+library("partykit")
+ct = ctree(Species ~ Petal.Length + Petal.Width, data = iris)
+ct_pt = parttree(ct)
+plot(ct_pt, pch = 19, palette = "okabe", main = "ctree predictions: iris species")
+
+## rpart via partykit
+rp2 = as.party(rp)
+parttree(rp2)
 }

@@ -20,20 +20,43 @@
 #' @returns A data frame comprising seven columns: the leaf node, its path, a
 #'   set of rectangle limits (i.e., xmin, xmax, ymin, ymax), and a final column
 #'   corresponding to the predicted value for that leaf.
-#' @importFrom data.table :=
-#' @importFrom data.table .SD
-#' @importFrom data.table fifelse
+#' @importFrom data.table := .SD fifelse
 #' @export
 #' @examples
 #' ## rpart trees
-#' library("rpart")
-#' rp = rpart(Species ~ Petal.Length + Petal.Width, data = iris)
-#' parttree(rp)
 #'
-#' ## conditional inference trees
+#' library("rpart")
+#' rp = rpart(Kyphosis ~ Start + Age, data = kyphosis)
+#'
+#' # A parttree object is just a data frame with additional attributes
+#' (rp_pt = parttree(rp))
+#' attr(rp_pt, "parttree")
+#'
+#' # simple plot
+#' plot(rp_pt)
+#'
+#' # removing the (recursive) partition borders helps to emphasise overall fit
+#' plot(rp_pt, border = NA)
+#'
+#' # customize further by passing extra options to (tiny)plot
+#' plot(
+#'    rp_pt,
+#'    border  = NA, # no partition borders
+#'    pch     = 19, # filled points
+#'    alpha   = 0.6, # point transparency
+#'    grid    = TRUE, # background grid
+#'    palette = "classic", # new colour palette
+#'    xlab    = "Topmost vertebra operated on", # custom x title
+#'    ylab    = "Patient age (months)", # custom y title
+#'    main    = "Tree predictions: Kyphosis recurrence" # custom title
+#' )
+#'
+#' ## conditional inference trees from partyit
+#'
 #' library("partykit")
 #' ct = ctree(Species ~ Petal.Length + Petal.Width, data = iris)
-#' parttree(ct)
+#' ct_pt = parttree(ct)
+#' plot(ct_pt, pch = 19, palette = "okabe", main = "ctree predictions: iris species")
 #'
 #' ## rpart via partykit
 #' rp2 = as.party(rp)

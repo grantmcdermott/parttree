@@ -12,8 +12,7 @@ Authors@R: c(
            role = "ctb",
            email = "Achim.Zeileis@R-project.org",
            comment = c(ORCID = "0000-0003-0918-3766")),
-    person(given = "Brian",
-           middle = "Heseung",
+    person(given = "Brian Heseung",
            family = "Kim",
            role = "ctb",
            email = "brhkim@gmail.com",
@@ -32,12 +31,14 @@ LazyData: true
 URL: https://github.com/grantmcdermott/parttree,
     http://grantmcdermott.com/parttree
 BugReports: https://github.com/grantmcdermott/parttree/issues
-Imports: 
-    rpart,
+Imports:
+    graphics,
+    stats,
     data.table,
     ggplot2 (>= 3.4.0),
     partykit,
     rlang,
+    rpart,
     tinyplot (> 0.1.0)
 Suggests: 
     tinytest,
@@ -48,7 +49,6 @@ Suggests:
     workflows,
     magick,
     imager,
-    patchwork,
     knitr,
     rmarkdown
 Remotes: grantmcdermott/tinyplot
