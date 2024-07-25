@@ -13,7 +13,6 @@
 #'   limits will extend only until the range of the raw data.
 #' @param jitter Logical. Should the raw points be jittered? Default is `FALSE`.
 #'   Only evaluated if `raw = TRUE`.
-#' @param xlab,ylab Character string(s). Custom labels for the x and y axes.
 #' @param add Logical. Add to an existing plot? Default is `FALSE`.
 #' @param ... Additional arguments passed down to
 #'   \code{\link[tinyplot]{tinyplot}}.
@@ -33,8 +32,6 @@ plot.parttree = function(
     fill_alpha = 0.3,
     expand = TRUE,
     jitter = FALSE,
-    xlab = NULL,
-    ylab = NULL,
     add = FALSE,
     ...
     ) {
@@ -47,9 +44,6 @@ plot.parttree = function(
     raw_data = attr(object, "parttree")[["raw_data"]]
     orig_call = attr(object, "parttree")[["call"]]
     orig_na_idx = attr(object, "parttree")[["na.action"]]
-
-    if (is.null(xlab)) xlab = xvar
-    if (is.null(ylab)) ylab = yvar
 
     if (isTRUE(raw)) {
         if (!is.null(raw_data)) {

@@ -11,8 +11,6 @@
   fill_alpha = 0.3,
   expand = TRUE,
   jitter = FALSE,
-  xlab = NULL,
-  ylab = NULL,
   add = FALSE,
   ...
 )
@@ -35,8 +33,6 @@ limits will extend only until the range of the raw data.}
 
 \item{jitter}{Logical. Should the raw points be jittered? Default is \code{FALSE}.
 Only evaluated if \code{raw = TRUE}.}
-
-\item{xlab, ylab}{Character string(s). Custom labels for the x and y axes.}
 
 \item{add}{Logical. Add to an existing plot? Default is \code{FALSE}.}
 
