@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_parttree.R
 \name{geom_parttree}
 \alias{geom_parttree}
-\title{Visualise tree partitions}
+\title{Visualise tree partitions with ggplot2}
 \usage{
 geom_parttree(
   mapping = NULL,
@@ -13,7 +13,7 @@ geom_parttree(
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE,
-  flipaxes = FALSE,
+  flip = FALSE,
   ...
 )
 }
@@ -69,7 +69,7 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[ggplot2:borders]{borders()}}.}
 
-\item{flipaxes}{Logical. By default, the "x" and "y" axes variables for
+\item{flip}{Logical. By default, the "x" and "y" axes variables for
 plotting are determined by the first split in the tree. This can cause
 plot orientation mismatches depending on how users specify the other layers
 of their plot. Setting to \code{TRUE} will flip the "x" and "y" variables for
@@ -135,6 +135,7 @@ cue regarding the prediction in each partition region)}
 
 \examples{
 library(rpart)
+library(ggplot2)
 
 ### Simple decision tree (max of two predictor variables)
 
@@ -162,8 +163,8 @@ p2 = ggplot(iris, aes(x=Petal.Width, y=Petal.Length)) +
 ## Oops
 p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
 
-## Fix with 'flipaxes = TRUE'
-p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flipaxes = TRUE)
+## Fix with 'flip = TRUE'
+p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flip = TRUE)
 
 
 ### Various front-end frameworks are also supported, e.g.:

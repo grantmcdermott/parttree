@@ -27,16 +27,15 @@ Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 LazyData: true
 URL: https://github.com/grantmcdermott/parttree,
     http://grantmcdermott.com/parttree
 BugReports: https://github.com/grantmcdermott/parttree/issues
-Depends:
-    ggplot2 (>= 3.4.0)
 Imports: 
     rpart,
     data.table,
+    ggplot2 (>= 3.4.0),
     partykit,
     rlang,
     tinyplot (> 0.1.0)

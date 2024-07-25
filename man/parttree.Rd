@@ -10,36 +10,32 @@
 \alias{parttree.constparty}
 \title{Convert a decision tree into a data frame of partition coordinates}
 \usage{
-parttree(tree, keep_as_dt = FALSE, flipaxes = FALSE)
+parttree(tree, keep_as_dt = FALSE, flip = FALSE)
 }
 \arguments{
-\item{tree}{A tree object. Supported classes include
-\link[rpart:rpart.object]{rpart::rpart.object}, or the compatible classes from
-from the \code{parsnip}, \code{workflows}, or \code{mlr3} front-ends, or the
-\code{constparty} class inheriting from \code{\link[partykit:party]{partykit::party()}}.}
+\item{tree}{An \code{\link[rpart]{rpart.object}} or alike. This includes
+compatible classes from the \code{mlr3} and \code{tidymodels} frontends, or the
+\code{constparty} class inheriting from \code{\link[partykit]{party}}.}
 
 \item{keep_as_dt}{Logical. The function relies on \code{data.table} for internal
 data manipulation. But it will coerce the final return object into a
 regular data frame (default behavior) unless the user specifies \code{TRUE}.}
 
-\item{flipaxes}{Logical. The function will automatically set the y-axis
-variable as the first split variable in the tree provided unless
-the user specifies \code{TRUE}.}
+\item{flip}{Logical. Should we flip the "x" and "y" variables in the return
+data frame? The default behaviour is for the first split variable in the
+tree to take the "y" slot, and any second split variable to take the "x"
+slot. Setting to \code{TRUE} switches these around.}
 }
 \value{
-A data frame comprising seven columns: the leaf node, its path, a set
-of coordinates understandable to \code{ggplot2} (i.e., xmin, xmax, ymin, ymax),
-and a final column corresponding to the predicted value for that leaf.
+A data frame comprising seven columns: the leaf node, its path, a
+set of rectangle limits (i.e., xmin, xmax, ymin, ymax), and a final column
+corresponding to the predicted value for that leaf.
 }
 \description{
-Extracts the terminal leaf nodes of a decision tree with one or
-two numeric predictor variables. These leaf nodes are then converted into a data
-frame, where each row represents a partition (or leaf or terminal node)
-that can easily be plotted in coordinate space.
-}
-\details{
-This function can be used with a regression or classification tree
-containing one or (at most) two numeric predictors.
+Extracts the terminal leaf nodes of a decision tree that
+contains no more that two numeric predictor variables. These leaf nodes are
+then converted into a data frame, where each row represents a partition (or
+leaf or terminal node) that can easily be plotted in 2-D coordinate space.
 }
 \examples{
 ## rpart trees
@@ -57,5 +53,6 @@ rp2 = as.party(rp)
 parttree(rp2)
 }
 \seealso{
-\code{\link[=geom_parttree]{geom_parttree()}}, \code{\link[rpart:rpart]{rpart::rpart()}}, \code{\link[partykit:ctree]{partykit::ctree()}}.
+\link{plot.parttree}, \link{geom_parttree}, \code{\link[rpart]{rpart}},
+\code{\link[partykit]{ctree}} \link[partykit:ctree]{partykit::ctree}.
 }
