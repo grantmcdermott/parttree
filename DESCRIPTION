@@ -38,6 +38,7 @@ Imports:
     partykit,
     rlang,
     rpart,
+    ggplot2 (>= 3.4.0),
     tinyplot (> 0.1.0)
 Suggests: 
     tinytest,
@@ -45,7 +46,6 @@ Suggests:
     fontquiver,
     rsvg,
     svglite,
-    ggplot2 (>= 3.4.0),
     palmerpenguins,
     titanic,
     mlr3,
