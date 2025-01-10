@@ -15,11 +15,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Basic use
+## Motivating example: Classifying penguin species
 
-Let's start by loading the **parttree** package alongside **rpart**, which comes
-bundled with the base R installation and is what we'll use for fitting our
-decision trees (at least, to start with). For the basic examples that follow, 
+Start by loading the **parttree** package alongside **rpart**, which comes
+bundled with the base R installation. For the basic examples that follow, 
 I'll use the well-known
 [Palmer Penguins](https://allisonhorst.github.io/palmerpenguins/) dataset to
 demonstrate functionality. You can load this dataset via the parent package (as 
@@ -27,74 +26,108 @@ I have here), or import it directly as a CSV
 [here](https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv).
 
 ```{r setup}
+library(parttree)  # This package
 library(rpart)     # For fitting decisions trees
-library(parttree)  # This package (will automatically load ggplot2 too)
-
-theme_set(theme_linedraw())
 
 # install.packages("palmerpenguins")
 data("penguins", package = "palmerpenguins")
 head(penguins)
 ```
 
-### Categorical predictions
+Dataset in hand, let's say that we are interested in predicting penguin
+_species_ as a function of 1) flipper length and 2) bill length. We could model
+this as a simple decision tree:
 
-Say we are interested in predicting the penguins _species_ as a function of 1)
-flipper length and 2) bill length. We can visualize these relationships as a 
-simple scatter plot prior to doing any formal modeling.
-
-```{r penguin_plot_cat1}
-p = 
-  ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
-  geom_point(aes(col = species))
-p
-```
-
-Recasting in terms of a decision tree is easily done (e.g., with `rpart`).
-However, visualizing the resulting tree predictions against the raw data is hard
-to do out of the box and this where **parttree** enters the fray. The main
-function that users will interact with is `geom_parttree()`, which provides a
-new geom layer for **ggplot2** objects.
-
-
-```{r penguin_plot_cat2}
-## Fit a decision tree using the same variables as the above plot
+```{r tree}
 tree = rpart(species ~ flipper_length_mm + bill_length_mm, data = penguins)
-
-## Visualize the tree partitions by adding it to our plot with geom_parttree()
-p +  
-  geom_parttree(data = tree, aes(fill=species), alpha = 0.1) +
-  labs(caption = "Note: Points denote observations. Shaded regions denote model predictions.")
+tree
 ```
 
-#### Continuous predictions
+Like most tree-based frameworks, **rpart** comes with a default `plot` method
+for visualizing the resulting node splits.
 
-Trees with continuous independent variables are also supported. However, I 
-recommend adjusting the plot fill aesthetic since your model will likely
-partition the data into intervals that don't match up exactly with the raw data.
-The easiest way to do this is by setting your colour and fill aesthetic together
-as part of the same `scale_colour_*` call.
-
-```{r penguin_plot_con}
-tree2 = rpart(body_mass_g ~ flipper_length_mm + bill_length_mm, data=penguins)
-
-ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
-  geom_parttree(data = tree2, aes(fill=body_mass_g), alpha = 0.3) +
-  geom_point(aes(col = body_mass_g)) + 
-  scale_colour_viridis_c(aesthetics = c('colour', 'fill')) # NB: Set colour + fill together
+```{r rpart_plot}
+plot(tree, compress = TRUE)
+text(tree, use.n = TRUE)
 ```
+
+While this is okay, I don't feel that it provides much intuition about the
+model's prediction on the _scale of the actual data_. In other words, what I'd
+prefer to see is: How has our tree partitioned the original penguin data?
+
+This is where **parttree** enters the fray. The package is named for its primary
+workhorse function `parttree()`, which extracts all of the information needed
+to produce a nice plot of our tree partitions alongside the original data.
+
+```{r penguin_cl_plot}
+ptree = parttree(tree)
+plot(ptree)
+```
+
+_Et voila!_ Now we can clearly see how our model has divided up the Cartesian
+space of the data. Gentoo penguins typically have longer flippers than Chinstrap
+or Adelie penguins, while the latter have the shortest bills.
+
+From the perspective of the end-user, the `ptree` parttree object is not all
+that interesting in of itself. It is simply a data frame that contains the basic
+information needed for our plot (partition coordinates, etc.). You can think of
+it as a helpful intermediate object on our way to the visualization of interest.
+
+```{r ptree}
+# See also `attr(ptree, "parttree")`
+ptree
+```
+
+Speaking of visualization, underneath the hood `plot.parttree` calls the
+powerful
+[**tinyplot**](https://grantmcdermott.com/tinyplot)
+package. All of the latter's various customization arguments can be passed on to
+our `parttree` plot to make it look a bit nicer. For example:
+
+```{r penguin_cl_plot_custom}
+plot(ptree, pch = 16, palette = "classic", alpha = 0.75, grid = TRUE)
+```
+
+
+### Continuous predictions
+
+In addition to discrete classification problems, **parttree** also supports
+regression trees with continuous independent variables.
+
+```{r penguin_reg_plot}
+tree_cont = rpart(body_mass_g ~ flipper_length_mm + bill_length_mm, data = penguins)
+
+tree_cont |>
+  parttree() |>
+  plot(pch = 16, palette = "viridis")
+```
+
 
 ## Supported model classes
 
-Currently, the package works with decision trees created by the 
-[**rpart**](https://CRAN.R-project.org/web/package=rpart) and
-[**partykit**](https://CRAN.R-project.org/web/package=partykit) packages. 
-Moreover, it supports other front-end modes that call `rpart::rpart()` as 
-the underlying engine; in particular the
-[**tidymodels**](https://www.tidymodels.org/) ([parsnip](https://parsnip.tidymodels.org/) 
-or [workflows](https://workflows.tidymodels.org/)) and 
-[**mlr3**](https://mlr3.mlr-org.com/) packages. Here's a quick example with
-**parsnip**.
+Alongside the [**rpart**](https://CRAN.R-project.org/web/package=rpart) model
+objects that we have been working with thus far, **parttree** also supports
+decision trees created by the
+[**partykit**](https://CRAN.R-project.org/web/package=partykit) package. Here we
+see how the latter's `ctree` (conditional inference tree) algorithm yields a
+slightly more sophisticated partitioning that the former's default.
+
+```{r penguin_ctree_plot}
+library(partykit)
+
+ctree(species ~ flipper_length_mm + bill_length_mm, data = penguins) |>
+  parttree() |>
+  plot(pch = 19, palette = "classic", alpha = 0.5)
+```
+
+**parttree** also supports a variety of "frontend" modes that call
+`rpart::rpart()` as the underlying engine. This includes packages from both the
+[**mlr3**](https://mlr3.mlr-org.com/) and
+[**tidymodels**](https://www.tidymodels.org/)
+([parsnip](https://parsnip.tidymodels.org/) 
+or [workflows](https://workflows.tidymodels.org/))
+ecosystems. Here is a quick demonstration using **parsnip**, where we'll also
+pull in a different dataset just to change things up a little.
 
 ```{r titanic_plot}
 set.seed(123) ## For consistent jitter
@@ -110,51 +143,81 @@ ti_tree =
   set_engine("rpart") |>
   set_mode("classification") |>
   fit(Survived ~ Pclass + Age, data = titanic_train)
-
-## Plot the data and model partitions
-titanic_train |>
-  ggplot(aes(x=Pclass, y=Age)) +
-  geom_parttree(data = ti_tree, aes(fill=Survived), alpha = 0.1) +
-  geom_jitter(aes(col=Survived), alpha=0.7)
+## Now pass to parttree and plot
+ti_tree |>
+  parttree() |>
+  plot(pch = 16, jitter = TRUE, palette = "dark", alpha = 0.7)
 ```
 
-## Plot orientation
+## ggplot2
 
-Underneath the hood, `geom_parttree()` is calling the companion `parttree()` 
-function, which coerces the **rpart** tree object into a data frame that is 
-easily understood by **ggplot2**. For example, consider again our first "tree" 
-model from earlier. Here's the print output of the raw model.
+The default `plot.parttree` method produces a base graphics plot. But we also
+support **ggplot2** via with a dedicated `geom_parttree()` function. Here we
+demonstrate with our initial classification tree from earlier.
 
-```{r tree}
-tree
+```{r penguin_cl_ggplot2}
+library(ggplot2)
+theme_set(theme_linedraw())
+
+## re-using the tree model object from above...
+ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+  geom_point(aes(col = species)) +
+  geom_parttree(data = tree, aes(fill=species), alpha = 0.1)
 ```
 
-And here's what we get after we feed it to `parttree()`.
+Compared to the "native" `plot.parttree` method, note that the **ggplot2**
+workflow requires a few tweaks:
 
-```{r tree_parted}
-parttree(tree)
+- We need to need to plot the original dataset as a separate layer (i.e., `geom_point()`).
+- `geom_parttree()` accepts the tree object _itself_, not the result of `parttree()`.^[This is because `geom_parttree(data = <tree>)` calls `parttree(<tree>)` internally.] 
+
+Continuous regression trees can also be drawn with `geom_parttree`. However, I 
+recommend adjusting the plot fill aesthetic since your model will likely
+partition the data into intervals that don't match up exactly with the raw data.
+The easiest way to do this is by setting your colour and fill aesthetic together
+as part of the same `scale_colour_*` call.
+
+```{r penguin_reg_ggplot2}
+## re-using the tree_cont model object from above...
+ggplot(data = penguins, aes(x = flipper_length_mm, y = bill_length_mm)) +
+  geom_parttree(data = tree_cont, aes(fill=body_mass_g), alpha = 0.3) +
+  geom_point(aes(col = body_mass_g)) + 
+  scale_colour_viridis_c(aesthetics = c('colour', 'fill')) # NB: Set colour + fill together
+```
+
+### Gotcha: (gg)plot orientation
+
+As we have already said, `geom_parttree()` calls the companion `parttree()` 
+function internally, which coerces the **rpart** tree object into a data frame
+that is  easily understood by **ggplot2**. For example, consider our initial
+"ptree" object from earlier. 
+
+```{r ptree_redux}
+# ptree = parttree(tree)
+ptree
 ```
 
 Again, the resulting data frame is designed to be amenable to a **ggplot2** geom
-layer, with columns like `xmin`, `xmax`, etc. specifying aesthetics that 
-**ggplot2** recognises. (Fun fact: `geom_parttree()` is really just a thin 
-wrapper around `geom_rect()`.) The goal of the package is to abstract away these 
-kinds of details 
-from the user, so we can just specify `geom_parttree()` &mdash; with a valid
-tree object as the data input &mdash; and be done with it. However, while this 
-generally works well, it can sometimes lead to unexpected behaviour in terms of 
-plot orientation. That's because it's hard to guess ahead of time what the user 
-will specify as the x and y variables (i.e. axes) in their other plot layers. To 
-see what I mean, let's redo our penguin plot from earlier, but this time switch 
-the axes in the main `ggplot()` call.
+layer, with columns like `xmin`, `xmax`, etc. specifying aesthetics that
+**ggplot2** recognizes. (Fun fact: `geom_parttree()` is really just a thin
+wrapper around `geom_rect()`.) The goal of **parttree** is to abstract away
+these kinds of details from the user, so that they can just specify
+`geom_parttree()`&mdash;with a valid tree object as the data input&mdash;and be
+done with it. However, while this generally works well, it can sometimes lead to
+unexpected behaviour in terms of plot orientation. That's because it's hard to
+guess ahead of time what the user will specify as the x and y variables (i.e.
+axes) in their other **ggplot2** layers.^[The default `plot.partree` method
+doesn't have this problem because it assigns the x and y variables for both the
+partitions and raw data points as part of the same function call.] To see what I
+mean, let's redo our penguin plot from earlier, but this time switch the axes in
+the main `ggplot()` call.
 
-```{r tree_plot_mismatch}
+```{r penguin_cl_ggplot_mismatch}
 ## First, redo our first plot but this time switch the x and y variables
-p3 = 
-  ggplot(
-    data = penguins, 
-    aes(x = bill_length_mm, y = flipper_length_mm) ## Switched!
-    ) +
+p3 = ggplot(
+  data = penguins, 
+  aes(x = bill_length_mm, y = flipper_length_mm) ## Switched!
+  ) +
   geom_point(aes(col = species))
 
 ## Add on our tree (and some preemptive titling..)
@@ -163,49 +226,18 @@ p3 +
   labs(
     title = "Oops!",
     subtitle = "Looks like a mismatch between our x and y axes..."
-    )
+  )
 ```
 
 As was the case here, this kind of orientation mismatch is normally (hopefully) 
-pretty easy to recognize. To fix, we can use the `flipaxes = TRUE` argument to 
+pretty easy to recognize. To fix, we can use the `flip = TRUE` argument to 
 flip the orientation of the `geom_parttree` layer.
 
-```{r tree_plot_flip}
+```{r penguin_cl_ggplot_mismatch_flip}
 p3 +
   geom_parttree(
     data = tree, aes(fill = species), alpha = 0.1,
-    flipaxes = TRUE  ## Flip the orientation
-    ) +
+    flip = TRUE  ## Flip the orientation
+  ) +
   labs(title = "That's better")
-```
-
-## Base graphics
-
-While the package has been primarily designed to work with **ggplot2**, the
-`parttree()` infrastructure can also be used to generate plots with base
-graphics. Here, the `ctree()` function from **partykit** is used for fitting
-the tree.
-
-```{r ctree_base_graphics}
-library(partykit)
-
-## CTree and corresponding partition
-ct = ctree(species ~ flipper_length_mm + bill_length_mm, data = penguins)
-pt = parttree(ct)
-
-## Color palette
-pal = palette.colors(4, "R4")[-1]
-
-## Maximum/minimum for plotting range as rect() does not handle Inf well
-m = 1000
-
-## scatter plot() with added rect()
-plot(
-  bill_length_mm ~ flipper_length_mm, 
-  data = penguins, col = pal[species], pch = 19
-  )
-rect(
-  pmax(-m, pt$xmin), pmax(-m, pt$ymin), pmin(m, pt$xmax), pmin(m, pt$ymax),
-  col = adjustcolor(pal, alpha.f = 0.1)[pt$species]
-  )
 ```

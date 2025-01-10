@@ -10,18 +10,17 @@
 <!-- badges: end -->
 
 Visualize simple 2-D decision tree partitions in R. The **parttree**
-package is optimised to work with
-[**ggplot2**](https://ggplot2.tidyverse.org/), although it can be used
-to visualize tree partitions with base R graphics too.
+package provides visualization methods for both base R graphics (via
+[**tinyplot**](https://grantmcdermott.com/tinyplot/)) and
+[**ggplot2**](https://ggplot2.tidyverse.org/).
 
 ## Installation
 
-This package is not yet on CRAN, but can be installed from
-[GitHub](https://github.com/) with:
+This package is not on CRAN yet, but can be installed from
+[r-universe](https://grantmcdermott.r-universe.dev/parttree):
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("grantmcdermott/parttree")
+install.packages("parttree", repos = "https://grantmcdermott.r-universe.dev")
 ```
 
 ## Quickstart
@@ -34,15 +33,49 @@ quickstart example using the
 dataset that comes bundled with the **rpart** package. In this case, we
 are interested in predicting kyphosis recovery after spinal surgery, as
 a function of 1) the number of topmost vertebra that were operated, and
-2) patient age. The key visualization layer below—provided by this
-package—is `geom_partree()`.
+2) patient age.
+
+The key function is `parttree()`, which comes with its own plotting
+method.
 
 ``` r
 library(rpart)     # For the dataset and fitting decisions trees
-library(parttree)  # This package (will automatically load ggplot2 too)
-#> Loading required package: ggplot2
+library(parttree)  # This package
 
 fit = rpart(Kyphosis ~ Start + Age, data = kyphosis)
+
+# Grab the partitions and plot
+fit_pt = parttree(fit)
+plot(fit_pt)
+```
+
+<img src="man/figures/README-quickstart-1.png" width="100%" />
+
+Customize your plots by passing additional arguments:
+
+``` r
+plot(
+  fit_pt,
+  border  = NA, # no partition borders
+  pch     = 19, # filled points
+  alpha   = 0.6, # point transparency
+  grid    = TRUE, # background grid
+  palette = "classic", # new colour palette
+  xlab    = "Topmost vertebra operated on", # custom x title
+  ylab    = "Patient age (months)", # custom y title
+  main    = "Tree predictions: Kyphosis recurrence" # custom title
+)
+```
+
+<img src="man/figures/README-quickstart2-1.png" width="100%" />
+
+### ggplot2
+
+For **ggplot2** users, we offer an equivalent workflow via the
+`geom_partree()` visualization layer.
+
+``` r
+library(ggplot2) ## Should be loaded separately
 
 ggplot(kyphosis, aes(x = Start, y = Age)) +
   geom_parttree(data = fit, alpha = 0.1, aes(fill = Kyphosis)) + # <-- key layer
@@ -54,4 +87,4 @@ ggplot(kyphosis, aes(x = Start, y = Age)) +
   theme_minimal()
 ```
 
-<img src="man/figures/README-quickstart-1.png" width="100%" />
+<img src="man/figures/README-quickstart_gg-1.png" width="100%" />

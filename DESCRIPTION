@@ -1,6 +1,6 @@
 Package: parttree
 Title: Visualise simple decision tree partitions
-Version: 0.0.1.9004
+Version: 0.0.1.9005
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
@@ -12,8 +12,7 @@ Authors@R: c(
            role = "ctb",
            email = "Achim.Zeileis@R-project.org",
            comment = c(ORCID = "0000-0003-0918-3766")),
-    person(given = "Brian",
-           middle = "Heseung",
+    person(given = "Brian Heseung",
            family = "Kim",
            role = "ctb",
            email = "brhkim@gmail.com",
@@ -27,20 +26,26 @@ Description: Simple functions for plotting 2D decision tree partition plots.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 LazyData: true
 URL: https://github.com/grantmcdermott/parttree,
     http://grantmcdermott.com/parttree
 BugReports: https://github.com/grantmcdermott/parttree/issues
-Depends:
-    ggplot2 (>= 3.4.0)
-Imports: 
-    rpart,
+Imports:
+    graphics,
+    stats,
     data.table,
     partykit,
-    rlang
+    rlang,
+    rpart,
+    ggplot2 (>= 3.4.0),
+    tinyplot (> 0.1.0)
 Suggests: 
     tinytest,
+    tinysnapshot (>= 0.0.3),
+    fontquiver,
+    rsvg,
+    svglite,
     palmerpenguins,
     titanic,
     mlr3,
@@ -48,7 +53,7 @@ Suggests:
     workflows,
     magick,
     imager,
-    patchwork,
     knitr,
     rmarkdown
+Remotes: grantmcdermott/tinyplot
 VignetteBuilder: knitr

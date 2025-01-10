@@ -8,5 +8,7 @@ if (require(partykit)) {
              data = iris)
   ct = parttree(ct)
   row.names(ct) = NULL
+  attr(ct, "parttree") = NULL
+  class(ct) = "data.frame"
   expect_equal(ct, pt_ct_cl_known)
 }

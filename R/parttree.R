@@ -1,52 +1,100 @@
 #' @title Convert a decision tree into a data frame of partition coordinates
-#' @aliases parttree parttree.rpart parttree._rpart parttree.workflow parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
-#'
-#' @description Extracts the terminal leaf nodes of a decision tree with one or
-#'   two numeric predictor variables. These leaf nodes are then converted into a data
-#'   frame, where each row represents a partition (or leaf or terminal node)
-#'   that can easily be plotted in coordinate space.
-#' @param tree A tree object. Supported classes include
-#'  [rpart::rpart.object], or the compatible classes from
-#'   from the `parsnip`, `workflows`, or `mlr3` front-ends, or the
-#'   `constparty` class inheriting from [partykit::party()].
+#' @aliases parttree parttree.rpart parttree._rpart parttree.workflow
+#'   parttree.LearnerClassifRpart parttree.LearnerRegrRpart parttree.constparty
+#' @description Extracts the terminal leaf nodes of a decision tree that
+#'   contains no more that two numeric predictor variables. These leaf nodes are
+#'   then converted into a data frame, where each row represents a partition (or
+#'   leaf or terminal node) that can easily be plotted in 2-D coordinate space.
+#' @param tree An \code{\link[rpart]{rpart.object}} or alike. This includes
+#'   compatible classes from the `mlr3` and `tidymodels` frontends, or the
+#'   `constparty` class inheriting from \code{\link[partykit]{party}}.
 #' @param keep_as_dt Logical. The function relies on `data.table` for internal
 #'   data manipulation. But it will coerce the final return object into a
 #'   regular data frame (default behavior) unless the user specifies `TRUE`.
-#' @param flipaxes Logical. The function will automatically set the y-axis
-#'   variable as the first split variable in the tree provided unless
-#'   the user specifies `TRUE`.
-#' @details This function can be used with a regression or classification tree
-#'   containing one or (at most) two numeric predictors.
-#' @seealso [geom_parttree()], [rpart::rpart()], [partykit::ctree()].
-#' @return A data frame comprising seven columns: the leaf node, its path, a set
-#'   of coordinates understandable to `ggplot2` (i.e., xmin, xmax, ymin, ymax),
-#'   and a final column corresponding to the predicted value for that leaf.
-#' @importFrom data.table :=
-#' @importFrom data.table .SD
-#' @importFrom data.table fifelse
+#' @param flip Logical. Should we flip the "x" and "y" variables in the return
+#'   data frame? The default behaviour is for the first split variable in the
+#'   tree to take the "y" slot, and any second split variable to take the "x"
+#'   slot. Setting to `TRUE` switches these around.
+#' @seealso [plot.parttree], [geom_parttree], \code{\link[rpart]{rpart}},
+#'   \code{\link[partykit]{ctree}} [partykit::ctree].
+#' @returns A data frame comprising seven columns: the leaf node, its path, a
+#'   set of rectangle limits (i.e., xmin, xmax, ymin, ymax), and a final column
+#'   corresponding to the predicted value for that leaf.
+#' @importFrom data.table := .SD fifelse
 #' @export
 #' @examples
-#' ## rpart trees
-#' library("rpart")
-#' rp = rpart(Species ~ Petal.Length + Petal.Width, data = iris)
-#' parttree(rp)
+#' library("parttree")
 #'
-#' ## conditional inference trees
+#' ## rpart trees
+#'
+#' library("rpart")
+#' rp = rpart(Kyphosis ~ Start + Age, data = kyphosis)
+#'
+#' # A parttree object is just a data frame with additional attributes
+#' (rp_pt = parttree(rp))
+#' attr(rp_pt, "parttree")
+#'
+#' # simple plot
+#' plot(rp_pt)
+#'
+#' # removing the (recursive) partition borders helps to emphasise overall fit
+#' plot(rp_pt, border = NA)
+#'
+#' # customize further by passing extra options to (tiny)plot
+#' plot(
+#'    rp_pt,
+#'    border  = NA, # no partition borders
+#'    pch     = 19, # filled points
+#'    alpha   = 0.6, # point transparency
+#'    grid    = TRUE, # background grid
+#'    palette = "classic", # new colour palette
+#'    xlab    = "Topmost vertebra operated on", # custom x title
+#'    ylab    = "Patient age (months)", # custom y title
+#'    main    = "Tree predictions: Kyphosis recurrence" # custom title
+#' )
+#'
+#' ## conditional inference trees from partyit
+#'
 #' library("partykit")
 #' ct = ctree(Species ~ Petal.Length + Petal.Width, data = iris)
-#' parttree(ct)
+#' ct_pt = parttree(ct)
+#' plot(ct_pt, pch = 19, palette = "okabe", main = "ctree predictions: iris species")
 #'
 #' ## rpart via partykit
 #' rp2 = as.party(rp)
 #' parttree(rp2)
+#'
+#' ## various front-end frameworks are also supported, e.g.
+#'
+#' # tidymodels
+#'
+#' library(parsnip)
+#'
+#' decision_tree() |>
+#'   set_engine("rpart") |>
+#'   set_mode("classification") |>
+#'   fit(Species ~ Petal.Length + Petal.Width, data=iris) |>
+#'   parttree() |>
+#'   plot(main = "This time brought to you via parsnip...")
+#'
+#' # mlr3 (NB: use `keep_model = TRUE` for mlr3 learners)
+#'
+#' library(mlr3)
+#'
+#' task_iris = TaskClassif$new("iris", iris, target = "Species")
+#' task_iris$formula(rhs = "Petal.Length + Petal.Width")
+#' fit_iris = lrn("classif.rpart", keep_model = TRUE) # NB!
+#' fit_iris$train(task_iris)
+#' plot(parttree(fit_iris), main = "... and now mlr3")
+#'
 parttree =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flip = FALSE) {
     UseMethod("parttree")
   }
 
 #' @export
 parttree.rpart =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flip = FALSE, ...) {
     ## Silence NSE notes in R CMD check. See:
     ## https://cran.r-project.org/web/packages/data.table/vignettes/datatable-importing.html#globals
     V1 = node = path = variable = side = ..vars = xvar = yvar = xmin = xmax = ymin = ymax = NULL
@@ -64,7 +112,8 @@ parttree.rpart =
 
     ## Get details about y variable for later
     ### y variable string (i.e. name)
-    y_var = attr(tree$terms, "variables")[[2]]
+    y_var = paste(tree$terms)[2]
+    # y_var = attr(tree$terms, "variables")[[2]]
     ### y values
     yvals = tree$frame[tree$frame$var == "<leaf>", ]$yval
     y_factored = attr(tree$terms, "dataClasses")[paste(y_var)] == "factor"
@@ -106,7 +155,7 @@ parttree.rpart =
       ## special case we can assume is likely wrong, notwithstanding ability to still flip axes
       if (vars[1]=="y" & vars[2]=="x") vars = rev(vars)
     }
-    if (flipaxes) {
+    if (flip) {
       vars = rev(vars)
       ## Handle edge cases with only 1 level
       if (length(vars)==1) {
@@ -150,46 +199,146 @@ parttree.rpart =
       part_coords = as.data.frame(part_coords)
     }
 
+    class(part_coords) = c("parttree", class(part_coords))
+
+    # attributes (for plot method)
+    dots = list(...)
+    if (!is.null(dots[["xvar"]])) {
+      xvar = dots[["xvar"]]
+    } else {
+      xvar = ifelse(isFALSE(flip), vars[1], vars[2])
+    }
+    if (!is.null(dots[["yvar"]])) {
+      yvar = dots[["yvar"]]
+    } else {
+      yvar = ifelse(isFALSE(flip), vars[2], vars[1])
+    }
+    if (!is.null(dots[["xrange"]])) {
+      xrange = dots[["xrange"]]
+    } else {
+      xrange = range(eval(tree$call$data, envir = attr(tree$terms, ".Environment"))[[xvar]], na.rm = TRUE)
+    }
+    if (!is.null(dots[["yrange"]])) {
+      yrange = dots[["yrange"]]
+    } else {
+      yrange = range(eval(tree$call$data, envir = attr(tree$terms, ".Environment"))[[yvar]], na.rm = TRUE)
+    }
+    raw_data = orig_call = orig_na.action = NULL
+    if (!is.null(dots[["raw_data"]])) {
+      raw_data = substitute(dots[["raw_data"]])
+    } else {
+      orig_call = tree$call
+      orig_na.action = tree$na.action
+    }
+
+    attr(part_coords, "parttree") = list(
+      xvar = xvar,
+      yvar = yvar,
+      xrange = xrange,
+      yrange = yrange,
+      response = y_var,
+      call = orig_call,
+      na.action = orig_na.action,
+      raw_data = raw_data
+      )
+
     return(part_coords)
   }
 
 #' @export
 parttree._rpart =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flip = FALSE) {
     ## parsnip front-end
     if (is.null(tree$fit)) {
       stop("No model detected.\n",
     	   "Did you forget to fit a model? See `?parsnip::fit`.")
     }
     tree = tree$fit
-    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+    # extra attribute arguments to pass through ... to parttree.rpart
+    raw_data = attr(tree$terms, ".Environment")$data
+    vars = attr(tree$terms, "term.labels")
+    xvar = ifelse(isFALSE(flip), vars[1], vars[2])
+    yvar = ifelse(isFALSE(flip), vars[2], vars[1])
+    xrange = range(raw_data[[xvar]])
+    yrange = range(raw_data[[yvar]])
+
+    parttree.rpart(
+      tree, keep_as_dt = keep_as_dt, flip = flip,
+      raw_data = raw_data,
+      xvar = xvar, yvar = yvar,
+      xrange = xrange, yrange = yrange
+    )
   }
 
 #' @export
 parttree.workflow =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flip = FALSE) {
     ## workflow front-end
     if (!workflows::is_trained_workflow(tree)) {
       stop("No model detected.\n",
            "Did you forget to fit a model? See `?workflows::fit`.")
     }
     y_name = names(tree$pre$mold$outcomes)[[1]]
+    raw_data = cbind(tree$pre$mold$predictors, tree$pre$mold$outcomes)
     tree = workflows::extract_fit_engine(tree)
+    tree$terms[[2]] = y_name
     attr(tree$terms, "variables")[[2]] = y_name
     names(attr(tree$terms, "dataClasses"))[[1]] = y_name
-    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+
+    # extra attribute arguments to pass through ... to parttree.rpart
+    vars = attr(tree$terms, "term.labels")
+    xvar = ifelse(isFALSE(flip), vars[1], vars[2])
+    yvar = ifelse(isFALSE(flip), vars[2], vars[1])
+    xrange = range(raw_data[[xvar]])
+    yrange = range(raw_data[[yvar]])
+
+    parttree.rpart(
+      tree, keep_as_dt = keep_as_dt, flip = flip,
+      raw_data = raw_data,
+      xvar = xvar, yvar = yvar,
+      xrange = xrange, yrange = yrange
+    )
   }
 
 #' @export
 parttree.LearnerClassifRpart =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flip = FALSE) {
     ## mlr3 front-end
     if (is.null(tree$model)) {
       stop("No model detected.\n",
     	   "Did you forget to assign a learner? See `?mlr3::lrn`.")
     }
+
+    pars = tree$param_set$get_values()
+    keep_model = isTRUE(pars$keep_model)
+
     tree = tree$model
-    parttree.rpart(tree, keep_as_dt = keep_as_dt, flipaxes = flipaxes)
+
+    # extra attribute arguments to pass through ... to parttree.rpart
+    # raw_data = eval(tree$call$data)
+    vars = attr(tree$terms, "term.labels")
+    xvar = ifelse(isFALSE(flip), vars[1], vars[2])
+    yvar = ifelse(isFALSE(flip), vars[2], vars[1])
+    if (keep_model) {
+      raw_data = tree$model
+      xrange = range(raw_data[[xvar]])
+      yrange = range(raw_data[[yvar]])
+    } else {
+      raw_data = NA
+      xrange = NA
+      yrange = NA
+      message(
+        "\nUnable to retrieve the original data, which we need for the default plot.parttree method.",
+        "\nFor mlr3 workflows, we recommended an explicit call to `keep_model = TRUE` when defining your Learner before training the model.\n"
+      )
+    }
+
+    parttree.rpart(
+      tree, keep_as_dt = keep_as_dt, flip = flip,
+      raw_data = raw_data,
+      xvar = xvar, yvar = yvar,
+      xrange = xrange, yrange = yrange
+    )
   }
 
 #' @export
@@ -197,7 +346,7 @@ parttree.LearnerRegrRpart = parttree.LearnerClassifRpart
 
 #' @export
 parttree.constparty =
-  function(tree, keep_as_dt = FALSE, flipaxes = FALSE) {
+  function(tree, keep_as_dt = FALSE, flip = FALSE) {
     ## sanity checks for tree
     mt = tree$terms
     mf = attr(mt, "factors")
@@ -303,11 +452,25 @@ parttree.constparty =
       path = labs
     )
     names(rval)[2L] = my
-    rval = cbind(rval, if(flipaxes) ints[, c(3L:4L, 1L:2L, drop = FALSE)] else ints)
+    rval = cbind(rval, if(flip) ints[, c(3L:4L, 1L:2L, drop = FALSE)] else ints)
     colnames(rval)[4L:7L] = c("xmin", "xmax", "ymin", "ymax")
 
     ## turn into data.table?
     if(keep_as_dt) rval = data.table::as.data.table(rval)
+
+    class(rval) = c("parttree", class(rval))
+    xvar = ifelse(isFALSE(flip), mx[1], mx[2])
+    yvar = ifelse(isFALSE(flip), mx[2], mx[1])
+    attr(rval, "parttree") = list(
+      xvar = xvar,
+      yvar = yvar,
+      xrange = range(eval(tree$data)[[xvar]], na.rm = TRUE),
+      yrange = range(eval(tree$data)[[yvar]], na.rm = TRUE),
+      response = my,
+      call = NULL,
+      na.action = NULL,
+      raw_data = substitute(tree$data) # Or, partykit::model_frame_rpart?
+      )
 
     return(rval)
 }
