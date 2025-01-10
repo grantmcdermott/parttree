@@ -130,7 +130,7 @@ for R’s in-memory manipulation.&lt;/p&gt;"><sup>2</sup></a></p>
 <span><span class="va">rosalba</span></span>
 <span><span class="co">#&gt; Image. Width: 850 pix Height: 400 pix Depth: 1 Colour channels: 3</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">rosalba</span>, axes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/peale-download-1.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/peale-download-1.png" width="70%"></p>
 <p>With our cropped image in hand, let’s walk through the 4-step recipe
 from above.</p>
 <p>Step 1 is converting the image into a data frame.</p>
@@ -213,7 +213,7 @@ Here’s how we can do it using base R plotting functions.</p>
 <span>    fill_alpha <span class="op">=</span> <span class="cn">NULL</span>, lwd <span class="op">=</span> <span class="fl">0.1</span>, border <span class="op">=</span> <span class="st">"grey15"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/rosalba_abstract-1.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/rosalba_abstract-1.png" width="70%"></p>
 <pre><code><span><span class="co">#&gt; $`1`</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -233,7 +233,7 @@ prefer to use that.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span>limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">rosalba_df</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span>, expand<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span>ratio <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Reduce</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">rosalba</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">1</span><span class="op">]</span>, f <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/rosalba_abstract_gg-1.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/rosalba_abstract_gg-1.png" width="70%"></p>
 </div>
 <div class="section level2">
 <h2 id="example-2-parttree-logo">Example 2: parttree logo<a class="anchor" aria-label="anchor" href="#example-2-parttree-logo"></a>
@@ -249,7 +249,7 @@ example, so I won’t repeat my explanations.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bonzai</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/imager/man/load.image.html" class="external-link">load.image</a></span><span class="op">(</span><span class="st">"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Japanese_Zelkova_bonsai_16%2C_30_April_2012.JPG/480px-Japanese_Zelkova_bonsai_16%2C_30_April_2012.JPG"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">bonzai</span>, axes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/bonzai-1.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/bonzai-1.png" width="70%"></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Coerce to data frame</span></span>
@@ -313,7 +313,7 @@ from each of our colour channel-based trees.</p>
 <span>  pt <span class="op">=</span> <span class="va">bonzai_pts</span>,</span>
 <span>  cols <span class="op">=</span> <span class="va">bonzai_mean_cols</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/bonza_abstract-1.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/bonza_abstract-1.png" width="70%"></p>
 <pre><code><span><span class="co">#&gt; $`1`</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -333,7 +333,7 @@ from each of our colour channel-based trees.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_reverse</a></span><span class="op">(</span>limits<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">bonzai_df</span><span class="op">$</span><span class="va">y</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span>, expand<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_fixed</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/unnamed-chunk-2-1.png" width="70%"></p>
 </div>
 <div class="section level2">
 <h2 id="postscript">Postscript<a class="anchor" aria-label="anchor" href="#postscript"></a>
@@ -354,7 +354,7 @@ glass prints…</p>
 <span>    <span class="op">)</span> </span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-art_files/figure-html/bonzai_glass-1.png" width="700"><img src="parttree-art_files/figure-html/bonzai_glass-2.png" width="700"><img src="parttree-art_files/figure-html/bonzai_glass-3.png" width="700"></p>
+<p><img src="parttree-art_files/figure-html/bonzai_glass-1.png" width="70%"><img src="parttree-art_files/figure-html/bonzai_glass-2.png" width="70%"><img src="parttree-art_files/figure-html/bonzai_glass-3.png" width="70%"></p>
 <pre><code><span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; NULL</span></span>
 <span><span class="co">#&gt; </span></span>
