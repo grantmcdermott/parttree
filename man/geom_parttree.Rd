@@ -2,7 +2,7 @@
 % Please edit documentation in R/geom_parttree.R
 \name{geom_parttree}
 \alias{geom_parttree}
-\title{Visualise tree partitions with ggplot2}
+\title{Visualize tree partitions with ggplot2}
 \usage{
 geom_parttree(
   mapping = NULL,
@@ -104,11 +104,11 @@ lists which parameters it can accept.
 }}
 }
 \description{
-\code{geom_parttree()} is a simple extension of
-\code{\link[ggplot2:geom_tile]{ggplot2::geom_rect()}}that first calls
-\code{\link[=parttree]{parttree()}} to convert the inputted tree object into an
-amenable data frame. Please note that \code{ggplot2} is not a hard dependency
-of \code{parttree} and should thus be installed separately on the user's system.
+\code{geom_parttree()} is a simple wrapper around \code{\link[=parttree]{parttree()}} that
+takes a tree model object and then converts into an amenable data frame
+that \code{ggplot2} knows how to plot. Please note that \code{ggplot2} is not a hard
+dependency of \code{parttree} and must thus be installed separately on the
+user's system before calling \code{geom_parttree}.
 }
 \details{
 Because of the way that \code{ggplot2} validates inputs and assembles
@@ -135,9 +135,11 @@ cue regarding the prediction in each partition region)}
 }
 
 \examples{
+# install.packages("ggplot2")
+library(ggplot2)  # ggplot2 must be installed/loaded separately
+
 library(parttree) # this package
 library(rpart)    # decision trees
-library(ggplot2)  # ggplot2 must be loaded separately
 
 ### Simple decision tree (max of two predictor variables)
 
@@ -170,12 +172,12 @@ p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
 
 ### Various front-end frameworks are also supported, e.g.:
 
+# install.packages("parsnip")
 library(parsnip)
 
-iris_tree_parsnip =
-  decision_tree() \%>\%
-  set_engine("rpart") \%>\%
-  set_mode("classification") \%>\%
+iris_tree_parsnip = decision_tree() |>
+  set_engine("rpart") |>
+  set_mode("classification") |>
   fit(Species ~ Petal.Length + Petal.Width, data=iris)
 
 p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)
@@ -199,7 +201,8 @@ p3
 
 ## Better to scale fill to the original data
 p3 + scale_fill_continuous(limits = range(iris$Petal.Length))
+
 }
 \seealso{
-\code{\link[=parttree]{parttree()}}, \code{\link[ggplot2:geom_tile]{ggplot2::geom_rect()}}.
+\code{\link[=plot.parttree]{plot.parttree()}}, which provides an alternative plotting method using base R graphics.
 }

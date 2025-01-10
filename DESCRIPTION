@@ -38,8 +38,9 @@ Imports:
     partykit,
     rlang,
     rpart,
-    ggplot2 (>= 3.4.0),
-    tinyplot (> 0.1.0)
+    tinyplot (>= 0.2.0)
+Enhances: 
+    ggplot2 (>= 3.4.0)
 Suggests: 
     tinytest,
     tinysnapshot (>= 0.0.3),
@@ -55,5 +56,4 @@ Suggests:
     imager,
     knitr,
     rmarkdown
-Remotes: grantmcdermott/tinyplot
 VignetteBuilder: knitr
