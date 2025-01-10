@@ -112,7 +112,7 @@ splits.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tree</span>, compress <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span><span class="va">tree</span>, use.n <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/rpart_plot-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/rpart_plot-1.png" width="90%"></p>
 <p>While this is okay, I don’t feel that it provides much intuition
 about the model’s prediction on the <em>scale of the actual data</em>.
 In other words, what I’d prefer to see is: How has our tree partitioned
@@ -124,7 +124,7 @@ our tree partitions alongside the original data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ptree</span> <span class="op">=</span> <span class="fu"><a href="../reference/parttree.html">parttree</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ptree</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_cl_plot-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_cl_plot-1.png" width="90%"></p>
 <p><em>Et voila!</em> Now we can clearly see how our model has divided
 up the Cartesian space of the data. Gentoo penguins typically have
 longer flippers than Chinstrap or Adelie penguins, while the latter have
@@ -152,7 +152,7 @@ passed on to our <code>parttree</code> plot to make it look a bit nicer.
 For example:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">ptree</span>, pch <span class="op">=</span> <span class="fl">16</span>, palette <span class="op">=</span> <span class="st">"classic"</span>, alpha <span class="op">=</span> <span class="fl">0.75</span>, grid <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_cl_plot_custom-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_cl_plot_custom-1.png" width="90%"></p>
 <div class="section level3">
 <h3 id="continuous-predictions">Continuous predictions<a class="anchor" aria-label="anchor" href="#continuous-predictions"></a>
 </h3>
@@ -165,7 +165,7 @@ independent variables.</p>
 <span><span class="va">tree_cont</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/parttree.html">parttree</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fl">16</span>, palette <span class="op">=</span> <span class="st">"viridis"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_reg_plot-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_reg_plot-1.png" width="90%"></p>
 </div>
 </div>
 <div class="section level2">
@@ -186,7 +186,7 @@ partitioning that the former’s default.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/partykit/man/ctree.html" class="external-link">ctree</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">bill_length_mm</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/parttree.html">parttree</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fl">19</span>, palette <span class="op">=</span> <span class="st">"classic"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_ctree_plot-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_ctree_plot-1.png" width="90%"></p>
 <p><strong>parttree</strong> also supports a variety of “frontend” modes
 that call <code><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart::rpart()</a></code> as the underlying engine. This
 includes packages from both the <a href="https://mlr3.mlr-org.com/" class="external-link"><strong>mlr3</strong></a> and <a href="https://www.tidymodels.org/" class="external-link"><strong>tidymodels</strong></a> (<a href="https://parsnip.tidymodels.org/" class="external-link">parsnip</a> or <a href="https://workflows.tidymodels.org/" class="external-link">workflows</a>) ecosystems. Here
@@ -210,7 +210,7 @@ also pull in a different dataset just to change things up a little.</p>
 <span><span class="va">ti_tree</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/parttree.html">parttree</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fl">16</span>, jitter <span class="op">=</span> <span class="cn">TRUE</span>, palette <span class="op">=</span> <span class="st">"dark"</span>, alpha <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/titanic_plot-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/titanic_plot-1.png" width="90%"></p>
 </div>
 <div class="section level2">
 <h2 id="ggplot2">ggplot2<a class="anchor" aria-label="anchor" href="#ggplot2"></a>
@@ -227,7 +227,7 @@ with our initial classification tree from earlier.</p>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">penguins</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>, y <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tree</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">species</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_cl_ggplot2-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_cl_ggplot2-1.png" width="90%"></p>
 <p>Compared to the “native” <code>plot.parttree</code> method, note that
 the <strong>ggplot2</strong> workflow requires a few tweaks:</p>
 <ul>
@@ -252,7 +252,7 @@ the same <code>scale_colour_*</code> call.</p>
 <span>  <span class="fu"><a href="../reference/geom_parttree.html">geom_parttree</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">tree_cont</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">body_mass_g</span><span class="op">)</span>, alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>col <span class="op">=</span> <span class="va">body_mass_g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html" class="external-link">scale_colour_viridis_c</a></span><span class="op">(</span>aesthetics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'colour'</span>, <span class="st">'fill'</span><span class="op">)</span><span class="op">)</span> <span class="co"># NB: Set colour + fill together</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_reg_ggplot2-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_reg_ggplot2-1.png" width="90%"></p>
 <div class="section level3">
 <h3 id="gotcha-ggplot-orientation">Gotcha: (gg)plot orientation<a class="anchor" aria-label="anchor" href="#gotcha-ggplot-orientation"></a>
 </h3>
@@ -304,7 +304,7 @@ plot from earlier, but this time switch the axes in the main
 <span>    title <span class="op">=</span> <span class="st">"Oops!"</span>,</span>
 <span>    subtitle <span class="op">=</span> <span class="st">"Looks like a mismatch between our x and y axes..."</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_cl_ggplot_mismatch-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_cl_ggplot_mismatch-1.png" width="90%"></p>
 <p>As was the case here, this kind of orientation mismatch is normally
 (hopefully) pretty easy to recognize. To fix, we can use the
 <code>flip = TRUE</code> argument to flip the orientation of the
@@ -316,7 +316,7 @@ plot from earlier, but this time switch the axes in the main
 <span>    flip <span class="op">=</span> <span class="cn">TRUE</span>  <span class="co">## Flip the orientation</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"That's better"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="parttree-intro_files/figure-html/penguin_cl_ggplot_mismatch_flip-1.png" width="70%"></p>
+<p><img src="parttree-intro_files/figure-html/penguin_cl_ggplot_mismatch_flip-1.png" width="90%"></p>
 </div>
 </div>
 
