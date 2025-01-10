@@ -11,7 +11,11 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  warning = FALSE
+  warning = FALSE,
+  out.width = "70%",
+  # fig.width = 8,
+  # dpi = 300,
+  asp = 0.625
 )
 ```
 
