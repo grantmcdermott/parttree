@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   warning = FALSE,
-  out.width = "70%",
+  out.width = "90%",
   # fig.width = 8,
   # dpi = 300,
   asp = 0.625

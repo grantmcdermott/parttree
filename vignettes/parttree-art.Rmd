@@ -11,19 +11,20 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  out.width = "70%",
+  out.width = "90%",
   # fig.width = 8,
   # dpi = 300,
-  asp = 0.625
+  asp = 0.625,
+  global.par = TRUE
 )
 ```
 
 ## Background
 
 One fun application of tree-based methods is abstracting over art and other
-images. For some really striking examples, take a look at the
-[portfolio](http://www.dimitris-ladopoulos.xyz/projects/portraits.html) of 
-designer Dimitris Ladopoulos. This vignette will show you how to implement
+images. For some really striking examples, take a look at designer
+[Dimitris Ladopoulos' portfolio](http://www.dimitris-ladopoulos.xyz/projects/portraits.html).
+This vignette will show you how to implement
 the same basic ideas using **parttree** and a few friends. Here are the
 packages that we'll be using.
 
@@ -90,7 +91,7 @@ plot(rosalba, axes = FALSE)
 
 With our cropped image in hand, let's walk through the 4-step recipe from above.
 
-Step 1 is converting the image into a data frame.
+**Step 1.** Convert the image into a data frame.
 
 ```{r rosalba_df}
 # Coerce to data frame
@@ -102,7 +103,7 @@ rosalba_df$value = round(rosalba_df$value, 4)
 head(rosalba_df)
 ```
 
-Step 2 is splitting the image by RGB colour channel. This is the `cc` column
+**Step 2.** Split the image by RGB colour channel. This is the `cc` column
 above, where 1=Red, 2=Green, and 3=Blue.
 
 ```{r rosalba_ccs}
@@ -112,7 +113,7 @@ rosalba_ccs = split(rosalba_df, rosalba_df$cc)
 # str(rosalba_css)
 ```
 
-Step 3 is fitting a decision tree (or similar model) on each of our colour
+**Step 3.** Fit a decision tree (or similar model) on each of our colour
 channel data frames. The tuning parameters that you give your model are a
 matter of experimentation. Here I'm giving it a low complexity parameter (so
 we see more variation in the final predictions) and trimming each tree to a 
@@ -130,7 +131,7 @@ trees = lapply(
   )
 ```
 
-Step 4 is using our model (colour) predictions to construct our abstracted art
+**Step 4.** Use our model (colour) predictions to construct our abstracted art
 piece. I was bit glib about it earlier, since it really involves a few
 sub-steps. First, let's grab the predictions for each of our trees.
 
@@ -158,7 +159,7 @@ pred_img = as.cimg(rosalba_df)
 Now we're ready to draw our abstracted art piece. It's also where
 **parttree** will enter the fray, since this is what we'll be using to highlight
 the partitioned areas of the downscaled pixels. Here's how we can do it using
-base R plotting functions. 
+base R graphics. 
 
 ```{r rosalba_abstract}
 # get a list of parttree data frames (one for each tree)
