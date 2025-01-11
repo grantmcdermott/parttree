@@ -1,6 +1,6 @@
 Package: parttree
 Title: Visualise simple decision tree partitions
-Version: 0.0.1.9005
+Version: 0.0.1.9006
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",

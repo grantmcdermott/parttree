@@ -1,10 +1,10 @@
-# parttree 0.0.1.9005
+# parttree 0.0.1.9006
 
 To be released as 0.1.0
 
 #### Breaking changes
 
-* Move ggplot2 to Suggests, following the addition of native (base R)
+* Move ggplot2 to Enhances, following the addition of native (base R)
 `plot.parttree` method. The `geom_parttree()` function now checks whether
 ggplot2 is available on the user's system before executing any code. (#18)
 * The `flipaxes` argument has been renamed to `flip`, e.g.
@@ -23,6 +23,7 @@ by @juliasilge).
 
 * Support for negative values. (#6 by @pjgeens)
 * Better handling of single-level factors and `flip(axes)`. (#5)
+* Handling of complex formula expressions. (#17)
 
 #### Internals
 
