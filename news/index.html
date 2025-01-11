@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">parttree</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9005</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9006</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,26 +36,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.1.9005" id="parttree-0019005">parttree 0.0.1.9005<a class="anchor" aria-label="anchor" href="#parttree-0019005"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.0.1.9006" id="parttree-0019006">parttree 0.0.1.9006<a class="anchor" aria-label="anchor" href="#parttree-0019006"></a></h2>
 <p>To be released as 0.1.0</p>
 <div class="section level5">
-<h5 id="breaking-changes-0-0-1-9005">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-1-9005"></a></h5>
-<ul><li>Move ggplot2 to Suggests, following the addition of native (base R) <code>plot.parttree</code> method. The <code><a href="../reference/geom_parttree.html">geom_parttree()</a></code> function now checks whether ggplot2 is available on the user’s system before executing any code. (<a href="https://github.com/grantmcdermott/parttree/issues/18" class="external-link">#18</a>)</li>
+<h5 id="breaking-changes-0-0-1-9006">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-0-1-9006"></a></h5>
+<ul><li>Move ggplot2 to Enhances, following the addition of native (base R) <code>plot.parttree</code> method. The <code><a href="../reference/geom_parttree.html">geom_parttree()</a></code> function now checks whether ggplot2 is available on the user’s system before executing any code. (<a href="https://github.com/grantmcdermott/parttree/issues/18" class="external-link">#18</a>)</li>
 <li>The <code>flipaxes</code> argument has been renamed to <code>flip</code>, e.g. <code>parttree(..., flip = TRUE)</code>. (<a href="https://github.com/grantmcdermott/parttree/issues/18" class="external-link">#18</a>)</li>
 </ul></div>
 <div class="section level5">
-<h5 id="improvements-0-0-1-9005">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-1-9005"></a></h5>
+<h5 id="improvements-0-0-1-9006">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-0-1-9006"></a></h5>
 <ul><li>Parttree objects now have their own class with a dedicated <code>plot.parttree</code> method, powered by tinyplot. (<a href="https://github.com/grantmcdermott/parttree/issues/18" class="external-link">#18</a>)<br></li>
 <li>Major speed-up for extracting parttree nodes and coordinates on complicated trees. (<a href="https://github.com/grantmcdermott/parttree/issues/15" class="external-link">#15</a>)</li>
 <li>Add method for tidymodels workflows objects fitted with <code>"rpart"</code> engine. (<a href="https://github.com/grantmcdermott/parttree/issues/7" class="external-link">#7</a> by <a href="https://github.com/juliasilge" class="external-link">@juliasilge</a>).</li>
 </ul></div>
 <div class="section level5">
-<h5 id="bug-fixes-0-0-1-9005">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-1-9005"></a></h5>
+<h5 id="bug-fixes-0-0-1-9006">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-0-1-9006"></a></h5>
 <ul><li>Support for negative values. (<a href="https://github.com/grantmcdermott/parttree/issues/6" class="external-link">#6</a> by <a href="https://github.com/pjgeens" class="external-link">@pjgeens</a>)</li>
 <li>Better handling of single-level factors and <code>flip(axes)</code>. (<a href="https://github.com/grantmcdermott/parttree/issues/5" class="external-link">#5</a>)</li>
+<li>Handling of complex formula expressions. (<a href="https://github.com/grantmcdermott/parttree/issues/17" class="external-link">#17</a>)</li>
 </ul></div>
 <div class="section level5">
-<h5 id="internals-0-0-1-9005">Internals<a class="anchor" aria-label="anchor" href="#internals-0-0-1-9005"></a></h5>
+<h5 id="internals-0-0-1-9006">Internals<a class="anchor" aria-label="anchor" href="#internals-0-0-1-9006"></a></h5>
 <ul><li>Several dependency adjustments, e.g. tinyplot to Imports and ggplot2 to Suggests. (<a href="https://github.com/grantmcdermott/parttree/issues/18" class="external-link">#18</a>)</li>
 <li>Added SVG snapshots for image-based tests. (<a href="https://github.com/grantmcdermott/parttree/issues/18" class="external-link">#18</a>)</li>
 <li>Bump ggplot2 version dependency to match deprecated functions from 3.4.0.</li>
