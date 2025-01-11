@@ -20,7 +20,9 @@
 #' @returns A data frame comprising seven columns: the leaf node, its path, a
 #'   set of rectangle limits (i.e., xmin, xmax, ymin, ymax), and a final column
 #'   corresponding to the predicted value for that leaf.
-#' @importFrom data.table := .SD fifelse
+#' @importFrom data.table := .SD as.data.table data.table fifelse rbindlist tstrsplit
+#' @importFrom rpart path.rpart
+#' @importFrom stats reformulate terms
 #' @export
 #' @examples
 #' library("parttree")
@@ -112,24 +114,25 @@ parttree.rpart =
 
     ## Get details about y variable for later
     ### y variable string (i.e. name)
-    y_var = paste(tree$terms)[2]
-    # y_var = attr(tree$terms, "variables")[[2]]
+    all_terms = terms(tree)
+    y_var = all.vars(all_terms)[attr(all_terms, "response")]
     ### y values
     yvals = tree$frame[tree$frame$var == "<leaf>", ]$yval
-    y_factored = attr(tree$terms, "dataClasses")[paste(y_var)] == "factor"
+    # y_factored = attr(tree$terms, "dataClasses")[paste(y_var)] == "factor"
+    y_factored = attr(tree$terms, "dataClasses")[y_var] == "factor"
     ## factor equivalents (if factor)
     if (y_factored) {
       ylevs = attr(tree, "ylevels")
       yvals = ylevs[yvals]
     }
 
-    part_list = rpart::path.rpart(tree, node=nodes, print.it = FALSE)
-    part_list = lapply(part_list, data.table::as.data.table)
-    part_dt = data.table::rbindlist(part_list, idcol="node")[V1!="root"]
-    part_dt[, c("variable", "split") := data.table::tstrsplit(V1, split = "+<|+<=|>|+>=")][]
+    part_list = path.rpart(tree, nodes = nodes, print.it = FALSE)
+    part_list = lapply(part_list, as.data.table)
+    part_dt = rbindlist(part_list, idcol="node")[V1!="root"]
+    part_dt[, c("variable", "split") := tstrsplit(V1, split = "+<|+<=|>|+>=")][]
     part_dt[, side := gsub("\\s$", "", gsub("\\w|\\.", "", V1))][]
 
-    yvals_dt = data.table::data.table(yvals, node = nodes)
+    yvals_dt = data.table(yvals, node = nodes)
 
     part_dt = part_dt[yvals_dt, on = "node", all = TRUE]
     part_dt[, V1 := NULL][, node := as.integer(node)][, split := as.double(split)][]
@@ -281,7 +284,7 @@ parttree.workflow =
     y_name = names(tree$pre$mold$outcomes)[[1]]
     raw_data = cbind(tree$pre$mold$predictors, tree$pre$mold$outcomes)
     tree = workflows::extract_fit_engine(tree)
-    tree$terms[[2]] = y_name
+    tree$terms[[2]] = reformulate(y_name)[[2]]
     attr(tree$terms, "variables")[[2]] = y_name
     names(attr(tree$terms, "dataClasses"))[[1]] = y_name
 
@@ -456,7 +459,7 @@ parttree.constparty =
     colnames(rval)[4L:7L] = c("xmin", "xmax", "ymin", "ymax")
 
     ## turn into data.table?
-    if(keep_as_dt) rval = data.table::as.data.table(rval)
+    if(keep_as_dt) rval = as.data.table(rval)
 
     class(rval) = c("parttree", class(rval))
     xvar = ifelse(isFALSE(flip), mx[1], mx[2])
