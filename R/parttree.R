@@ -26,6 +26,7 @@
 #' @export
 #' @examples
 #' library("parttree")
+#' \dontshow{data.table::setDTthreads(2)}
 #'
 #' ## rpart trees
 #'
@@ -70,6 +71,7 @@
 #'
 #' # tidymodels
 #'
+#' # install.packages("parsnip")
 #' library(parsnip)
 #'
 #' decision_tree() |>
@@ -81,6 +83,7 @@
 #'
 #' # mlr3 (NB: use `keep_model = TRUE` for mlr3 learners)
 #'
+#' # install.packages("mlr3")
 #' library(mlr3)
 #'
 #' task_iris = TaskClassif$new("iris", iris, target = "Species")

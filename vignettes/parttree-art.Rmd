@@ -28,7 +28,6 @@ This vignette will show you how to implement
 the same basic ideas using **parttree** and a few friends. Here are the
 packages that we'll be using.
 
-
 ```{r setup, message=FALSE}
 library(parttree) # This package
 library(rpart)    # For decision trees
@@ -36,6 +35,11 @@ library(magick)   # For reading and manipulating images
 library(imager)   # Another image library, with some additional features
 
 op = par(mar = c(0,0,0,0)) # Remove plot margins
+```
+
+```{r thread_control, echo=-1}
+data.table::setDTthreads(2)
+magick:::magick_threads(2)
 ```
 
 While the exact details will vary depending on the image at hand, the essential

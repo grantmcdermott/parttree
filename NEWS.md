@@ -1,12 +1,12 @@
-# parttree 0.0.1.9006
+# parttree 0.1.0
 
-To be released as 0.1.0
+Our first CRAN submission. 🎉🎉
 
 #### Breaking changes
 
-* Move ggplot2 to Enhances, following the addition of native (base R)
-`plot.parttree` method. The `geom_parttree()` function now checks whether
-ggplot2 is available on the user's system before executing any code. (#18)
+* Move ggplot2 to Enhances, following the addition of a dedicated (base R)
+`plot.parttree` method. The `geom_parttree()` function is still available, but
+requires that ggplot2 is already been installed on the user's system. (#18)
 * The `flipaxes` argument has been renamed to `flip`, e.g.
 `parttree(..., flip = TRUE)`. (#18)
 

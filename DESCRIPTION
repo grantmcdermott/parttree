@@ -1,11 +1,12 @@
 Package: parttree
-Title: Visualise simple decision tree partitions
-Version: 0.0.1.9006
+Title: Visualize Simple 2-D Decision Tree Partitions
+Version: 0.1.0
+Date: 2025-10-11
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
            role = c("aut", "cre"),
-           email = "grantmcd@uoregon.edu",
+           email = "gmcd@amazon.com",
            comment = c(ORCID = "0000-0001-7883-8573")),
     person(given = "Achim",
            family = "Zeileis",
@@ -28,8 +29,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 LazyData: true
-URL: https://github.com/grantmcdermott/parttree,
-    http://grantmcdermott.com/parttree
+URL: https://grantmcdermott.com/parttree/
 BugReports: https://github.com/grantmcdermott/parttree/issues
 Imports:
     graphics,

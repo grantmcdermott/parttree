@@ -4,3 +4,5 @@
 docs
 inst/doc
 SCRATCH/
+**/*/.DS_Store
+.DS_Store

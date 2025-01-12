@@ -140,6 +140,7 @@ library(ggplot2)  # ggplot2 must be installed/loaded separately
 
 library(parttree) # this package
 library(rpart)    # decision trees
+\dontshow{data.table::setDTthreads(2)}
 
 ### Simple decision tree (max of two predictor variables)
 

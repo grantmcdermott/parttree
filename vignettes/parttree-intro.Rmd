@@ -38,6 +38,10 @@ data("penguins", package = "palmerpenguins")
 head(penguins)
 ```
 
+```{r thread_control, echo=-1}
+data.table::setDTthreads(2)
+```
+
 Dataset in hand, let's say that we are interested in predicting penguin
 _species_ as a function of 1) flipper length and 2) bill length. We could model
 this as a simple decision tree:
@@ -84,7 +88,7 @@ ptree
 
 Speaking of visualization, underneath the hood `plot.parttree` calls the
 powerful
-[**tinyplot**](https://grantmcdermott.com/tinyplot)
+[**tinyplot**](https://grantmcdermott.com/tinyplot/)
 package. All of the latter's various customization arguments can be passed on to
 our `parttree` plot to make it look a bit nicer. For example:
 
@@ -109,10 +113,10 @@ tree_cont |>
 
 ## Supported model classes
 
-Alongside the [**rpart**](https://CRAN.R-project.org/web/package=rpart) model
+Alongside the [**rpart**](https://CRAN.R-project.org/package=rpart) model
 objects that we have been working with thus far, **parttree** also supports
 decision trees created by the
-[**partykit**](https://CRAN.R-project.org/web/package=partykit) package. Here we
+[**partykit**](https://CRAN.R-project.org/package=partykit) package. Here we
 see how the latter's `ctree` (conditional inference tree) algorithm yields a
 slightly more sophisticated partitioning that the former's default.
 
