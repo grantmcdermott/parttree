@@ -50,7 +50,7 @@ Provides a plot method for parttree objects.
 \examples{
 library("parttree")
 \dontshow{data.table::setDTthreads(2)}
-
+#
 ## rpart trees
 
 library("rpart")
@@ -79,6 +79,7 @@ plot(
    main    = "Tree predictions: Kyphosis recurrence" # custom title
 )
 
+#
 ## conditional inference trees from partyit
 
 library("partykit")
@@ -90,6 +91,7 @@ plot(ct_pt, pch = 19, palette = "okabe", main = "ctree predictions: iris species
 rp2 = as.party(rp)
 parttree(rp2)
 
+#
 ## various front-end frameworks are also supported, e.g.
 
 # tidymodels

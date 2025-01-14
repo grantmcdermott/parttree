@@ -24,7 +24,15 @@ regular data frame (default behavior) unless the user specifies \code{TRUE}.}
 \item{flip}{Logical. Should we flip the "x" and "y" variables in the return
 data frame? The default behaviour is for the first split variable in the
 tree to take the "y" slot, and any second split variable to take the "x"
-slot. Setting to \code{TRUE} switches these around.}
+slot. Setting to \code{TRUE} switches these around.
+
+\emph{Note:} This argument is primarily useful when it passed via
+\link{geom_parttree} to ensure correct axes orientation as part of a \code{ggplot2}
+visualization (see \link{geom_parttree} Examples). We do not expect users to
+call \code{parttree(..., flip = TRUE)} directly. Similarly, to switch axes
+orientation for the native (base graphics) \link{plot.parttree} method, we
+recommend calling \code{plot(..., flip = TRUE)} rather than flipping the
+underlying \code{parttree} object.}
 }
 \value{
 A data frame comprising seven columns: the leaf node, its path, a
@@ -40,7 +48,7 @@ leaf or terminal node) that can easily be plotted in 2-D coordinate space.
 \examples{
 library("parttree")
 \dontshow{data.table::setDTthreads(2)}
-
+#
 ## rpart trees
 
 library("rpart")
@@ -69,6 +77,7 @@ plot(
    main    = "Tree predictions: Kyphosis recurrence" # custom title
 )
 
+#
 ## conditional inference trees from partyit
 
 library("partykit")
@@ -80,6 +89,7 @@ plot(ct_pt, pch = 19, palette = "okabe", main = "ctree predictions: iris species
 rp2 = as.party(rp)
 parttree(rp2)
 
+#
 ## various front-end frameworks are also supported, e.g.
 
 # tidymodels
