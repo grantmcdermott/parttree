@@ -26,11 +26,11 @@ Authors@R: c(
 Description: Visualize the partitions of simple decision trees, involving one or
     two predictors, on the scale of the original data. Provides an intuitive
     alternative to traditional tree diagrams, by visualizing how a decision tree
-    divides the predictor space in a simple 2-D plot alongside the original
-    data. The 'parttree' package supports both classification and regression
-    trees from 'rpart' and 'partykit', as well as trees produced by popular
-    frontend systems like 'tidymodels' and 'mlr3'. Visualization methods are
-    provided for both base R graphics and 'ggplot2'.
+    divides the predictor space in a simple 2D plot alongside the original data.
+    The 'parttree' package supports both classification and regression trees
+    from 'rpart' and 'partykit', as well as trees produced by popular frontend
+    systems like 'tidymodels' and 'mlr3'. Visualization methods are provided for
+    both base R graphics and 'ggplot2'.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
