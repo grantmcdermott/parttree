@@ -46,13 +46,13 @@
 #' # customize further by passing extra options to (tiny)plot
 #' plot(
 #'    rp_pt,
-#'    border  = NA, # no partition borders
-#'    pch     = 19, # filled points
-#'    alpha   = 0.6, # point transparency
-#'    grid    = TRUE, # background grid
-#'    palette = "classic", # new colour palette
-#'    xlab    = "Topmost vertebra operated on", # custom x title
-#'    ylab    = "Patient age (months)", # custom y title
+#'    border  = NA,                                     # no partition borders
+#'    pch     = 16,                                     # filled points
+#'    alpha   = 0.6,                                    # point transparency
+#'    grid    = TRUE,                                   # background grid
+#'    palette = "classic",                              # new colour palette
+#'    xlab    = "Topmost vertebra operated on",         # custom x title
+#'    ylab    = "Patient age (months)",                 # custom y title
 #'    main    = "Tree predictions: Kyphosis recurrence" # custom title
 #' )
 #'
