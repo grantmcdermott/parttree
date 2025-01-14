@@ -35,6 +35,7 @@ plot.parttree = function(
     add = FALSE,
     ...
     ) {
+    dots = list(...)
     object = x
     xvar = attr(object, "parttree")[["xvar"]]
     yvar = attr(object, "parttree")[["yvar"]]
@@ -109,10 +110,17 @@ plot.parttree = function(
     # Grab the plot corners and adjust the partition limits
     if (isTRUE(expand)) {
         corners = par("usr")
-        object$xmin[xmin_idxr] = corners[1]
-        object$xmax[xmax_idxr] = corners[2]
-        object$ymin[ymin_idxr] = corners[3]
-        object$ymax[ymax_idxr] = corners[4]
+        if (isTRUE(dots[["flip"]])) {
+          object$xmin[xmin_idxr] = corners[3]
+          object$xmax[xmax_idxr] = corners[4]
+          object$ymin[ymin_idxr] = corners[1]
+          object$ymax[ymax_idxr] = corners[2]
+        } else {
+          object$xmin[xmin_idxr] = corners[1]
+          object$xmax[xmax_idxr] = corners[2]
+          object$ymin[ymin_idxr] = corners[3]
+          object$ymax[ymax_idxr] = corners[4]
+        }
     }
 
 
