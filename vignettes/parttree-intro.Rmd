@@ -125,7 +125,7 @@ library(partykit)
 
 ctree(species ~ flipper_length_mm + bill_length_mm, data = penguins) |>
   parttree() |>
-  plot(pch = 19, palette = "classic", alpha = 0.5)
+  plot(pch = 16, palette = "classic", alpha = 0.5)
 ```
 
 **parttree** also supports a variety of "frontend" modes that call
