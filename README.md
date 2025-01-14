@@ -20,8 +20,14 @@ package provides visualization methods for both base R graphics (via
 
 ## Installation
 
-This package is not on CRAN yet, but can be installed from
-[r-universe](https://grantmcdermott.r-universe.dev/parttree):
+The stable version of **parttree** is available on CRAN.
+
+``` r
+install.packages("parttree")
+```
+
+Or, you can grab the latest development version from
+[R-universe](https://grantmcdermott.r-universe.dev/parttree).
 
 ``` r
 install.packages("parttree", repos = "https://grantmcdermott.r-universe.dev")
