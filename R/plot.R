@@ -37,10 +37,18 @@ plot.parttree = function(
     ) {
     dots = list(...)
     object = x
-    xvar = attr(object, "parttree")[["xvar"]]
-    yvar = attr(object, "parttree")[["yvar"]]
-    xrange = attr(object, "parttree")[["xrange"]]
-    yrange = attr(object, "parttree")[["yrange"]]
+    flip_data = isTRUE(attr(object, "parttree")[["flip"]])
+    if (flip_data) {
+      xvar = attr(object, "parttree")[["yvar"]]
+      yvar = attr(object, "parttree")[["xvar"]]
+      xrange = attr(object, "parttree")[["yrange"]]
+      yrange = attr(object, "parttree")[["xrange"]]
+    } else {
+      xvar = attr(object, "parttree")[["xvar"]]
+      yvar = attr(object, "parttree")[["yvar"]]
+      xrange = attr(object, "parttree")[["xrange"]]
+      yrange = attr(object, "parttree")[["yrange"]]
+    }
     response = attr(object, "parttree")[["response"]]
     raw_data = attr(object, "parttree")[["raw_data"]]
     orig_call = attr(object, "parttree")[["call"]]
