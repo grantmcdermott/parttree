@@ -103,6 +103,9 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 }
+\value{
+A \code{\link[ggplot2]{ggplot}}  layer.
+}
 \description{
 \code{geom_parttree()} is a simple wrapper around \code{\link[=parttree]{parttree()}} that
 takes a tree model object and then converts into an amenable data frame

@@ -20,6 +20,7 @@
 #'   plot layers, note that the data input for `geom_parttree()` (i.e. decision
 #'   tree object) must assigned in the layer itself; not in the initialising
 #'   [ggplot2::ggplot()] call. See Examples.
+#' @returns A \code{\link[ggplot2]{ggplot}}  layer.
 #' @section Aesthetics:
 #' \code{geom_parttree()} aims to "work-out-of-the-box" with minimal input from
 #' the user's side, apart from specifying the data object. This includes taking
