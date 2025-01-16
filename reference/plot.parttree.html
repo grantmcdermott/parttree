@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">parttree</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,8 +106,8 @@ Only evaluated if <code>raw = TRUE</code>.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/grantmcdermott/parttree" class="external-link">"parttree"</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://grantmcdermott.com/parttree/">"parttree"</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
 <span class="r-in"><span><span class="co">## rpart trees</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/bethatkinson/rpart" class="external-link">"rpart"</a></span><span class="op">)</span></span></span>
@@ -149,6 +149,9 @@ Only evaluated if <code>raw = TRUE</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $na.action</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flip</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $raw_data</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -164,17 +167,18 @@ Only evaluated if <code>raw = TRUE</code>.</p></dd>
 <span class="r-in"><span><span class="co"># customize further by passing extra options to (tiny)plot</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>   <span class="va">rp_pt</span>,</span></span>
-<span class="r-in"><span>   border  <span class="op">=</span> <span class="cn">NA</span>, <span class="co"># no partition borders</span></span></span>
-<span class="r-in"><span>   pch     <span class="op">=</span> <span class="fl">19</span>, <span class="co"># filled points</span></span></span>
-<span class="r-in"><span>   alpha   <span class="op">=</span> <span class="fl">0.6</span>, <span class="co"># point transparency</span></span></span>
-<span class="r-in"><span>   grid    <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># background grid</span></span></span>
-<span class="r-in"><span>   palette <span class="op">=</span> <span class="st">"classic"</span>, <span class="co"># new colour palette</span></span></span>
-<span class="r-in"><span>   xlab    <span class="op">=</span> <span class="st">"Topmost vertebra operated on"</span>, <span class="co"># custom x title</span></span></span>
-<span class="r-in"><span>   ylab    <span class="op">=</span> <span class="st">"Patient age (months)"</span>, <span class="co"># custom y title</span></span></span>
+<span class="r-in"><span>   border  <span class="op">=</span> <span class="cn">NA</span>,                                     <span class="co"># no partition borders</span></span></span>
+<span class="r-in"><span>   pch     <span class="op">=</span> <span class="fl">16</span>,                                     <span class="co"># filled points</span></span></span>
+<span class="r-in"><span>   alpha   <span class="op">=</span> <span class="fl">0.6</span>,                                    <span class="co"># point transparency</span></span></span>
+<span class="r-in"><span>   grid    <span class="op">=</span> <span class="cn">TRUE</span>,                                   <span class="co"># background grid</span></span></span>
+<span class="r-in"><span>   palette <span class="op">=</span> <span class="st">"classic"</span>,                              <span class="co"># new colour palette</span></span></span>
+<span class="r-in"><span>   xlab    <span class="op">=</span> <span class="st">"Topmost vertebra operated on"</span>,         <span class="co"># custom x title</span></span></span>
+<span class="r-in"><span>   ylab    <span class="op">=</span> <span class="st">"Patient age (months)"</span>,                 <span class="co"># custom y title</span></span></span>
 <span class="r-in"><span>   main    <span class="op">=</span> <span class="st">"Tree predictions: Kyphosis recurrence"</span> <span class="co"># custom title</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.parttree-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
 <span class="r-in"><span><span class="co">## conditional inference trees from partyit</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="http://partykit.r-forge.r-project.org/partykit/" class="external-link">"partykit"</a></span><span class="op">)</span></span></span>
@@ -199,10 +203,12 @@ Only evaluated if <code>raw = TRUE</code>.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 14.5   55  111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9  8.5 -Inf  Inf</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#</span></span></span>
 <span class="r-in"><span><span class="co">## various front-end frameworks are also supported, e.g.</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># tidymodels</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># install.packages("parsnip")</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/parsnip" class="external-link">parsnip</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://parsnip.tidymodels.org/reference/decision_tree.html" class="external-link">decision_tree</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
@@ -215,6 +221,7 @@ Only evaluated if <code>raw = TRUE</code>.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># mlr3 (NB: use `keep_model = TRUE` for mlr3 learners)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># install.packages("mlr3")</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mlr3.mlr-org.com" class="external-link">mlr3</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">task_iris</span> <span class="op">=</span> <span class="va"><a href="https://mlr3.mlr-org.com/reference/TaskClassif.html" class="external-link">TaskClassif</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"iris"</span>, <span class="va">iris</span>, target <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span></span>

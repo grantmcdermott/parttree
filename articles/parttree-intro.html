@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">parttree</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@ Penguins</a> dataset to demonstrate functionality. You can load this
 dataset via the parent package (as I have here), or import it directly
 as a CSV <a href="https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv" class="external-link">here</a>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/grantmcdermott/parttree" class="external-link">parttree</a></span><span class="op">)</span>  <span class="co"># This package</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://grantmcdermott.com/parttree/">parttree</a></span><span class="op">)</span>  <span class="co"># This package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bethatkinson/rpart" class="external-link">rpart</a></span><span class="op">)</span>     <span class="co"># For fitting decisions trees</span></span>
 <span></span>
 <span><span class="co"># install.packages("palmerpenguins")</span></span>
@@ -146,7 +146,7 @@ on our way to the visualization of interest.</p>
 <span><span class="co">#&gt; 2 206.5  -Inf 43.35</span></span>
 <span><span class="co">#&gt; 3 206.5 43.35   Inf</span></span></code></pre></div>
 <p>Speaking of visualization, underneath the hood
-<code>plot.parttree</code> calls the powerful <a href="https://grantmcdermott.com/tinyplot" class="external-link"><strong>tinyplot</strong></a>
+<code>plot.parttree</code> calls the powerful <a href="https://grantmcdermott.com/tinyplot/" class="external-link"><strong>tinyplot</strong></a>
 package. All of the latter’s various customization arguments can be
 passed on to our <code>parttree</code> plot to make it look a bit nicer.
 For example:</p>
@@ -171,9 +171,9 @@ independent variables.</p>
 <div class="section level2">
 <h2 id="supported-model-classes">Supported model classes<a class="anchor" aria-label="anchor" href="#supported-model-classes"></a>
 </h2>
-<p>Alongside the <a href="https://CRAN.R-project.org/web/package=rpart" class="external-link"><strong>rpart</strong></a>
+<p>Alongside the <a href="https://CRAN.R-project.org/package=rpart" class="external-link"><strong>rpart</strong></a>
 model objects that we have been working with thus far,
-<strong>parttree</strong> also supports decision trees created by the <a href="https://CRAN.R-project.org/web/package=partykit" class="external-link"><strong>partykit</strong></a>
+<strong>parttree</strong> also supports decision trees created by the <a href="https://CRAN.R-project.org/package=partykit" class="external-link"><strong>partykit</strong></a>
 package. Here we see how the latter’s <code>ctree</code> (conditional
 inference tree) algorithm yields a slightly more sophisticated
 partitioning that the former’s default.</p>
@@ -185,7 +185,7 @@ partitioning that the former’s default.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/partykit/man/ctree.html" class="external-link">ctree</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">bill_length_mm</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/parttree.html">parttree</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fl">19</span>, palette <span class="op">=</span> <span class="st">"classic"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>pch <span class="op">=</span> <span class="fl">16</span>, palette <span class="op">=</span> <span class="st">"classic"</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
 <p><img src="parttree-intro_files/figure-html/penguin_ctree_plot-1.png" width="90%"></p>
 <p><strong>parttree</strong> also supports a variety of “frontend” modes
 that call <code><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart::rpart()</a></code> as the underlying engine. This

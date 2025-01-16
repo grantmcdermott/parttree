@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Visualise simple decision tree partitions • parttree</title>
+<title>Visualize Simple 2-D Decision Tree Partitions • parttree</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Visualise simple decision tree partitions">
-<meta name="description" content="Simple functions for plotting 2D decision tree partition plots.">
-<meta property="og:description" content="Simple functions for plotting 2D decision tree partition plots.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Visualize Simple 2-D Decision Tree Partitions">
+<meta name="description" content="Visualize the partitions of simple decision trees, involving one or two predictors, on the scale of the original data. Provides an intuitive alternative to traditional tree diagrams, by visualizing how a decision tree divides the predictor space in a simple 2D plot alongside the original data. The parttree package supports both classification and regression trees from rpart and partykit, as well as trees produced by popular frontend systems like tidymodels and mlr3. Visualization methods are provided for both base R graphics and ggplot2.">
+<meta property="og:description" content="Visualize the partitions of simple decision trees, involving one or two predictors, on the scale of the original data. Provides an intuitive alternative to traditional tree diagrams, by visualizing how a decision tree divides the predictor space in a simple 2D plot alongside the original data. The parttree package supports both classification and regression trees from rpart and partykit, as well as trees produced by popular frontend systems like tidymodels and mlr3. Visualization methods are provided for both base R graphics and ggplot2.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">parttree</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,8 +60,11 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>This package is not on CRAN yet, but can be installed from <a href="https://grantmcdermott.r-universe.dev/parttree" class="external-link">r-universe</a>:</p>
+<p>The stable version of <strong>parttree</strong> is available on CRAN.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"parttree"</span><span class="op">)</span></span></code></pre></div>
+<p>Or, you can grab the latest development version from <a href="https://grantmcdermott.r-universe.dev/parttree" class="external-link">R-universe</a>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"parttree"</span>, repos <span class="op">=</span> <span class="st">"https://grantmcdermott.r-universe.dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -69,9 +72,9 @@
 </h2>
 <p>The <strong>parttree</strong> <a href="https://grantmcdermott.com/parttree/index.html">homepage</a> includes an introductory vignette and detailed documentation. But here’s a quickstart example using the <a href="https://search.r-project.org/CRAN/refmans/rpart/html/kyphosis.html" class="external-link">“kyphosis”</a> dataset that comes bundled with the <strong>rpart</strong> package. In this case, we are interested in predicting kyphosis recovery after spinal surgery, as a function of 1) the number of topmost vertebra that were operated, and 2) patient age.</p>
 <p>The key function is <code><a href="reference/parttree.html">parttree()</a></code>, which comes with its own plotting method.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bethatkinson/rpart" class="external-link">rpart</a></span><span class="op">)</span>     <span class="co"># For the dataset and fitting decisions trees</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/grantmcdermott/parttree" class="external-link">parttree</a></span><span class="op">)</span>  <span class="co"># This package</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://grantmcdermott.com/parttree/">parttree</a></span><span class="op">)</span>  <span class="co"># This package</span></span>
 <span></span>
 <span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html" class="external-link">rpart</a></span><span class="op">(</span><span class="va">Kyphosis</span> <span class="op">~</span> <span class="va">Start</span> <span class="op">+</span> <span class="va">Age</span>, data <span class="op">=</span> <span class="va">kyphosis</span><span class="op">)</span></span>
 <span></span>
@@ -80,24 +83,24 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit_pt</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-quickstart-1.png" width="100%"></p>
 <p>Customize your plots by passing additional arguments:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span></span>
-<span>  <span class="va">fit_pt</span>,</span>
-<span>  border  <span class="op">=</span> <span class="cn">NA</span>, <span class="co"># no partition borders</span></span>
-<span>  pch     <span class="op">=</span> <span class="fl">19</span>, <span class="co"># filled points</span></span>
-<span>  alpha   <span class="op">=</span> <span class="fl">0.6</span>, <span class="co"># point transparency</span></span>
-<span>  grid    <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># background grid</span></span>
-<span>  palette <span class="op">=</span> <span class="st">"classic"</span>, <span class="co"># new colour palette</span></span>
-<span>  xlab    <span class="op">=</span> <span class="st">"Topmost vertebra operated on"</span>, <span class="co"># custom x title</span></span>
-<span>  ylab    <span class="op">=</span> <span class="st">"Patient age (months)"</span>, <span class="co"># custom y title</span></span>
-<span>  main    <span class="op">=</span> <span class="st">"Tree predictions: Kyphosis recurrence"</span> <span class="co"># custom title</span></span>
+<span>   <span class="va">fit_pt</span>,</span>
+<span>   border  <span class="op">=</span> <span class="cn">NA</span>,                                     <span class="co"># no partition borders</span></span>
+<span>   pch     <span class="op">=</span> <span class="fl">19</span>,                                     <span class="co"># filled points</span></span>
+<span>   alpha   <span class="op">=</span> <span class="fl">0.6</span>,                                    <span class="co"># point transparency</span></span>
+<span>   grid    <span class="op">=</span> <span class="cn">TRUE</span>,                                   <span class="co"># background grid</span></span>
+<span>   palette <span class="op">=</span> <span class="st">"classic"</span>,                              <span class="co"># new colour palette</span></span>
+<span>   xlab    <span class="op">=</span> <span class="st">"Topmost vertebra operated on"</span>,         <span class="co"># custom x title</span></span>
+<span>   ylab    <span class="op">=</span> <span class="st">"Patient age (months)"</span>,                 <span class="co"># custom y title</span></span>
+<span>   main    <span class="op">=</span> <span class="st">"Tree predictions: Kyphosis recurrence"</span> <span class="co"># custom title</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-quickstart2-1.png" width="100%"></p>
 <div class="section level3">
 <h3 id="ggplot2">ggplot2<a class="anchor" aria-label="anchor" href="#ggplot2"></a>
 </h3>
 <p>For <strong>ggplot2</strong> users, we offer an equivalent workflow via the <code>geom_partree()</code> visualization layer.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span> <span class="co">## Should be loaded separately</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">kyphosis</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Start</span>, y <span class="op">=</span> <span class="va">Age</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -115,6 +118,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=parttree" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/grantmcdermott/parttree/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/grantmcdermott/parttree/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -147,6 +151,8 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=parttree" class="external-link"><img src="https://www.r-pkg.org/badges/version/parttree" alt="CRAN status"></a></li>
+<li><a href="https://grantmcdermott.r-universe.dev" class="external-link"><img src="https://grantmcdermott.r-universe.dev/badges/parttree" alt="R-universe status badge"></a></li>
 <li><a href="https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://grantmcdermott.com/parttree/index.html"><img src="https://img.shields.io/badge/docs-homepage-blue.svg" alt="Docs"></a></li>
 </ul>
