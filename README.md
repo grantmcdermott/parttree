@@ -5,6 +5,10 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/parttree)](https://CRAN.R-project.org/package=parttree)
+[![R-universe status
+badge](https://grantmcdermott.r-universe.dev/badges/parttree)](https://grantmcdermott.r-universe.dev)
 [![R-CMD-check](https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/grantmcdermott/parttree/actions/workflows/R-CMD-check.yaml)
 [![Docs](https://img.shields.io/badge/docs-homepage-blue.svg)](https://grantmcdermott.com/parttree/index.html)
 <!-- badges: end -->
@@ -16,8 +20,14 @@ package provides visualization methods for both base R graphics (via
 
 ## Installation
 
-This package is not on CRAN yet, but can be installed from
-[r-universe](https://grantmcdermott.r-universe.dev/parttree):
+The stable version of **parttree** is available on CRAN.
+
+``` r
+install.packages("parttree")
+```
+
+Or, you can grab the latest development version from
+[R-universe](https://grantmcdermott.r-universe.dev/parttree).
 
 ``` r
 install.packages("parttree", repos = "https://grantmcdermott.r-universe.dev")
@@ -55,15 +65,15 @@ Customize your plots by passing additional arguments:
 
 ``` r
 plot(
-  fit_pt,
-  border  = NA, # no partition borders
-  pch     = 19, # filled points
-  alpha   = 0.6, # point transparency
-  grid    = TRUE, # background grid
-  palette = "classic", # new colour palette
-  xlab    = "Topmost vertebra operated on", # custom x title
-  ylab    = "Patient age (months)", # custom y title
-  main    = "Tree predictions: Kyphosis recurrence" # custom title
+   fit_pt,
+   border  = NA,                                     # no partition borders
+   pch     = 19,                                     # filled points
+   alpha   = 0.6,                                    # point transparency
+   grid    = TRUE,                                   # background grid
+   palette = "classic",                              # new colour palette
+   xlab    = "Topmost vertebra operated on",         # custom x title
+   ylab    = "Patient age (months)",                 # custom y title
+   main    = "Tree predictions: Kyphosis recurrence" # custom title
 )
 ```
 

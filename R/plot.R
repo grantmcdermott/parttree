@@ -35,11 +35,20 @@ plot.parttree = function(
     add = FALSE,
     ...
     ) {
+    dots = list(...)
     object = x
-    xvar = attr(object, "parttree")[["xvar"]]
-    yvar = attr(object, "parttree")[["yvar"]]
-    xrange = attr(object, "parttree")[["xrange"]]
-    yrange = attr(object, "parttree")[["yrange"]]
+    flip_data = isTRUE(attr(object, "parttree")[["flip"]])
+    if (flip_data) {
+      xvar = attr(object, "parttree")[["yvar"]]
+      yvar = attr(object, "parttree")[["xvar"]]
+      xrange = attr(object, "parttree")[["yrange"]]
+      yrange = attr(object, "parttree")[["xrange"]]
+    } else {
+      xvar = attr(object, "parttree")[["xvar"]]
+      yvar = attr(object, "parttree")[["yvar"]]
+      xrange = attr(object, "parttree")[["xrange"]]
+      yrange = attr(object, "parttree")[["yrange"]]
+    }
     response = attr(object, "parttree")[["response"]]
     raw_data = attr(object, "parttree")[["raw_data"]]
     orig_call = attr(object, "parttree")[["call"]]
@@ -109,10 +118,17 @@ plot.parttree = function(
     # Grab the plot corners and adjust the partition limits
     if (isTRUE(expand)) {
         corners = par("usr")
-        object$xmin[xmin_idxr] = corners[1]
-        object$xmax[xmax_idxr] = corners[2]
-        object$ymin[ymin_idxr] = corners[3]
-        object$ymax[ymax_idxr] = corners[4]
+        if (isTRUE(dots[["flip"]])) {
+          object$xmin[xmin_idxr] = corners[3]
+          object$xmax[xmax_idxr] = corners[4]
+          object$ymin[ymin_idxr] = corners[1]
+          object$ymax[ymax_idxr] = corners[2]
+        } else {
+          object$xmin[xmin_idxr] = corners[1]
+          object$xmax[xmax_idxr] = corners[2]
+          object$ymin[ymin_idxr] = corners[3]
+          object$ymax[ymax_idxr] = corners[4]
+        }
     }
 
 

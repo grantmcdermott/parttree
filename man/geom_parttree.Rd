@@ -103,6 +103,9 @@ lists which parameters it can accept.
 \link[ggplot2:draw_key]{key glyphs}, to change the display of the layer in the legend.
 }}
 }
+\value{
+A \code{\link[ggplot2]{ggplot}}  layer.
+}
 \description{
 \code{geom_parttree()} is a simple wrapper around \code{\link[=parttree]{parttree()}} that
 takes a tree model object and then converts into an amenable data frame
@@ -140,37 +143,39 @@ library(ggplot2)  # ggplot2 must be installed/loaded separately
 
 library(parttree) # this package
 library(rpart)    # decision trees
-
-### Simple decision tree (max of two predictor variables)
+\dontshow{data.table::setDTthreads(2)}
+#
+## Simple decision tree (max of two predictor variables)
 
 iris_tree = rpart(Species ~ Petal.Length + Petal.Width, data=iris)
 
-## Plot with original iris data only
+# Plot with original iris data only
 p = ggplot(data = iris, aes(x = Petal.Length, y = Petal.Width)) +
   geom_point(aes(col = Species))
 
-## Add tree partitions to the plot (borders only)
+# Add tree partitions to the plot (borders only)
 p + geom_parttree(data = iris_tree)
 
-## Better to use fill and highlight predictions
+# Better to use fill and highlight predictions
 p + geom_parttree(data = iris_tree, aes(fill = Species), alpha=0.1)
 
-## To drop the black border lines (i.e. fill only)
+# To drop the black border lines (i.e. fill only)
 p + geom_parttree(data = iris_tree, aes(fill = Species), col = NA, alpha = 0.1)
 
-
-### Example with plot orientation mismatch
+#
+## Example with plot orientation mismatch
 
 p2 = ggplot(iris, aes(x=Petal.Width, y=Petal.Length)) +
   geom_point(aes(col=Species))
 
-## Oops
+# Oops
 p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1)
 
-## Fix with 'flip = TRUE'
+# Fix with 'flip = TRUE'
+p2 + geom_parttree(data = iris_tree, aes(fill=Species), alpha = 0.1, flip = TRUE)
 
-
-### Various front-end frameworks are also supported, e.g.:
+#
+## Various front-end frameworks are also supported, e.g.:
 
 # install.packages("parsnip")
 library(parsnip)
@@ -182,10 +187,11 @@ iris_tree_parsnip = decision_tree() |>
 
 p + geom_parttree(data = iris_tree_parsnip, aes(fill=Species), alpha = 0.1)
 
+#
+## Trees with continuous independent variables are also supported.
 
-### Trees with continuous independent variables are also supported. But you
-### may need to adjust (or switch off) the fill legend to match the original
-### data, e.g.:
+# Note: you may need to adjust (or switch off) the fill legend to match the
+# original data, e.g.:
 
 iris_tree_cont = rpart(Petal.Length ~ Sepal.Length + Petal.Width, data=iris)
 p3 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
@@ -196,10 +202,10 @@ p3 = ggplot(data = iris, aes(x = Petal.Width, y = Sepal.Length)) +
   geom_point(aes(col = Petal.Length)) +
   theme_minimal()
 
-## Legend scales don't quite match here:
+# Legend scales don't quite match here:
 p3
 
-## Better to scale fill to the original data
+# Better to scale fill to the original data
 p3 + scale_fill_continuous(limits = range(iris$Petal.Length))
 
 }

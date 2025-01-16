@@ -15,6 +15,14 @@
 #'   data frame? The default behaviour is for the first split variable in the
 #'   tree to take the "y" slot, and any second split variable to take the "x"
 #'   slot. Setting to `TRUE` switches these around.
+#'
+#'   _Note:_ This argument is primarily useful when it passed via
+#'   [geom_parttree] to ensure correct axes orientation as part of a `ggplot2`
+#'   visualization (see [geom_parttree] Examples). We do not expect users to
+#'   call `parttree(..., flip = TRUE)` directly. Similarly, to switch axes
+#'   orientation for the native (base graphics) [plot.parttree] method, we
+#'   recommend calling `plot(..., flip = TRUE)` rather than flipping the
+#'   underlying `parttree` object.
 #' @seealso [plot.parttree], [geom_parttree], \code{\link[rpart]{rpart}},
 #'   \code{\link[partykit]{ctree}} [partykit::ctree].
 #' @returns A data frame comprising seven columns: the leaf node, its path, a
@@ -26,7 +34,8 @@
 #' @export
 #' @examples
 #' library("parttree")
-#'
+#' \dontshow{data.table::setDTthreads(2)}
+#' #
 #' ## rpart trees
 #'
 #' library("rpart")
@@ -45,16 +54,17 @@
 #' # customize further by passing extra options to (tiny)plot
 #' plot(
 #'    rp_pt,
-#'    border  = NA, # no partition borders
-#'    pch     = 19, # filled points
-#'    alpha   = 0.6, # point transparency
-#'    grid    = TRUE, # background grid
-#'    palette = "classic", # new colour palette
-#'    xlab    = "Topmost vertebra operated on", # custom x title
-#'    ylab    = "Patient age (months)", # custom y title
+#'    border  = NA,                                     # no partition borders
+#'    pch     = 16,                                     # filled points
+#'    alpha   = 0.6,                                    # point transparency
+#'    grid    = TRUE,                                   # background grid
+#'    palette = "classic",                              # new colour palette
+#'    xlab    = "Topmost vertebra operated on",         # custom x title
+#'    ylab    = "Patient age (months)",                 # custom y title
 #'    main    = "Tree predictions: Kyphosis recurrence" # custom title
 #' )
 #'
+#' #
 #' ## conditional inference trees from partyit
 #'
 #' library("partykit")
@@ -66,10 +76,12 @@
 #' rp2 = as.party(rp)
 #' parttree(rp2)
 #'
+#' #
 #' ## various front-end frameworks are also supported, e.g.
 #'
 #' # tidymodels
 #'
+#' # install.packages("parsnip")
 #' library(parsnip)
 #'
 #' decision_tree() |>
@@ -81,6 +93,7 @@
 #'
 #' # mlr3 (NB: use `keep_model = TRUE` for mlr3 learners)
 #'
+#' # install.packages("mlr3")
 #' library(mlr3)
 #'
 #' task_iris = TaskClassif$new("iris", iris, target = "Species")
@@ -157,15 +170,12 @@ parttree.rpart =
     if (length(vars)==2) {
       ## special case we can assume is likely wrong, notwithstanding ability to still flip axes
       if (vars[1]=="y" & vars[2]=="x") vars = rev(vars)
-    }
-    if (flip) {
-      vars = rev(vars)
+    } else if (length(vars)==1) {
       ## Handle edge cases with only 1 level
-      if (length(vars)==1) {
-        missing_var = setdiff(attr(tree$terms, 'term.labels'), vars)
-        vars = c(missing_var, vars)
-      }
+      missing_var = setdiff(attr(tree$terms, 'term.labels'), vars)
+      vars = c(missing_var, vars)
     }
+    if (flip) vars = rev(vars)
 
     part_coords =
       part_dt[
@@ -242,6 +252,7 @@ parttree.rpart =
       response = y_var,
       call = orig_call,
       na.action = orig_na.action,
+      flip = flip,
       raw_data = raw_data
       )
 
@@ -472,6 +483,7 @@ parttree.constparty =
       response = my,
       call = NULL,
       na.action = NULL,
+      flip = flip,
       raw_data = substitute(tree$data) # Or, partykit::model_frame_rpart?
       )
 

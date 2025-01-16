@@ -12,9 +12,15 @@ source('known_output/parttree_rpart_classification.R')
 # rpart
 rp = rpart::rpart(Species ~ Petal.Length + Petal.Width, data = iris)
 rp_pt = parttree(rp)
+
 # plot method
 f = function() {plot(rp_pt)}
 expect_snapshot_plot(f, label = "iris_classification")
+
+# ## uncomment once tinyplot 0.3.0 comes out
+# f = function() {plot(rp_pt, flip = TRUE)}
+# expect_snapshot_plot(f, label = "iris_classification_flip")
+
 # now strip attributes and compare data frames
 attr(rp_pt, "parttree") = NULL
 class(rp_pt) = "data.frame"
@@ -40,6 +46,12 @@ if (require(partykit)) {
 # Comparison data
 source('known_output/parttree_rpart_classification_flip.R')
 rp_pt_flip = parttree(rp, flip = TRUE)
+
+# plot method
+f = function() {plot(rp_pt_flip)}
+expect_snapshot_plot(f, label = "iris_classification_flip")
+
+# now strip attributes and compare data frames
 attr(rp_pt_flip, "parttree") = NULL
 class(rp_pt_flip) = "data.frame"
 expect_equal(pt_cl_known_flip, rp_pt_flip)
