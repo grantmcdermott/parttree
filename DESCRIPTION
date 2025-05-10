@@ -53,7 +53,7 @@ Suggests:
     tinysnapshot (>= 0.0.3),
     fontquiver,
     rsvg,
-    svglite (>= 2.2.0)
+    svglite (>= 2.2.0),
     palmerpenguins,
     titanic,
     mlr3,
