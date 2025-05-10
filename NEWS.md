@@ -1,3 +1,11 @@
+# parttree 0.1.1
+
+No user-facing changes.
+
+#### Internals
+
+Bump svglite to v2.2.0 and update test snapshots to fix CRAN errors.
+
 # parttree 0.1.0
 
 Our first CRAN submission. 🎉🎉
