@@ -2,4 +2,4 @@
 
 0 errors | 0 warnings | 0 notes
 
-* Bump dependency (svglite) version to fix CRAN errors.
+* This is a patch release that bumps the svglite dependency version to fix CRAN errors.
