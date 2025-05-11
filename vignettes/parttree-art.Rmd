@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
 ## Background
 
 One fun application of tree-based methods is abstracting over art and other
-images. For some really striking examples, take a look at designer
-[Dimitris Ladopoulos' portfolio](http://www.dimitris-ladopoulos.xyz/projects/portraits.html).
+images. For some really striking examples, take a look at the portfoilo of
+[Dimitris Ladopoulos](https://www.dimitris-ladopoulos.xyz/projects/portraits.html).
 This vignette will show you how to implement
 the same basic ideas using **parttree** and a few friends. Here are the
 packages that we'll be using.

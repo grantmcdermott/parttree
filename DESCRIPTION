@@ -1,7 +1,7 @@
 Package: parttree
 Title: Visualize Simple 2-D Decision Tree Partitions
-Version: 0.1.0
-Date: 2025-10-14
+Version: 0.1.1
+Date: 2025-05-10
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
@@ -45,7 +45,7 @@ Imports:
     partykit,
     rlang,
     rpart,
-    tinyplot (>= 0.2.0)
+    tinyplot (>= 0.3.0)
 Enhances: 
     ggplot2 (>= 3.4.0)
 Suggests: 
@@ -53,7 +53,7 @@ Suggests:
     tinysnapshot (>= 0.0.3),
     fontquiver,
     rsvg,
-    svglite,
+    svglite (>= 2.2.0),
     palmerpenguins,
     titanic,
     mlr3,
