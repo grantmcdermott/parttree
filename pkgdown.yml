@@ -1,10 +1,10 @@
 pandoc: 3.1.11
-pkgdown: 2.1.2
+pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   parttree-art: parttree-art.html
   parttree-intro: parttree-intro.html
-last_built: 2025-05-11T03:26Z
+last_built: 2026-01-15T22:28Z
 urls:
   reference: https://grantmcdermott.com/parttree/reference
   article: https://grantmcdermott.com/parttree/articles
