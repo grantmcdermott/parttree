@@ -64,26 +64,18 @@ Our first example, will mimic one of Dimitri Ladopoulos's aforementioned
 portrait pieces. Specifically, we will abstract over a close-up (eyes only) of
 Rembrandt Peale's [portrait of his daughter, Rosalba](https://en.wikipedia.org/wiki/File:Rembrandt_Peale_-_Portrait_of_Rosalba_Peale_-_Google_Art_Project.jpg). 
 
-We can download a digital image of the original artwork from Wikimedia. I'll
-download a high-res version to show off, but feel free to go for a lower 
-resolution if you want to reduce modeling and plotting times.^[For example, you
-can download [this version](https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Rembrandt_Peale_-_Portrait_of_Rosalba_Peale_-_Google_Art_Project.jpg/556px-Rembrandt_Peale_-_Portrait_of_Rosalba_Peale_-_Google_Art_Project.jpg) 
-instead and adapt your cropping command to 
-`rosalba = image_crop(rosalba, "170x90+170+260")`.]
-However, I will crop the image around Rosalba's eyes to get a close-up and
-reduce the overall complexity of the exercise.^[One minor faff is that I'm
-using two separate packages---**magick** and **imager** to prep the image. 
-Without going into the details, just know that the former is better for cropping
-the image the way I want, while the latter is better for R's in-memory
-manipulation.]
+For convenience, a low-resolution version of the image is bundled with this
+package.^[Image source:
+[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Rembrandt_Peale_-_Portrait_of_Rosalba_Peale_-_Google_Art_Project.jpg).
+Public domain.] Users can download a higher-resolution version from the source
+link above for better results.
 
 ```{r peale-download}
-# Download the image
-rosalba = image_read("https://upload.wikimedia.org/wikipedia/commons/a/aa/Rembrandt_Peale_-_Portrait_of_Rosalba_Peale_-_Google_Art_Project.jpg")
+# Load the bundled image
+rosalba = image_read(system.file("extdata/rosalba.jpg", package = "parttree"))
 
 # Crop around the eyes
-rosalba = image_crop(rosalba, "850x400+890+1350")
-# rosalba = image_crop(rosalba, "750x350+890+1350")
+rosalba = image_crop(rosalba, "170x90+170+260")
 
 # Convert to cimg (better for in-memory manipulation)
 rosalba = magick2cimg(rosalba)
@@ -199,7 +191,10 @@ ggplot() +
 
 Now that we've walked through a detailed example, let's quickly go through one
 more. We're about to get very _meta_: Visualizing the decision tree partitions
-of an actual tree image. This also happens to be the basis for the **parttree**
+of an actual tree image.^[Image source:
+[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Japanese_Zelkova_bonsai_16,_30_April_2012.JPG).
+Photo by Cliff, licensed [CC BY 2.0](https://creativecommons.org/licenses/by/2.0/).]
+This also happens to be the basis for the **parttree**
 [logo](https://github.com/grantmcdermott/parttree/blob/main/man/figures/hex.png),
 which seems a nice way to bookend the vignette.
 
@@ -208,7 +203,7 @@ the same recipe that we saw in the previous portrait example, so I won't repeat
 my explanations.
 
 ```{r bonzai}
-bonzai = load.image("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Japanese_Zelkova_bonsai_16%2C_30_April_2012.JPG/480px-Japanese_Zelkova_bonsai_16%2C_30_April_2012.JPG")
+bonzai = load.image(system.file("extdata/bonsai.jpg", package = "parttree"))
 plot(bonzai, axes = FALSE)
 
 # Coerce to data frame
@@ -272,7 +267,7 @@ Map(
   function(pt, cols) {
     plot(
       pt, raw = FALSE, add = TRUE, expand = FALSE,
-      fill_alpha = 0, lwd = 0.2, border = cols
+      fill_alpha = NULL, lwd = 0.2, border = cols
     )
   },
   pt = bonzai_pts,
