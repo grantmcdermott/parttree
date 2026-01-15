@@ -17,7 +17,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/grantmcdermott/parttree/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/grantmcdermott/parttree/blob/v0.1.2/DESCRIPTION)
 
 McDermott G (2026). *parttree: Visualize Simple 2-D Decision Tree
 Partitions*. R package version 0.1.2,
