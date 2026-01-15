@@ -3,7 +3,7 @@
 #### New features
 
 * Bundle low-res versions of the images used in the Abstract Art vignette to
-  bypass potential download issues and CRAN warnings. 
+  bypass potential download issues and CRAN warnings. (#25)
 
 # parttree 0.1.1
 
