@@ -1,7 +1,7 @@
 Package: parttree
 Title: Visualize Simple 2-D Decision Tree Partitions
-Version: 0.1.1
-Date: 2025-05-10
+Version: 0.1.2
+Date: 2026-10-14
 Authors@R: c(
     person(given = "Grant",
            family = "McDermott",
@@ -34,7 +34,6 @@ Description: Visualize the partitions of simple decision trees, involving one or
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 LazyData: true
 URL: https://grantmcdermott.com/parttree/
 BugReports: https://github.com/grantmcdermott/parttree/issues
@@ -64,3 +63,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+RoxygenNote: 7.3.3

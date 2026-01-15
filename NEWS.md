@@ -1,10 +1,17 @@
+# parttree 0.1.2
+
+#### New features
+
+* Bundle low-res versions of the images used in the Abstract Art vignette to
+  bypass potential download issues and CRAN warnings. 
+
 # parttree 0.1.1
 
 No user-facing changes.
 
 #### Internals
 
-Bump svglite to v2.2.0 and update test snapshots to fix CRAN errors.
+* Bump svglite to v2.2.0 and update test snapshots to fix CRAN errors.
 
 # parttree 0.1.0
 
