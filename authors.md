@@ -17,16 +17,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/grantmcdermott/parttree/blob/v0.1.2/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/grantmcdermott/parttree/blob/main/DESCRIPTION)
 
 McDermott G (2026). *parttree: Visualize Simple 2-D Decision Tree
-Partitions*. R package version 0.1.2,
+Partitions*. R package version 0.1.3,
 <https://grantmcdermott.com/parttree/>.
 
     @Manual{,
       title = {parttree: Visualize Simple 2-D Decision Tree Partitions},
       author = {Grant McDermott},
       year = {2026},
-      note = {R package version 0.1.2},
+      note = {R package version 0.1.3},
       url = {https://grantmcdermott.com/parttree/},
     }

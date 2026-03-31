@@ -1,5 +1,15 @@
 # Changelog
 
+## parttree 0.1.3
+
+CRAN release: 2026-03-31
+
+No user-facing changes.
+
+##### Internals
+
+- Update maintainer email address.
+
 ## parttree 0.1.2
 
 CRAN release: 2026-01-15
