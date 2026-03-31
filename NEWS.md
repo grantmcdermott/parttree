@@ -1,3 +1,11 @@
+# parttree 0.1.3
+
+No user-facing changes.
+
+#### Internals
+
+* Update maintainer email address.
+
 # parttree 0.1.2
 
 #### New features
